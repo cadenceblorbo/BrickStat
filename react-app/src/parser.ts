@@ -1,6 +1,4 @@
-import csvParser from 'csv-parser';
 import fs from 'fs';
-import type { Tuple2D } from './common-types.ts'
 import * as partNumbers from './part-numbers/index.ts'
 import * as csvPromise from './csv-promise.ts'
 
@@ -69,14 +67,13 @@ function getTrimmedPartNumber(fullID: string): string {
     //cut off all string after first num->char transition
     let index: number = 0;
     while (index < fullID.length) {
-        if (!Number.isNaN(fullID[index])) {
+        if (!isNaN(Number(fullID[index]))) {
             break;
         }
         index++;
     }
     while (index < fullID.length) {
-        if (Number.isNaN(fullID[index])) {
-            index++;
+        if (isNaN(Number(fullID[index]))) {
             break;
         }
         index++;
@@ -84,15 +81,15 @@ function getTrimmedPartNumber(fullID: string): string {
     return fullID.substring(0, index);
 }
 
-async function getPartDataByYear(): Promise<Map<Tuple2D, Map<number, number>>> {
+async function getPartDataByYear(): Promise<Map<string, Map<number, number>>> {
     const idToYear = await getIDToYearMapping();
     
-    const partDataByYear: Map<Tuple2D, Map<number, number>> = new Map();
+    const partDataByYear: Map<string, Map<number, number>> = new Map();
 
     const onInventoryPartsData = (row: InventoryPartsData) => {
         const trimmedNumber = getTrimmedPartNumber(row.part_num);
 
-        const dims: Tuple2D | undefined = partNumbers.brickMap.get(trimmedNumber);
+        const dims: string | undefined = partNumbers.brickMap.get(trimmedNumber);
         const year: number = Number(idToYear.get(row.inventory_id));
         if (dims === undefined || isNaN(year) || row.is_spare == "True") {
             return;
