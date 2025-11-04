@@ -43,8 +43,6 @@ async function getIDToYearMapping(): Promise<Map<string, string>> {
 
     await csvPromise.parseCSV<SetsData>(setsPath, onSetData);
 
-    
-
     const invIDToYear = new Map<string, string>();
 
     const onInventoriesData = (row: InventoriesData) => {
