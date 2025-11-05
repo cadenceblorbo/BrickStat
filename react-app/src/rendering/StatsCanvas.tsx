@@ -22,15 +22,39 @@ function InteractableBoxMesh(props: ThreeElements['mesh']) {
     )
 }
 
+function CameraToy() {
+    let dir = 1
+    const min = 20
+    const max = 120
+    const speed = 10
+    useFrame((state, delta) => {
+        if (state.camera instanceof THREE.PerspectiveCamera) {
+            console.log("here");
+            if (state.camera.fov > max) {
+                dir = -1
+            } else if (state.camera.fov < min) {
+                dir = 1
+            }
+            state.camera.fov += delta * dir * speed;
+            state.camera.updateProjectionMatrix();
+        }
+    });
+    return <></>
+}
+
 function StatsCanvas() {
+    
+    
     return (
         <div>
             <Canvas>
+                
                 <ambientLight intensity={Math.PI / 2} />
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
                 <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
                 <InteractableBoxMesh position={[-1.2, 0, 0]} />
                 <InteractableBoxMesh position={[1.2, 0, 0]} />
+                <CameraToy></CameraToy>
             </Canvas>
         </div>
     )
