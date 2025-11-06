@@ -1,41 +1,78 @@
 import type { ThreeElements } from "@react-three/fiber";
-import { Vector3 } from "three";
+import { Vector3} from "three";
 
-interface HistogramColumnProps {
-    meshProps?: ThreeElements['mesh'];
-    height: number;
+export interface HistogramColumnProps {
+    meshProps: ThreeElements['mesh'];
+    height?: number;
+    xWidth?: number;
+    yWidth?: number;
 }
 
-function HistogramColumn({ meshProps, height }: HistogramColumnProps) {
+function HistogramColumn({
+    meshProps,
+    height = 1,
+    xWidth = 1,
+    yWidth = 1,
+}: HistogramColumnProps) {
     let usedPosition = meshProps?.position as Vector3 || new Vector3(0,0,0);
     usedPosition = new Vector3(usedPosition.x, usedPosition.y + height / 2, usedPosition.z);
     const newProps = {...meshProps, position: usedPosition}
     return <mesh
         {...newProps}
     >
-        <boxGeometry args={[1, height, 1]} />
-        <meshStandardMaterial color={'green'} />
+        <boxGeometry args={[xWidth, height, yWidth]} />
     </mesh>
 }
 
 interface Histogram3DProps {
     xCols: number;
     yCols: number;
+    data: {[key: string]: string};
+    onDataPresent: (props: HistogramColumnProps, dataVal:unknown, i: number, j: number) => void;
+    onDataAbsent: (props: HistogramColumnProps, i: number, j: number) => void;
+    colWidthX?: number;
+    colWidthY?: number;
+    defaultHeight?: number;
     padding?: number;
 }
 
-function Histogram3D({xCols, yCols, padding = 0.5}: Histogram3DProps) {
+export function Histogram3D({
+    xCols,
+    yCols,
+    data,
+    onDataPresent,
+    onDataAbsent,
+    colWidthX = 1,
+    colWidthY = 1,
+    defaultHeight = 1,
+    padding = 0.5
+}: Histogram3DProps) {
     const grid = [];
     const xOffset = -(xCols - 1) / 2
     const yOffset = -(yCols - 1) / 2
     for (let i = 0; i < xCols; i++) {
         for (let j = 0; j < yCols; j++) {
             //grid position
-            const xPos = (xOffset + i) * (1 + padding)
-            const yPos = (yOffset + j) * (1 + padding)
-            grid.push(<HistogramColumn meshProps={{ position: new Vector3(xPos, 0, yPos) }} height={Math.random() * 5} key={ i*yCols + j} />)
+            const xPos = (xOffset + i) * (colWidthX + padding)
+            const yPos = (yOffset + j) * (colWidthY + padding)
+            const props: HistogramColumnProps = {
+                meshProps: { position: new Vector3(xPos, 0, yPos) },
+                height: defaultHeight,
+                xWidth: colWidthX,
+                yWidth: colWidthY
+            };
+            const key = (i + 1) + "," + (j + 1)
+            if (key in data) {
+                onDataPresent(props, data[key], i, j);
+            } else {
+                onDataAbsent(props, i, j);
+            }
+
+            grid.push(<HistogramColumn
+                {...props}
+                key={i * yCols + j}
+            />)
         }
     }
     return <>{grid}</>;
 }
-export default Histogram3D
