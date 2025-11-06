@@ -21,14 +21,18 @@ function HistogramColumn({ meshProps, height }: HistogramColumnProps) {
 interface Histogram3DProps {
     xCols: number;
     yCols: number;
+    padding?: number;
 }
 
-function Histogram3D({xCols, yCols}: Histogram3DProps) {
+function Histogram3D({xCols, yCols, padding = 0.5}: Histogram3DProps) {
     const grid = [];
+    const xOffset = -(xCols - 1) / 2
+    const yOffset = -(yCols - 1) / 2
     for (let i = 0; i < xCols; i++) {
         for (let j = 0; j < yCols; j++) {
-            const xPos = -xCols/2 + i
-            const yPos = -yCols/2 + j
+            //grid position
+            const xPos = (xOffset + i) * (1 + padding)
+            const yPos = (yOffset + j) * (1 + padding)
             grid.push(<HistogramColumn meshProps={{ position: new Vector3(xPos, 0, yPos) }} height={Math.random() * 5} key={ i*yCols + j} />)
         }
     }

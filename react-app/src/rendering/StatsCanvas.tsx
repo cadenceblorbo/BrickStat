@@ -12,7 +12,7 @@ function StatsCanvas() {
     
     return (
         <div>
-            <Canvas camera={cam }>
+            <Canvas camera={cam}>
                 <ambientLight intensity={Math.PI / 2} />
                 <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} />
                 <Histogram3D xCols={5} yCols={5} />
