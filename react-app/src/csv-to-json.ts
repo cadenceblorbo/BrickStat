@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import * as partNumbers from './part-numbers/index.ts'
 import * as csvPromise from './csv-promise.ts'
 
@@ -79,10 +79,10 @@ function getTrimmedPartNumber(fullID: string): string {
     return fullID.substring(0, index);
 }
 
-async function getPartDataByYear(): Promise<Map<string, Map<number, number>>> {
+async function getPartDataByYear(): Promise<Map<number, Map<string, number>>> {
     const idToYear = await getIDToYearMapping();
     
-    const partDataByYear: Map<string, Map<number, number>> = new Map();
+    const partDataByYear: Map<number, Map<string, number>> = new Map();
 
     const onInventoryPartsData = (row: InventoryPartsData) => {
         const trimmedNumber = getTrimmedPartNumber(row.part_num);
@@ -92,12 +92,12 @@ async function getPartDataByYear(): Promise<Map<string, Map<number, number>>> {
         if (dims === undefined || isNaN(year) || row.is_spare == "True") {
             return;
         }
-        if (!partDataByYear.has(dims)) {
-            partDataByYear.set(dims, new Map());
+        if (!partDataByYear.has(year)) {
+            partDataByYear.set(year, new Map());
         }
-        const currentPartMap = partDataByYear.get(dims);
+        const currentPartMap = partDataByYear.get(year);
         if (currentPartMap !== undefined) {
-            currentPartMap.set(year, (currentPartMap.get(year) ?? 0) + Number(row.quantity));
+            currentPartMap.set(dims, (currentPartMap.get(dims) ?? 0) + Number(row.quantity));
         }
     }
 

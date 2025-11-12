@@ -16,7 +16,7 @@ function HistogramColumn({
 }: HistogramColumnProps) {
     let usedPosition = meshProps?.position as Vector3 || new Vector3(0,0,0);
     usedPosition = new Vector3(usedPosition.x, usedPosition.y + height / 2, usedPosition.z);
-    const newProps = {...meshProps, position: usedPosition}
+    const newProps = { ...meshProps, position: usedPosition }
     return <mesh
         {...newProps}
     >
@@ -27,7 +27,7 @@ function HistogramColumn({
 interface Histogram3DProps {
     xCols: number;
     yCols: number;
-    data: {[key: string]: string};
+    data: {[key: string]: number};
     onDataPresent: (props: HistogramColumnProps, dataVal:unknown, i: number, j: number) => void;
     onDataAbsent: (props: HistogramColumnProps, i: number, j: number) => void;
     colWidthX?: number;
@@ -61,7 +61,7 @@ export function Histogram3D({
                 xWidth: colWidthX,
                 yWidth: colWidthY
             };
-            const key = (i + 1) + "," + (j + 1)
+            const key = (i + 1) + "x" + (j + 1)
             if (key in data) {
                 onDataPresent(props, data[key], i, j);
             } else {
