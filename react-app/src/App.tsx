@@ -14,6 +14,7 @@ function App() {
 
     const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     cam.position.z = 10
+    cam.position.y = 3
     cam.updateProjectionMatrix();
 
     return (<div>
