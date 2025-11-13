@@ -5,20 +5,20 @@ import { Canvas } from '@react-three/fiber'
 import { Histogram3D, type HistogramColumnProps } from "./Histogram3D"
 import CameraControls from "./CameraControls"
 
-export interface StatsCanvasProps {
-    data: { [key: string]: number }
+interface StatsCanvasProps {
+    data: { [key: string]: number },
+    cam: THREE.PerspectiveCamera,
     xCols: number,
     yCols: number
 }
 
 export function StatsCanvas({
     data,
+    cam,
     xCols,
     yCols
 }: StatsCanvasProps) {
-    const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    cam.position.z = 10
-    cam.updateProjectionMatrix();
+    
 
     const mat1 = new THREE.MeshStandardMaterial({ color: 'green' });
     const mat2 = new THREE.MeshStandardMaterial({ color: 'black', side: THREE.DoubleSide});
