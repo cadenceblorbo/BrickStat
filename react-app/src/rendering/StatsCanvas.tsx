@@ -40,13 +40,11 @@ export function StatsCanvas({
     
 
     return (
-        <div>
-            <Canvas camera={cam}>
-                <ambientLight intensity={Math.PI / 2} />
-                <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} />
-                <Histogram3D xCols={xCols} yCols={yCols} data={data} onDataPresent={onDataPresent} onDataAbsent={onDataAbsent} />
-                <CameraControls/>
-            </Canvas>
-        </div>
+        <Canvas className="stats-canvas" camera={cam}>
+            <ambientLight intensity={Math.PI / 2} />
+            <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} />
+            <Histogram3D xCols={xCols} yCols={yCols} data={data} onDataPresent={onDataPresent} onDataAbsent={onDataAbsent} />
+            <CameraControls/>
+        </Canvas>
     )
 }

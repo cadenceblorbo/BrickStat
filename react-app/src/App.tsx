@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { StatsCanvas } from './rendering/StatsCanvas.tsx'
 import * as JSONParse from './json-parser.ts'
 import * as THREE from 'three';
+import './App.css'
 
 function App() {
     const data = JSONParse.retrieveData()
@@ -16,9 +17,13 @@ function App() {
     cam.position.z = 10
     cam.position.y = 3
     cam.updateProjectionMatrix();
+    console.log(window.innerWidth)
+    console.log(window.innerHeight)
 
     return (<div>
-        <StatsCanvas xCols={data.xCols} yCols={data.yCols} cam={cam} data={data.cumulative[sliderVal]} />
+        <div className = "stats-canvas-parent">
+            <StatsCanvas xCols={data.xCols} yCols={data.yCols} cam={cam} data={data.cumulative[sliderVal]} />
+        </div>
         <input type="range" min={data.firstYear} max={data.lastYear} onChange={handleSliderChange} defaultValue={sliderVal}></input>        
     </div>)
 }
