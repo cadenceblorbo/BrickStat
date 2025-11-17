@@ -11,6 +11,12 @@
     height: 75vh;
 }
 
-.stats-canvas {
+.year-controls{
+    display:flex;
+    gap: 10px;
+    justify-content:center;
+}
 
+.year-slider{
+    width: 80vw;
 }
