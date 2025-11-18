@@ -1,5 +1,5 @@
 import {type ThreeElements, extend, type ThreeElement} from "@react-three/fiber";
-import { Vector3, MeshBasicMaterial, Euler} from "three";
+import { Vector3, MeshBasicMaterial} from "three";
 import { FontLoader, type FontData } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
 import Inter from '../assets/Inter_Regular.json'

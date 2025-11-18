@@ -26,7 +26,12 @@ function CameraControls() {
         orbitControlsRef.current.addEventListener('change', onOrbitChange)
         return () => orbitControlsRef.current.removeEventListener('change', onOrbitChange)
     });
-    return <orbitControls ref={orbitControlsRef} args={[camera, gl.domElement]} target={[0, 3, 0] } />
+    return <orbitControls
+        ref={orbitControlsRef}
+        args={[camera, gl.domElement]}
+        target={[0, 0, 0]}
+        maxPolarAngle={Math.PI/2}
+    />
 }
 
 export default CameraControls
