@@ -2,11 +2,17 @@
     margin: 0 auto;
     padding: 2rem;
     text-align: center;
+    --color-black: #151515;
+    --color-green: #1adb4e;
+    --color-gray: #A0A19F;
+    --base-opacity: 0.9;
+    --transition-time: 0.2s;
 }
 
 .stats-canvas-parent {
     border-style: solid;
-    border-color: black;
+    border-color: var(--color-gray);
+    border-radius: 6px;
     width: 100%;
     height: 75vh;
 }
@@ -15,8 +21,53 @@
     display:flex;
     gap: 10px;
     justify-content:center;
+    align-items:center;
 }
 
-.year-slider{
+.year-slider {
     width: 80vw;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--color-gray);
+    border-radius: 200px;
+    outline: none;
+    opacity: var(--base-opacity);
+    -webkit-transition: var(--transition-time);
+    transition: opacity var(--transition-time);
+    --thumb-color: var(--color-green);
+    --thumb-height: 150%;
+}
+
+.year-slider:hover{
+    opacity:1;
+}
+
+.year-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--thumb-color);
+    cursor: pointer;
+    height: var(--thumb-height);
+}
+
+.year-slider::-moz-range-thumb {
+    background: var(--thumb-color);
+    cursor: pointer;
+    height: var(--thumb-height);
+}
+
+.year-button {
+    background-color: var(--color-gray);
+    border: none;
+    color: var(--color-black);
+    border-radius: 6px;
+    opacity: var(--base-opacity);
+    -webkit-transition: var(--transition-time);
+    transition: opacity var(--transition-time);
+    font-size: 20px;
+    text-align:center;
+}
+
+.year-button:hover {
+    opacity:1;
 }

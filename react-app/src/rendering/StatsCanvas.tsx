@@ -20,9 +20,9 @@ export function StatsCanvas({
 }: StatsCanvasProps) {
     
 
-    const mat1 = new THREE.MeshStandardMaterial({ color: 'green' });
-    const mat2 = new THREE.MeshStandardMaterial({ color: 'black', side: THREE.DoubleSide});
-    const mat3 = new THREE.MeshStandardMaterial({ color: 'gray' });
+    const mat1 = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0x00Af4d) });
+    const mat2 = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0x42423e) });
+    const mat3 = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) });
 
     const onDataPresent = (props: HistogramColumnProps, dataVal: unknown): void => {
         props.height = Math.max(Math.log(Number(dataVal)), 0.1)

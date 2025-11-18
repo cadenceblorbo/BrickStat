@@ -33,9 +33,9 @@ function App() {
         </div>
         <div className = "year-controls">
             <input className="year-slider" type="range" min={data.firstYear} max={data.lastYear} onChange={sliderYearChange} value={yearVal}></input>
-            <button onClick={() => {buttonYearChange(-1)} }>{"←"}</button>
+            <button className ="year-button" onClick={() => {buttonYearChange(-1)} }>{"<"}</button>
             <p>{yearVal}</p>
-            <button onClick={() => { buttonYearChange(1) }}>{"→"}</button>
+            <button className="year-button" onClick={() => { buttonYearChange(1) }}>{">"}</button>
         </div>
         
     </div>)
