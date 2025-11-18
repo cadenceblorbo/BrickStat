@@ -10,7 +10,6 @@ class HistogramData {
 	constructor(
 		rawJSON: { [key: string]: { [key: string]: number } }
 	) {
-		console.log(rawJSON)
 		this.byYear = structuredClone(rawJSON);
 		this.cumulative = structuredClone(rawJSON);
 		this.firstYear = Infinity;
