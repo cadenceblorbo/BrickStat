@@ -35,7 +35,7 @@
     -webkit-transition: var(--transition-time);
     transition: opacity var(--transition-time);
     --thumb-color: var(--color-green);
-    --thumb-height: 150%;
+    --thumb-height: 175%;
 }
 
 .year-slider:hover{
@@ -48,12 +48,14 @@
     background: var(--thumb-color);
     cursor: pointer;
     height: var(--thumb-height);
+    border:none
 }
 
 .year-slider::-moz-range-thumb {
     background: var(--thumb-color);
     cursor: pointer;
     height: var(--thumb-height);
+    border-color: var(--color-black)
 }
 
 .year-button {
