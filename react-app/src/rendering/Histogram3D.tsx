@@ -14,11 +14,6 @@ extend({ TextGeometry })
 
 const loader = new FontLoader;
 const font = loader.parse(Inter as unknown as FontData);
-const textOptions: TextGeometryParameters = {
-    font: font,
-    size: 0.8,
-    depth: 0
-}
 const textMaterial = new MeshBasicMaterial();
 
 export interface HistogramColumnProps {
@@ -44,23 +39,92 @@ function HistogramColumn({
     </mesh>
 }
 
-interface Histogram3DProps {
-    xCols: number;
-    yCols: number;
-    data: {[key: string]: number};
-    onDataPresent: (props: HistogramColumnProps, dataVal:unknown, i: number, j: number) => void;
-    onDataAbsent: (props: HistogramColumnProps, i: number, j: number) => void;
-    colWidthX?: number;
-    colWidthY?: number;
-    defaultHeight?: number;
-    padding?: number;
-}
-
 function centeredTextGeometry(text: string, textOptions: TextGeometryParameters): TextGeometry {
     const textGeometry = new TextGeometry(text, textOptions);
     textGeometry.computeBoundingBox();
     textGeometry.center();
     return textGeometry;
+}
+
+interface Histogran3DLabelsProps {
+    xCols: number;
+    yCols: number;
+    colWidthX: number;
+    colWidthY: number;
+    xOffset: number;
+    yOffset: number;
+    padding: number;
+}
+
+function Histogram3DLabels({
+    xCols,
+    yCols,
+    colWidthX,
+    colWidthY,
+    xOffset,
+    yOffset,
+    padding
+}: Histogran3DLabelsProps) {
+    const xNumberOptions: TextGeometryParameters = {
+        font: font,
+        size: colWidthX * 0.8,
+        depth: 0
+    }
+
+    const yNumberOptions: TextGeometryParameters = {
+        font: font,
+        size: colWidthY * 0.8,
+        depth: 0
+    }
+
+    //create labels
+    const labels = [];
+    for (let i = 0; i < xCols; i++) {
+        const textGeometry = centeredTextGeometry(String(i + 1), xNumberOptions);
+        const textMesh = <mesh
+            key={i}
+            position={[
+                (xOffset + i) * (colWidthX + padding),
+                0,
+                (-yOffset + 1) * (colWidthY + padding)
+            ]}
+            rotation={[3 * Math.PI / 2, 0, Math.PI / 2]}
+            geometry={textGeometry}
+            {...{ material: textMaterial }}
+        >
+        </mesh>;
+        labels.push(textMesh);
+    }
+
+    for (let i = 0; i < yCols; i++) {
+        const textGeometry = centeredTextGeometry(String(i + 1), yNumberOptions);
+        const textMesh = <mesh
+            key={i + xCols}
+            position={[
+                (xOffset - 1) * (colWidthX + padding),
+                0,
+                (yOffset + (yCols - i - 1)) * (colWidthY + padding)
+            ]}
+            rotation={[3 * Math.PI / 2, 0, Math.PI / 2]}
+            geometry={textGeometry}
+            {...{ material: textMaterial }}
+        >
+        </mesh>;
+        labels.push(textMesh);
+    }
+    return <>{labels}</>
+}
+
+interface Histogram3DProps {
+    xCols: number;
+    yCols: number;
+    data: { [key: string]: number };
+    onDataPresent: (props: HistogramColumnProps, dataVal: unknown, i: number, j: number) => void;
+    onDataAbsent: (props: HistogramColumnProps, i: number, j: number) => void;
+    colWidthX?: number;
+    colWidthY?: number;
+    defaultHeight?: number;
+    padding?: number;
 }
 
 export function Histogram3D({
@@ -105,44 +169,16 @@ export function Histogram3D({
         }
     }
 
-    //create labels
-    const labels = [];
-    for (let i = 0; i < xCols; i++) {
-        const textGeometry = centeredTextGeometry(String(i+1), textOptions);
-        const textMesh = <mesh
-            key={xCols * yCols + i}
-            position={[
-                (xOffset + i) * (colWidthX + padding),
-                0,
-                (-yOffset+1) * (colWidthY + padding)
-            ]}
-            rotation={[3*Math.PI/2, 0, Math.PI/2]}
-            geometry = {textGeometry}
-            {...{ material: textMaterial }}
-        >
-        </mesh>;
-        labels.push(textMesh);
-    }
-
-    for (let i = 0; i < yCols; i++) {
-        const textGeometry = centeredTextGeometry(String(i + 1), textOptions);
-        const textMesh = <mesh
-            key={xCols * yCols + i + xCols}
-            position={[
-                (xOffset - 1) * (colWidthX + padding),
-                0,
-                (yOffset + (yCols - i - 1)) * (colWidthY + padding)
-            ]}
-            rotation={[3 * Math.PI / 2, 0, Math.PI / 2]}
-            geometry={textGeometry}
-            {...{ material: textMaterial }}
-        >
-        </mesh>;
-        labels.push(textMesh);
-    }
-
     return (<>
         {grid}
-        {labels}
+        <Histogram3DLabels
+            xCols={xCols}
+            yCols={yCols}
+            colWidthX={colWidthX}
+            colWidthY={colWidthY}
+            xOffset={xOffset}
+            yOffset={yOffset}
+            padding={padding}
+        />
     </>);
 }

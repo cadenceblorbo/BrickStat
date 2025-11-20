@@ -4,8 +4,11 @@ import * as JSONParse from './json-parser.ts'
 import * as THREE from 'three';
 import './App.css'
 
+
+
 function App() {
     const data = JSONParse.retrieveData()
+    console.log(data.dataset)
 
     const [yearVal, setYearVal] = useState(data.firstYear);
 
@@ -24,12 +27,10 @@ function App() {
     cam.position.z = 10
     cam.position.y = 3
     cam.updateProjectionMatrix();
-    console.log(window.innerWidth)
-    console.log(window.innerHeight)
 
     return (<div>
         <div className = "stats-canvas-parent">
-            <StatsCanvas xCols={data.xCols} yCols={data.yCols} cam={cam} data={data.cumulative[yearVal]} />
+            <StatsCanvas xCols={data.xCols} yCols={data.yCols} cam={cam} data={data.dataset[yearVal]} />
         </div>
         <div className = "year-controls">
             <input className="year-slider" type="range" min={data.firstYear} max={data.lastYear} onChange={sliderYearChange} value={yearVal}></input>
