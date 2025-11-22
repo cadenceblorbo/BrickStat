@@ -73,3 +73,18 @@
 .year-button:hover {
     opacity:1;
 }
+
+.dataset-selection-parent {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+.dataset-selection-parent select {
+    background: var(--color-black);
+    border-color: var(--color-gray);
+    border-radius: 6px;
+    margin-left: 6px;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}

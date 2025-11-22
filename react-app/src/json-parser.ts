@@ -1,4 +1,5 @@
-import brickHistory from './dataset/brick-history.json'
+import brickTotalHistory from './dataset/brick-total-history.json'
+import brickSetHistory from './dataset/brick-set-history.json'
 
 class HistogramData {
 	public dataset: { [key: string]: { [key: string]: number } };
@@ -75,9 +76,18 @@ class HistogramData {
 	
 }
 
-export function retrieveData(): {[key:string] : HistogramData} {
+export function retrieveData(): { [key: string]: { [key: string]: { [key: string]: HistogramData } } } {
 	return {
-		"Cumulative": new HistogramData(brickHistory, true),
-		"By Year": new HistogramData(brickHistory)
+		"Bricks": {
+			"Total Quantity": {
+				"Cumulative": new HistogramData(brickTotalHistory, true),
+				"By Year": new HistogramData(brickTotalHistory)
+			},
+			"Set Apperances": {
+				"Cumulative": new HistogramData(brickSetHistory, true),
+				"By Year": new HistogramData(brickSetHistory)
+			}
+		}
+		
 	}
 }

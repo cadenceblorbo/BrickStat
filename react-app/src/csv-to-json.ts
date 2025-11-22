@@ -8,7 +8,8 @@ const setsPath = "./dataset/sets.csv"
 const inventoriesPath = "./dataset/inventories.csv"
 const inventoryPartsPath = "./dataset/inventory_parts.csv"
 
-const brickOutputPath = "./dataset/brick-history.json"
+const brickTotalOutputPath = "./dataset/brick-total-history.json"
+const brickSetOutputPath = "./dataset/brick-set-history.json"
 
 type InventoriesData = {
     id: string;
@@ -79,7 +80,7 @@ function getTrimmedPartNumber(fullID: string): string {
     return fullID.substring(0, index);
 }
 
-async function getPartDataByYear(): Promise<Map<number, Map<string, number>>> {
+async function getPartDataByYear(useQuantity: boolean = true): Promise<Map<number, Map<string, number>>> {
     const idToYear = await getIDToYearMapping();
     
     const partDataByYear: Map<number, Map<string, number>> = new Map();
@@ -97,7 +98,12 @@ async function getPartDataByYear(): Promise<Map<number, Map<string, number>>> {
         }
         const currentPartMap = partDataByYear.get(year);
         if (currentPartMap !== undefined) {
-            currentPartMap.set(dims, (currentPartMap.get(dims) ?? 0) + Number(row.quantity));
+            if (useQuantity) {
+                currentPartMap.set(dims, (currentPartMap.get(dims) ?? 0) + Number(row.quantity));
+            } else {
+                currentPartMap.set(dims, (currentPartMap.get(dims) ?? 0) + 1);
+            }
+            
         }
     }
 
@@ -107,7 +113,8 @@ async function getPartDataByYear(): Promise<Map<number, Map<string, number>>> {
 }
 
 async function regenerateFiles() {
-    const partDataByYear = await getPartDataByYear();
+    const totalBrickData = await getPartDataByYear(true);
+    const setBrickData = await getPartDataByYear(false);
 
     const replacer = (key: unknown, value: unknown) => {
         if (value instanceof Map) {
@@ -117,7 +124,8 @@ async function regenerateFiles() {
     }
     //console.log(JSON.stringify(partDataByYear, replacer))
 
-    fs.writeFileSync(brickOutputPath, JSON.stringify(partDataByYear, replacer, 4))
+    fs.writeFileSync(brickTotalOutputPath, JSON.stringify(totalBrickData, replacer, 4))
+    fs.writeFileSync(brickSetOutputPath, JSON.stringify(setBrickData, replacer, 4))
 }
 
 regenerateFiles();

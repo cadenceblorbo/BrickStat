@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react'
 import { StatsCanvas } from './rendering/StatsCanvas.tsx'
 import LabeledDropdown from './react-components/LabeledDropdown.tsx'
+import { GraphTitle } from './graph-title.ts'
 import * as JSONParse from './json-parser.ts'
 import * as THREE from 'three';
 import './App.css'
@@ -12,8 +13,11 @@ function App() {
     console.log(data.dataset)
 
     const [chronoType, setChronoType] = useState("Cumulative");
-    const [yearVal, setYearVal] = useState(data[chronoType].firstYear);
-    const currentData = data[chronoType]
+    const [quantityType, setQuantityType] = useState("Total Quantity");
+    const [partType, setPartType] = useState("Bricks");
+    const currentData = data[partType][quantityType][chronoType];
+    const [yearVal, setYearVal] = useState(currentData.firstYear);
+    
 
     function sliderYearChange(event: { currentTarget: { value: string; }; }) {
         setYearVal(Number(event.currentTarget.value));
@@ -35,7 +39,7 @@ function App() {
 
     return (<div>
         <div className = "stats-canvas-parent">
-            <StatsCanvas xCols={currentData.xCols} yCols={currentData.yCols} cam={cam} data={currentData.dataset[yearVal]} xAxisLabel={"Stud Length"} yAxisLabel={"Stud Width"} headerLabel={"temp" } />
+            <StatsCanvas xCols={currentData.xCols} yCols={currentData.yCols} cam={cam} data={currentData.dataset[yearVal]} xAxisLabel={"Stud Length"} yAxisLabel={"Stud Width"} headerLabel={GraphTitle(partType, quantityType, chronoType)} />
         </div>
         <div className = "year-controls">
             <input className="year-slider" type="range" min={currentData.firstYear} max={currentData.lastYear} onChange={sliderYearChange} value={yearVal}></input>
@@ -43,7 +47,9 @@ function App() {
             <p>{yearVal}</p>
             <button className="year-button" onClick={() => { buttonYearChange(1) }}>{">"}</button>
         </div>
-        <div>
+        <div className="dataset-selection-parent">
+            <LabeledDropdown label={"Part Types"} values={["Bricks"]} selected={partType} onChange={setPartType} />
+            <LabeledDropdown label={"Quantity Format"} values={["Total Quantity", "Set Apperances"]} selected={quantityType} onChange={setQuantityType} />
             <LabeledDropdown label={"Time Format"} values={["Cumulative", "By Year"]} selected={chronoType} onChange={setChronoType} />
         </div>
         
