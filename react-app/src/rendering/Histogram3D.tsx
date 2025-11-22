@@ -86,7 +86,7 @@ function Histogram3DLabels({
     yCols,
     xAxisLabel,
     yAxisLabel,
-    hearderLabel,
+    headerLabel,
     colWidthX,
     colWidthY,
     xOffset,
@@ -99,6 +99,7 @@ function Histogram3DLabels({
     const rotationVertical: [number, number, number] = [3* Math.PI / 2, 0, Math.PI];
 
     const labels = [];
+    //x labels
     for (let i = 0; i < xCols; i++) {
         const numberPos: [number, number, number] = [
             (xOffset + i) * (colWidthX + padding),
@@ -108,6 +109,7 @@ function Histogram3DLabels({
         labels.push(makeTextMesh(String(i+1), xNumberSize, numberPos, rotationHorizontal, i));
     }
 
+    //y labels
     for (let i = 0; i < yCols; i++) {
         const numberPos: [number, number, number] = [
             (xOffset - 1) * (colWidthX + padding),
@@ -128,9 +130,15 @@ function Histogram3DLabels({
         0,
         (-yOffset + 1) * (colWidthY + padding)  + ((yNumberSize) + 0.5 * axisLabelSize)
     ]
+    const headerPos: [number, number, number] = [
+        xLabelPos[0] - (axisLabelSize * 2 + padding),
+        0,
+        0
+    ]
 
     labels.push(makeTextMesh(xAxisLabel, axisLabelSize, xLabelPos, rotationHorizontal, xCols + yCols));
     labels.push(makeTextMesh(yAxisLabel, axisLabelSize, yLabelPos, rotationVertical, xCols + yCols + 1));
+    labels.push(makeTextMesh(headerLabel, 2 * axisLabelSize, headerPos, rotationHorizontal, xCols + yCols + 2));
 
     return <>{labels}</>
 }
@@ -143,9 +151,9 @@ interface Histogram3DProps {
     data: { [key: string]: number };
     onDataPresent: (props: HistogramColumnProps, dataVal: unknown, i: number, j: number) => void;
     onDataAbsent: (props: HistogramColumnProps, i: number, j: number) => void;
-    xAxisLabel: string;
-    yAxisLabel: string;
-    headerLabel: string;
+    xAxisLabel?: string;
+    yAxisLabel?: string;
+    headerLabel?: string;
     colWidthX?: number;
     colWidthY?: number;
     defaultHeight?: number;

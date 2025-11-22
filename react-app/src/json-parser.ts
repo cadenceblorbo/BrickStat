@@ -8,13 +8,15 @@ class HistogramData {
 	public lastYear: number;
 	public isCumulative: boolean = false;
 	constructor(
-		rawJSON: { [key: string]: { [key: string]: number } }
+		rawJSON: { [key: string]: { [key: string]: number } },
+		isCumulative: boolean = false
 	) {
 		this.dataset = structuredClone(rawJSON);
 		this.firstYear = Infinity;
 		this.lastYear = -Infinity;
 		this.xCols = 0;
 		this.yCols = 0;
+		this.isCumulative = isCumulative;
 		this.computeYearBounds();
 
 		const encounteredParts = new Set<string>();
@@ -73,6 +75,9 @@ class HistogramData {
 	
 }
 
-export function retrieveData(): HistogramData {
-	return new HistogramData(brickHistory)
+export function retrieveData(): {[key:string] : HistogramData} {
+	return {
+		"Cumulative": new HistogramData(brickHistory, true),
+		"By Year": new HistogramData(brickHistory)
+	}
 }
