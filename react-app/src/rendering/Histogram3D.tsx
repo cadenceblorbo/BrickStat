@@ -1,8 +1,11 @@
-import {type ThreeElements, extend, type ThreeElement} from "@react-three/fiber";
+import { useState } from 'react';
+import { extend, type ThreeElement } from "@react-three/fiber";
 import { Vector3, MeshBasicMaterial} from "three";
-import { FontLoader, type FontData, Font } from 'three/addons/loaders/FontLoader.js';
+import { FontLoader, type FontData} from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
 import Inter from '../assets/Inter_Regular.json'
+
+import {HistogramColumn, AnimatedHistogramColumn, type AnimatedColumnProps, type HistogramColumnProps} from './HistogramColumn.tsx'
 
 declare module '@react-three/fiber' {
     interface ThreeElements {
@@ -15,29 +18,6 @@ extend({ TextGeometry })
 const loader = new FontLoader;
 const font = loader.parse(Inter as unknown as FontData);
 const textMaterial = new MeshBasicMaterial();
-
-export interface HistogramColumnProps {
-    meshProps: ThreeElements['mesh'];
-    height?: number;
-    xWidth?: number;
-    yWidth?: number;
-}
-
-function HistogramColumn({
-    meshProps,
-    height = 1,
-    xWidth = 1,
-    yWidth = 1,
-}: HistogramColumnProps) {
-    let usedPosition = meshProps?.position as Vector3 || new Vector3(0,0,0);
-    usedPosition = new Vector3(usedPosition.x, usedPosition.y + height / 2, usedPosition.z);
-    const newProps = { ...meshProps, position: usedPosition }
-    return <mesh
-        {...newProps}
-    >
-        <boxGeometry args={[xWidth, height, yWidth]} />
-    </mesh>
-}
 
 function centeredTextGeometry(text: string, textOptions: TextGeometryParameters): TextGeometry {
     const textGeometry = new TextGeometry(text, textOptions);
@@ -174,6 +154,8 @@ export function Histogram3D({
     defaultHeight = 1,
     padding = 0.5
 }: Histogram3DProps) {
+
+    const [pastHeight, setPastHeight] = useState(Array(xCols).fill(defaultHeight).map(() => new Array(yCols).fill(defaultHeight)));
     
     const xOffset = -(xCols - 1) / 2
     const yOffset = -(yCols - 1) / 2
@@ -185,20 +167,28 @@ export function Histogram3D({
             //grid position
             const xPos = (xOffset + i) * (colWidthX + padding)
             const yPos = (yOffset + (yCols-j-1)) * (colWidthY + padding)
-            const props: HistogramColumnProps = {
+            const props: AnimatedColumnProps = {
                 meshProps: { position: new Vector3(xPos, 0, yPos) },
-                height: defaultHeight,
+                heightStart: pastHeight[i][j],
+                heightTarget: pastHeight[i][j],
+                handleHeightChange: (h: number) => {
+                    const nextH = pastHeight.slice();
+                    nextH[i][j] = h;
+                    setPastHeight(nextH);
+                },
                 xWidth: colWidthX,
                 yWidth: colWidthY
             };
             const key = (i + 1) + "x" + (j + 1)
             if (key in data) {
                 onDataPresent(props, data[key], i, j);
+                props.heightTarget = data[key];
             } else {
                 onDataAbsent(props, i, j);
+                props.heightTarget = defaultHeight;
             }
 
-            grid.push(<HistogramColumn
+            grid.push(<AnimatedHistogramColumn
                 {...props}
                 key={i * yCols + j}
             />)
