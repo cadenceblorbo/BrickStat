@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { type ThreeElements, useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 
@@ -37,19 +38,14 @@ export function AnimatedHistogramColumn({
     meshProps,
     heightStart = 1,
     heightTarget = 1,
-    handleHeightChange = () => { },
     xWidth = 1,
     yWidth = 1,
 }: AnimatedColumnProps) {
 
-    let height = heightStart;
-    let e = 0;
+    const [height, setHeight] = useState(heightStart);
 
     useFrame(({ clock }) => {
-        e += clock.getDelta()
-        console.log(e)
-        height = Smoothstep(heightStart, heightTarget, e)
-        handleHeightChange(height)
+        setHeight(Smoothstep(heightStart, heightTarget, clock.elapsedTime));
     })
 
     const props: HistogramColumnProps = {
@@ -64,6 +60,6 @@ export function AnimatedHistogramColumn({
 function Smoothstep(from: number, to: number, t: number) {
     let t_real = Math.max(0, Math.min(1, t));
     t_real = t_real * t_real * (3.0 - 2.0 * t_real)
-    return from * t_real + to * (1-t_real)
+    return to * t_real + from * (1-t_real)
 }
 

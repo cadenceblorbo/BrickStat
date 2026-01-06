@@ -10,7 +10,6 @@ import './App.css'
 
 function App() {
     const data = JSONParse.retrieveData()
-    console.log(data.dataset)
 
     const [chronoType, setChronoType] = useState("Cumulative");
     const [quantityType, setQuantityType] = useState("Total Quantity");
