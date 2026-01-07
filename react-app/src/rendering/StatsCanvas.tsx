@@ -31,11 +31,11 @@ export function StatsCanvas({
     const mat3 = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) });
 
     const onDataPresent = (props: HistogramColumnProps, dataVal: unknown): void => {
-        //props.height = Math.max(Math.log(Number(dataVal)), 0.1)
+        props.height = Math.max(Math.log(Number(dataVal)), 0.1)
         props.meshProps.material = mat1
     }
     const onDataAbsent = (props: HistogramColumnProps, i: number, j: number): void => {
-        //props.height = 0.1
+        props.height = 0.1
         if (i > j) {
             props.meshProps.material = mat2
         } else {

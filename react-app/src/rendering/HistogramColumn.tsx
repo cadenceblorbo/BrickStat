@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect, useReducer } from 'react';
 import { type ThreeElements, useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 
@@ -32,7 +32,13 @@ export interface AnimatedColumnProps {
     handleHeightChange?: (h: number) => void;
     xWidth?: number;
     yWidth?: number;
+    t?: number;
+    flag?: string;
 }
+
+//function reducer(state, action) {
+//    switch
+//}
 
 export function AnimatedHistogramColumn({
     meshProps,
@@ -40,11 +46,32 @@ export function AnimatedHistogramColumn({
     heightTarget = 1,
     xWidth = 1,
     yWidth = 1,
+    t = 0,
+    flag = "",
 }: AnimatedColumnProps) {
+    const [time, setTime] = useState(0)
+    const [height, setHeight] = useState(heightStart)
+    const [oldHeight, setOldHeight] = useState(heightStart)
+    //const [heightReducer, dispatch] = useReducer(reducer, {old: heightStart, curr: heightStart})
+    useEffect(() => {
+        
+        setOldHeight(height);
+        setTime(0);
+    }, [heightTarget])
+    useFrame((state, delta) => {
+        if (time < 1) {
+            setHeight(height => height + Smoothstep(oldHeight, heightTarget, time + delta) - Smoothstep(oldHeight, heightTarget, time));
+            setTime(time => time + delta);
 
-    const [height, setHeight] = useState(heightStart);
+        }
+        
+        if (flag == "x") {
+            console.log(time + ", " + height + ", " + oldHeight + ", " + heightTarget);
+        }
+        
+        
+    })
 
-    
 
     const props: HistogramColumnProps = {
         meshProps: meshProps,
@@ -56,8 +83,8 @@ export function AnimatedHistogramColumn({
 }
 
 function Smoothstep(from: number, to: number, t: number) {
-    let t_real = Math.max(0, Math.min(1, t));
-    t_real = t_real * t_real * (3.0 - 2.0 * t_real)
+    const t_real = Math.max(0, Math.min(1, t));
+    //t_real = t_real * t_real * (3.0 - 2.0 * t_real)
     return to * t_real + from * (1-t_real)
 }
 

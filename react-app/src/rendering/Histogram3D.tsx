@@ -154,9 +154,8 @@ export function Histogram3D({
     defaultHeight = 1,
     padding = 0.5
 }: Histogram3DProps) {
-
-    let time = 0;
     
+
     const xOffset = -(xCols - 1) / 2
     const yOffset = -(yCols - 1) / 2
 
@@ -167,30 +166,30 @@ export function Histogram3D({
             //grid position
             const xPos = (xOffset + i) * (colWidthX + padding)
             const yPos = (yOffset + (yCols-j-1)) * (colWidthY + padding)
-            const props: HistogramColumnProps = {
+            const props: AnimatedColumnProps = {
                 meshProps: { position: new Vector3(xPos, 0, yPos) },
-                height: defaultHeight,
+                heightStart: defaultHeight,
+                heightTarget: defaultHeight,
                 xWidth: colWidthX,
                 yWidth: colWidthY
             };
             const key = (i + 1) + "x" + (j + 1)
             if (key in data) {
                 onDataPresent(props, data[key], i, j);
+                props.heightTarget = data[key];
             } else {
                 onDataAbsent(props, i, j);
             }
+            if (i ==9 && j == 19) {
+                props.flag = "x"
+            }
 
-            grid.push(<HistogramColumn
+            grid.push(<AnimatedHistogramColumn
                 {...props}
                 key={i * yCols + j}
             />)
         }
     }
-
-    useFrame(({ clock }) => {
-        console.log(time);
-        time += clock.getDelta();
-    });
 
     return (<>
         {grid}
