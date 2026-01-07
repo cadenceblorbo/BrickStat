@@ -44,9 +44,7 @@ export function AnimatedHistogramColumn({
 
     const [height, setHeight] = useState(heightStart);
 
-    useFrame(({ clock }) => {
-        setHeight(Smoothstep(heightStart, heightTarget, clock.elapsedTime));
-    })
+    
 
     const props: HistogramColumnProps = {
         meshProps: meshProps,

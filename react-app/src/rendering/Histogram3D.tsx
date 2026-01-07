@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { extend, type ThreeElement } from "@react-three/fiber";
+import { extend, type ThreeElement, useFrame } from "@react-three/fiber";
 import { Vector3, MeshBasicMaterial} from "three";
 import { FontLoader, type FontData} from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
@@ -155,7 +155,7 @@ export function Histogram3D({
     padding = 0.5
 }: Histogram3DProps) {
 
-    const [pastHeight, setPastHeight] = useState(Array(xCols).fill(defaultHeight).map(() => new Array(yCols).fill(defaultHeight)));
+    let time = 0;
     
     const xOffset = -(xCols - 1) / 2
     const yOffset = -(yCols - 1) / 2
@@ -167,33 +167,30 @@ export function Histogram3D({
             //grid position
             const xPos = (xOffset + i) * (colWidthX + padding)
             const yPos = (yOffset + (yCols-j-1)) * (colWidthY + padding)
-            const props: AnimatedColumnProps = {
+            const props: HistogramColumnProps = {
                 meshProps: { position: new Vector3(xPos, 0, yPos) },
-                heightStart: pastHeight[i][j],
-                heightTarget: pastHeight[i][j],
-                handleHeightChange: (h: number) => {
-                    const nextH = pastHeight.slice();
-                    nextH[i][j] = h;
-                    setPastHeight(nextH);
-                },
+                height: defaultHeight,
                 xWidth: colWidthX,
                 yWidth: colWidthY
             };
             const key = (i + 1) + "x" + (j + 1)
             if (key in data) {
                 onDataPresent(props, data[key], i, j);
-                props.heightTarget = data[key];
             } else {
                 onDataAbsent(props, i, j);
-                props.heightTarget = defaultHeight;
             }
 
-            grid.push(<AnimatedHistogramColumn
+            grid.push(<HistogramColumn
                 {...props}
                 key={i * yCols + j}
             />)
         }
     }
+
+    useFrame(({ clock }) => {
+        console.log(time);
+        time += clock.getDelta();
+    });
 
     return (<>
         {grid}
@@ -210,4 +207,10 @@ export function Histogram3D({
             padding={padding}
         />
     </>);
+}
+
+function Smoothstep(from: number, to: number, t: number) {
+    let t_real = Math.max(0, Math.min(1, t));
+    t_real = t_real * t_real * (3.0 - 2.0 * t_real)
+    return to * t_real + from * (1 - t_real)
 }
