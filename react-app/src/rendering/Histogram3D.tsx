@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { extend, type ThreeElement, useFrame } from "@react-three/fiber";
 import { Vector3, MeshBasicMaterial} from "three";
 import { FontLoader, type FontData} from 'three/addons/loaders/FontLoader.js';
@@ -154,7 +154,8 @@ export function Histogram3D({
     defaultHeight = 1,
     padding = 0.5
 }: Histogram3DProps) {
-    
+
+    const heights = useRef(Array<number>(xCols).fill(defaultHeight).map(() => new Array<number>(yCols).fill(defaultHeight)));
 
     const xOffset = -(xCols - 1) / 2
     const yOffset = -(yCols - 1) / 2
@@ -165,23 +166,27 @@ export function Histogram3D({
         for (let j = 0; j < yCols; j++) {
             //grid position
             const xPos = (xOffset + i) * (colWidthX + padding)
-            const yPos = (yOffset + (yCols-j-1)) * (colWidthY + padding)
+            const yPos = (yOffset + (yCols - j - 1)) * (colWidthY + padding)
+            const key = (i + 1) + "x" + (j + 1)
             const props: AnimatedColumnProps = {
                 meshProps: { position: new Vector3(xPos, 0, yPos) },
-                heightStart: defaultHeight,
-                heightTarget: defaultHeight,
+                heightStart: heights.current[i][j],
+                heightTarget: (key in data) ? data[key] : defaultHeight,
+                handleHeightChange: (h: number) => {
+                    heights.current[i][j] = h;
+                },
                 xWidth: colWidthX,
                 yWidth: colWidthY
             };
-            const key = (i + 1) + "x" + (j + 1)
+            
             if (key in data) {
                 onDataPresent(props, data[key], i, j);
-                props.heightTarget = data[key];
             } else {
                 onDataAbsent(props, i, j);
             }
-            if (i ==9 && j == 19) {
-                props.flag = "x"
+
+            if (i == 9 && j == 19) {
+                props.flag = 'x';
             }
 
             grid.push(<AnimatedHistogramColumn
@@ -206,10 +211,4 @@ export function Histogram3D({
             padding={padding}
         />
     </>);
-}
-
-function Smoothstep(from: number, to: number, t: number) {
-    let t_real = Math.max(0, Math.min(1, t));
-    t_real = t_real * t_real * (3.0 - 2.0 * t_real)
-    return to * t_real + from * (1 - t_real)
 }
