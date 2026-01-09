@@ -26,11 +26,13 @@ export function HistogramColumn({
 }
 
 export interface AnimatedColumnProps {
+    iPos: number,
+    jPos: number,
     meshProps: ThreeElements['mesh'];
     heightStart?: number;
     heightTarget?: number;
     trackHeightChange?: (h: number) => void;
-    materialChange?: (mat: Material | Material[], height: number, isEmpty: boolean) => void;
+    materialChange?: (mat: Material | Material[], height: number, row: number, col:number, isEmpty: boolean) => void;
     animSpeed?: number;
     xWidth?: number;
     yWidth?: number;
@@ -43,6 +45,8 @@ export interface AnimatedColumnProps {
 //}
 
 export function AnimatedHistogramColumn({
+    iPos,
+    jPos,
     meshProps,
     heightStart = 1,
     heightTarget = 1,
@@ -73,7 +77,7 @@ export function AnimatedHistogramColumn({
             meshRef.current.position.y = height / 2 + ((meshProps?.position as Vector3).y as number || 0);
             meshRef.current.scale.y = height;
 
-            materialChange(meshRef.current.material, height, isEmpty)
+            materialChange(meshRef.current.material, height, iPos, jPos, isEmpty)
             trackHeightChange(height);
         }
     })

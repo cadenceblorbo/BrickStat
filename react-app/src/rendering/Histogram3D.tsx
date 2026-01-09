@@ -129,10 +129,9 @@ interface Histogram3DProps {
     xCols: number;
     yCols: number;
     data: { [key: string]: number };
-    onDataPresent: (props: HistogramColumnProps, dataVal: unknown, i: number, j: number) => void;
-    onDataAbsent: (props: HistogramColumnProps, i: number, j: number) => void;
     heightScaling?: (dataVal: number) => number;
-    materialChange?: (mat: Material | Material[], height: number, isEmpty: boolean) => void;
+    material: Material;
+    materialChange?: (mat: Material | Material[], height: number, row:number, col:number, isEmpty: boolean) => void;
     xAxisLabel?: string;
     yAxisLabel?: string;
     headerLabel?: string;
@@ -146,9 +145,8 @@ export function Histogram3D({
     xCols,
     yCols,
     data,
-    onDataPresent,
-    onDataAbsent,
     heightScaling = (dataVal) => { return dataVal },
+    material,
     materialChange = () => { },
     xAxisLabel = "X Axis",
     yAxisLabel = "Y Axis",
@@ -164,6 +162,8 @@ export function Histogram3D({
     const xOffset = -(xCols - 1) / 2
     const yOffset = -(yCols - 1) / 2
 
+    
+
     //create columns
     const grid = [];
     for (let i = 0; i < xCols; i++) {
@@ -173,7 +173,9 @@ export function Histogram3D({
             const yPos = (yOffset + (yCols - j - 1)) * (colWidthY + padding)
             const key = (i + 1) + "x" + (j + 1)
             const props: AnimatedColumnProps = {
-                meshProps: { position: new Vector3(xPos, 0, yPos) },
+                iPos: i,
+                jPos: j,
+                meshProps: { position: new Vector3(xPos, 0, yPos), material: material },
                 heightStart: heights.current[i][j],
                 heightTarget: heightScaling((key in data) ? data[key] : defaultHeight),
                 trackHeightChange: (h: number) => {
@@ -184,12 +186,6 @@ export function Histogram3D({
                 yWidth: colWidthY,
                 isEmpty: key in data
             };
-            
-            if (key in data) {
-                onDataPresent(props, data[key], i, j);
-            } else {
-                onDataAbsent(props, i, j);
-            }
 
             if (i == 9 && j == 19) {
                 props.flag = 'x';
