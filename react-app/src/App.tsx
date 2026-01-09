@@ -1,12 +1,14 @@
-﻿import { useState } from 'react'
+﻿import { useState, useRef } from 'react'
 import * as THREE from 'three';
 
 import { StatsCanvas } from './rendering/StatsCanvas.tsx'
 import LabeledDropdown from './react-components/LabeledDropdown.tsx'
 import { GraphTitle } from './graph-title.ts'
 import * as JSONParse from './json-parser.ts'
-import { colorLerp3 } from  './utils/ColorUtil.ts'
+import { colorLerp3 } from './utils/ColorUtil.ts'
+import CameraControls from "./rendering/CameraControls.tsx"
 import './App.css'
+import type { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
@@ -28,7 +30,11 @@ function App() {
     const [scalingType, setScalingType] = useState("Logarithmic")
     const currentData = data[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
+    const camControlsRef = useRef<OrbitControls>(null!);
     
+    function buttonResetCamera() {
+        camControlsRef.current.reset();
+    }
 
     function sliderYearChange(event: { currentTarget: { value: string; }; }) {
         setYearVal(Number(event.currentTarget.value));
@@ -103,6 +109,7 @@ function App() {
                 heightScaling={heightScaling}
                 barMat={new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) })}
                 materialChange={materialChange}
+                cameraControls={<CameraControls ref={camControlsRef }></CameraControls>}
             />
         </div>
         <div className = "year-controls">

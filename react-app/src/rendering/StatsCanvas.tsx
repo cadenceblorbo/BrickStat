@@ -1,24 +1,25 @@
 import * as THREE from 'three';
-import { Canvas } from '@react-three/fiber'
-//import CameraToy from "./CameraToy"
-//import InteractableBoxMesh from "./InteractableBoxMesh"
+import { Canvas, type ThreeElement } from '@react-three/fiber'
+import { OrbitControls } from 'three/addons'
 import { Histogram3D, type HistogramColumnProps } from "./Histogram3D"
-import CameraControls from "./CameraControls"
+import CameraControls from"./CameraControls"
+import type { ReactElement } from 'react';
 
 
 
 interface StatsCanvasProps {
-    data: { [key: string]: number },
-    cam: THREE.PerspectiveCamera,
-    xCols: number,
-    yCols: number,
-    xAxisLabel: string,
-    yAxisLabel: string,
-    headerLabel: string,
-    defaultHeight?: number,
-    heightScaling?: (dataVal: number) => number
-    barMat?: THREE.Material
+    data: { [key: string]: number };
+    cam: THREE.PerspectiveCamera;
+    xCols: number;
+    yCols: number;
+    xAxisLabel: string;
+    yAxisLabel: string;
+    headerLabel: string;
+    defaultHeight?: number;
+    heightScaling?: (dataVal: number) => number;
+    barMat?: THREE.Material;
     materialChange?: (mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
+    cameraControls?: ReactElement
 }
 
 export function StatsCanvas({
@@ -32,9 +33,14 @@ export function StatsCanvas({
     defaultHeight = 0.1,
     heightScaling = (dataVal: number) => { return dataVal },
     barMat = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) }),
-    materialChange = () => { }
+    materialChange = () => { },
+    cameraControls
 }: StatsCanvasProps) {
 
+    if (cameraControls === undefined) {
+        cameraControls = <CameraControls></CameraControls>
+    }
+    
     return (
         <Canvas className="stats-canvas" camera={cam}>
             <ambientLight intensity={Math.PI / 2} />
@@ -51,7 +57,7 @@ export function StatsCanvas({
                 headerLabel={headerLabel}
                 defaultHeight={defaultHeight}
             />
-            <CameraControls/>
+            {cameraControls}
         </Canvas>
     )
 }

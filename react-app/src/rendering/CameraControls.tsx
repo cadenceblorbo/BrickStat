@@ -1,6 +1,6 @@
 import { OrbitControls } from 'three/addons'
 import { type ThreeElement, useThree, extend } from '@react-three/fiber'
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, RefObject, createRef } from 'react'
 import {PerspectiveCamera } from 'three'
 
 declare module '@react-three/fiber' {
@@ -11,8 +11,13 @@ declare module '@react-three/fiber' {
 
 extend({OrbitControls})
 
-function CameraControls() {
-    const orbitControlsRef = useRef<OrbitControls>(null!);
+interface CameraControlProps {
+    ref?: RefObject<OrbitControls>
+}
+
+function CameraControls({
+    ref 
+}: CameraControlProps) {
     const { invalidate, camera, gl } = useThree()
     useEffect(() => {
         const onOrbitChange = () => {
@@ -23,12 +28,15 @@ function CameraControls() {
             invalidate()
             
         }
-        orbitControlsRef.current.addEventListener('change', onOrbitChange)
-        const orbitRefVal = orbitControlsRef.current
-        return () => orbitRefVal.removeEventListener('change', onOrbitChange)
+        if (ref !== undefined) {
+            ref.current.addEventListener('change', onOrbitChange)
+            const orbitRefVal = ref.current
+            return () => orbitRefVal.removeEventListener('change', onOrbitChange)
+        }
+        
     });
     return <orbitControls
-        ref={orbitControlsRef}
+        ref={ref}
         args={[camera, gl.domElement]}
         target={[0, 0, 0]}
         maxPolarAngle={Math.PI/2}
