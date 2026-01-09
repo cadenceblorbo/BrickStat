@@ -114,7 +114,7 @@ function App() {
         </div>
         <div className = "year-controls">
             <input className="year-slider" type="range" min={currentData.firstYear} max={currentData.lastYear} onChange={sliderYearChange} value={yearVal}></input>
-            <button className ="year-button" onClick={() => {buttonYearChange(-1)} }>{"<"}</button>
+            <button className="year-button" onClick={() => {buttonYearChange(-1)} }>{"<"}</button>
             <p>{yearVal}</p>
             <button className="year-button" onClick={() => { buttonYearChange(1) }}>{">"}</button>
         </div>
@@ -123,6 +123,7 @@ function App() {
             <LabeledDropdown label={"Quantity Format"} values={["Total Quantity", "Set Apperances"]} selected={quantityType} onChange={setQuantityType} />
             <LabeledDropdown label={"Time Format"} values={["Cumulative", "By Year"]} selected={chronoType} onChange={setChronoType} />
             <LabeledDropdown label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
+            <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
         
     </div>)
