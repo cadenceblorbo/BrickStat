@@ -187,7 +187,7 @@ export function Histogram3D({
                 isEmpty: !(key in data)
             };
 
-            if (i == 9 && j == 19) {
+            if (i == 0 && j == 1) {
                 props.flag = 'x';
             }
 

@@ -1,14 +1,23 @@
 ﻿import { useState } from 'react'
+import * as THREE from 'three';
+
 import { StatsCanvas } from './rendering/StatsCanvas.tsx'
 import LabeledDropdown from './react-components/LabeledDropdown.tsx'
 import { GraphTitle } from './graph-title.ts'
 import * as JSONParse from './json-parser.ts'
-import * as THREE from 'three';
+import { colorLerp3 } from  './utils/ColorUtil.ts'
 import './App.css'
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
 const DEFAULT_BAR_HEIGHT = 0.1;
+
+//73dca1
+//4b9f4a
+//237841
+const COLOR_1 = new THREE.Color().setHex(0x60ba76);
+const COLOR_2 = new THREE.Color().setHex(0x4b9f4a);
+const COLOR_3 = new THREE.Color().setHex(0x237841);
 
 function App() {
     const data = JSONParse.retrieveData()
@@ -51,13 +60,25 @@ function App() {
         return Math.max(DEFAULT_BAR_HEIGHT, dataVal);
     }
 
+    
     function materialChange(mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void {
         if (isEmpty) {
             if (row > col) {
                 (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x42423e);
             } else {
-                (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0xA0A19f);
+                (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x6c6e68);
             }
+        }
+        else {
+            const heightDiv = (scalingType === "Linear") ? 20 : 6;
+            const midpoint = (scalingType === "Linear") ? 0.25 : 0.8;
+            (mat as THREE.MeshStandardMaterial).color = colorLerp3(
+                COLOR_1,
+                COLOR_2,
+                COLOR_3,
+                height/heightDiv,
+                midpoint
+            )
         }
     }
 

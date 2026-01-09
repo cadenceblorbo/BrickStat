@@ -24,7 +24,8 @@ function CameraControls() {
             
         }
         orbitControlsRef.current.addEventListener('change', onOrbitChange)
-        return () => orbitControlsRef.current.removeEventListener('change', onOrbitChange)
+        const orbitRefVal = orbitControlsRef.current
+        return () => orbitRefVal.removeEventListener('change', onOrbitChange)
     });
     return <orbitControls
         ref={orbitControlsRef}

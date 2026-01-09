@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useReducer } from 'react';
 import { type ThreeElements, useFrame} from "@react-three/fiber";
 import { Vector3, Mesh, Material } from "three";
 
+import { Smoothstep } from "../utils/MathUtil";
+
 export interface HistogramColumnProps {
     meshProps: ThreeElements['mesh'];
     height?: number;
@@ -84,6 +86,9 @@ export function AnimatedHistogramColumn({
 
             materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty)
             trackHeightChange(height);
+            if (flag === "x") {
+                console.log(height)
+            }
         }
     })
 
@@ -97,9 +102,5 @@ export function AnimatedHistogramColumn({
     </mesh>
 }
 
-function Smoothstep(from: number, to: number, t: number) {
-    let t_real = Math.max(0, Math.min(1, t));
-    t_real = t_real * t_real * (3.0 - 2.0 * t_real)
-    return to * t_real + from * (1-t_real)
-}
+
 

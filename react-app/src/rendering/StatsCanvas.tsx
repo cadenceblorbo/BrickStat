@@ -18,7 +18,7 @@ interface StatsCanvasProps {
     defaultHeight?: number,
     heightScaling?: (dataVal: number) => number
     barMat?: THREE.Material
-    materialChange?: (mat: Material | Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
+    materialChange?: (mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
 }
 
 export function StatsCanvas({
