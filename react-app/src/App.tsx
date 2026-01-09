@@ -88,10 +88,10 @@ function App() {
         }
     }
 
-    const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    cam.position.x = 7
-    cam.position.y = 30
-    cam.updateProjectionMatrix();
+    const perspectiveCam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    perspectiveCam.position.x = 7
+    perspectiveCam.position.y = 30
+    perspectiveCam.updateProjectionMatrix();
 
     
 
@@ -100,7 +100,7 @@ function App() {
             <StatsCanvas
                 xCols={currentData.xCols}
                 yCols={currentData.yCols}
-                cam={cam}
+                cam={perspectiveCam}
                 data={currentData.dataset[yearVal]}
                 xAxisLabel={"Stud Length"}
                 yAxisLabel={"Stud Width"}
