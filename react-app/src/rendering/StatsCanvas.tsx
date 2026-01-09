@@ -32,28 +32,15 @@ export function StatsCanvas({
 
     const materialChange = (mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean) : void => {
         if(row > col) {
-            (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0xA0A19F);
+            (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x42423e);
         }
     }
-
-    const onDataPresent = (props: HistogramColumnProps, dataVal: unknown): void => {
-        props.meshProps.material = mat1
-    }
-    const onDataAbsent = (props: HistogramColumnProps, i: number, j: number): void => {
-        if (i > j) {
-            props.meshProps.material = mat2
-        } else {
-            props.meshProps.material = mat3
-        }
-    }
-
-    
 
     return (
         <Canvas className="stats-canvas" camera={cam}>
             <ambientLight intensity={Math.PI / 2} />
             <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} />
-            <Histogram3D xCols={xCols} yCols={yCols} data={data} material={mat2} materialChange={materialChange } xAxisLabel={xAxisLabel} yAxisLabel={yAxisLabel} headerLabel={headerLabel} />
+            <Histogram3D xCols={xCols} yCols={yCols} data={data} material={mat3} materialChange={materialChange } xAxisLabel={xAxisLabel} yAxisLabel={yAxisLabel} headerLabel={headerLabel} />
             <CameraControls/>
         </Canvas>
     )
