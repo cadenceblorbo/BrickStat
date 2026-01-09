@@ -177,14 +177,14 @@ export function Histogram3D({
                 col: j,
                 meshProps: { position: new Vector3(xPos, 0, yPos), material: material.clone() },
                 heightStart: heights.current[i][j],
-                heightTarget: heightScaling((key in data) ? data[key] : defaultHeight),
+                heightTarget: (key in data) ? heightScaling(data[key]) : defaultHeight,
                 trackHeightChange: (h: number) => {
                     heights.current[i][j] = h;
                 },
                 materialChange: materialChange,
                 xWidth: colWidthX,
                 yWidth: colWidthY,
-                isEmpty: key in data
+                isEmpty: !(key in data)
             };
 
             if (i == 9 && j == 19) {
