@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useReducer } from 'react';
-import { type ThreeElements, useFrame, useThree } from "@react-three/fiber";
-import { Vector3, Mesh } from "three";
+import { type ThreeElements, useFrame} from "@react-three/fiber";
+import { Vector3, Mesh, Material } from "three";
 
 export interface HistogramColumnProps {
     meshProps: ThreeElements['mesh'];
@@ -29,10 +29,12 @@ export interface AnimatedColumnProps {
     meshProps: ThreeElements['mesh'];
     heightStart?: number;
     heightTarget?: number;
-    handleHeightChange?: (h: number) => void;
+    trackHeightChange?: (h: number) => void;
+    materialChange?: (mat: Material | Material[], height: number, isEmpty: boolean) => void;
     animSpeed?: number;
     xWidth?: number;
     yWidth?: number;
+    isEmpty: boolean;
     flag?: string;
 }
 
@@ -44,10 +46,12 @@ export function AnimatedHistogramColumn({
     meshProps,
     heightStart = 1,
     heightTarget = 1,
-    handleHeightChange = () => { },
+    trackHeightChange = () => { },
+    materialChange = () => { },
     animSpeed = 0.1,
     xWidth = 1,
     yWidth = 1,
+    isEmpty,
     flag = "",
 }: AnimatedColumnProps) {
     if (animSpeed === 0) {
@@ -69,7 +73,8 @@ export function AnimatedHistogramColumn({
             meshRef.current.position.y = height / 2 + ((meshProps?.position as Vector3).y as number || 0);
             meshRef.current.scale.y = height;
 
-            handleHeightChange(height);
+            materialChange(meshRef.current.material, height, isEmpty)
+            trackHeightChange(height);
         }
     })
 

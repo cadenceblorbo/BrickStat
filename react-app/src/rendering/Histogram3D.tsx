@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { extend, type ThreeElement, useFrame } from "@react-three/fiber";
-import { Vector3, MeshBasicMaterial} from "three";
+import { Vector3, MeshBasicMaterial, type Material } from "three";
 import { FontLoader, type FontData} from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
 import Inter from '../assets/Inter_Regular.json'
@@ -131,6 +131,8 @@ interface Histogram3DProps {
     data: { [key: string]: number };
     onDataPresent: (props: HistogramColumnProps, dataVal: unknown, i: number, j: number) => void;
     onDataAbsent: (props: HistogramColumnProps, i: number, j: number) => void;
+    heightScaling?: (dataVal: number) => number;
+    materialChange?: (mat: Material | Material[], height: number, isEmpty: boolean) => void;
     xAxisLabel?: string;
     yAxisLabel?: string;
     headerLabel?: string;
@@ -146,12 +148,14 @@ export function Histogram3D({
     data,
     onDataPresent,
     onDataAbsent,
+    heightScaling = (dataVal) => { return dataVal },
+    materialChange = () => { },
     xAxisLabel = "X Axis",
     yAxisLabel = "Y Axis",
     headerLabel = "Histogram3D",
     colWidthX = 1,
     colWidthY = 1,
-    defaultHeight = 1,
+    defaultHeight = 0.1,
     padding = 0.5
 }: Histogram3DProps) {
 
@@ -171,12 +175,14 @@ export function Histogram3D({
             const props: AnimatedColumnProps = {
                 meshProps: { position: new Vector3(xPos, 0, yPos) },
                 heightStart: heights.current[i][j],
-                heightTarget: (key in data) ? data[key] : defaultHeight,
-                handleHeightChange: (h: number) => {
+                heightTarget: heightScaling((key in data) ? data[key] : defaultHeight),
+                trackHeightChange: (h: number) => {
                     heights.current[i][j] = h;
                 },
+                materialChange: materialChange,
                 xWidth: colWidthX,
-                yWidth: colWidthY
+                yWidth: colWidthY,
+                isEmpty: key in data
             };
             
             if (key in data) {
