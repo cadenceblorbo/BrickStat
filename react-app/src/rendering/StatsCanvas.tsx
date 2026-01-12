@@ -9,7 +9,7 @@ import type { ReactElement } from 'react';
 
 interface StatsCanvasProps {
     data: { [key: string]: number };
-    cam: THREE.PerspectiveCamera;
+    cam: THREE.Camera;
     xCols: number;
     yCols: number;
     xAxisLabel: string;
@@ -38,7 +38,7 @@ export function StatsCanvas({
 }: StatsCanvasProps) {
 
     if (cameraControls === undefined) {
-        cameraControls = <CameraControls></CameraControls>
+        cameraControls = <></>
     }
     
     return (

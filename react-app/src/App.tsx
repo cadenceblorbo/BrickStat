@@ -9,6 +9,7 @@ import { colorLerp3 } from './utils/ColorUtil.ts'
 import CameraControls from "./rendering/CameraControls.tsx"
 import './App.css'
 import type { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { degToRad } from 'three/src/math/MathUtils.js';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
@@ -89,9 +90,15 @@ function App() {
     }
 
     const perspectiveCam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    perspectiveCam.position.x = 7
+    perspectiveCam.position.z = 7
     perspectiveCam.position.y = 30
     perspectiveCam.updateProjectionMatrix();
+
+    const orthographicCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10000);
+    orthographicCam.position.y = 9000;
+    orthographicCam.rotation.x = degToRad(-90);
+    //orthographicCam.rotation.z = degToRad(90);
+    orthographicCam.zoom = Math.sqrt(Math.min(window.innerWidth, window.innerHeight)/2)/1.5;
 
     
 
@@ -100,7 +107,7 @@ function App() {
             <StatsCanvas
                 xCols={currentData.xCols}
                 yCols={currentData.yCols}
-                cam={perspectiveCam}
+                cam={orthographicCam}
                 data={currentData.dataset[yearVal]}
                 xAxisLabel={"Stud Length"}
                 yAxisLabel={"Stud Width"}

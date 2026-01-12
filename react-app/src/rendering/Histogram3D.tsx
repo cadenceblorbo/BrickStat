@@ -75,16 +75,18 @@ function Histogram3DLabels({
 }: Histogran3DLabelsProps) {
     const xNumberSize = colWidthX * 0.8;
     const yNumberSize = colWidthY * 0.8;
-    const rotationHorizontal: [number, number, number] = [3 * Math.PI / 2, 0, Math.PI / 2];
-    const rotationVertical: [number, number, number] = [3* Math.PI / 2, 0, Math.PI];
+    //const rotationHorizontal: [number, number, number] = [3 * Math.PI / 2, 0, Math.PI / 2];
+    //const rotationVertical: [number, number, number] = [3* Math.PI / 2, 0, Math.PI];
+    const rotationHorizontal: [number, number, number] = [3*Math.PI / 2, 0, 0];
+    const rotationVertical: [number, number, number] = [3 * Math.PI / 2, 0, Math.PI/2];
 
     const labels = [];
     //x labels
     for (let i = 0; i < xCols; i++) {
         const numberPos: [number, number, number] = [
-            (xOffset + i) * (colWidthX + padding),
+            (yOffset - 1) * (colWidthY + padding),
             0,
-            (-yOffset + 1) * (colWidthY + padding)
+            (xOffset + i) * (colWidthX + padding)
         ]
         labels.push(makeTextMesh(String(i+1), xNumberSize, numberPos, rotationHorizontal, i));
     }
@@ -92,28 +94,28 @@ function Histogram3DLabels({
     //y labels
     for (let i = 0; i < yCols; i++) {
         const numberPos: [number, number, number] = [
-            (xOffset - 1) * (colWidthX + padding),
+            (yOffset + i) * (colWidthY + padding),
             0,
-            (yOffset + (yCols - i - 1)) * (colWidthY + padding)
+            (xOffset - 1) * (colWidthX + padding)
         ]
         labels.push(makeTextMesh(String(i+1), yNumberSize, numberPos, rotationHorizontal, i+xCols));
     }
 
     const axisLabelSize = (colWidthX + colWidthY) / 2;
     const xLabelPos: [number, number, number] = [
-        (xOffset - 1) * (colWidthX + padding) - ((xNumberSize) + 0.5 * axisLabelSize),
         0,
-        0
+        0,
+        (xOffset - 1) * (colWidthX + padding) - ((xNumberSize) + 0.5 * axisLabelSize)
     ]
     const yLabelPos: [number, number, number] = [
-        0,
-        0,
-        (-yOffset + 1) * (colWidthY + padding)  + ((yNumberSize) + 0.5 * axisLabelSize)
-    ]
-    const headerPos: [number, number, number] = [
-        xLabelPos[0] - (axisLabelSize * 2 + padding),
+        (yOffset - 1) * (colWidthY + padding) - ((yNumberSize) + 0.5 * axisLabelSize),
         0,
         0
+    ]
+    const headerPos: [number, number, number] = [
+        0,
+        0,
+        xLabelPos[2] - (axisLabelSize * 2 + padding)
     ]
 
     labels.push(makeTextMesh(xAxisLabel, axisLabelSize, xLabelPos, rotationHorizontal, xCols + yCols));
@@ -170,12 +172,12 @@ export function Histogram3D({
         for (let j = 0; j < yCols; j++) {
             //grid position
             const xPos = (xOffset + i) * (colWidthX + padding)
-            const yPos = (yOffset + (yCols - j - 1)) * (colWidthY + padding)
+            const yPos = (yOffset + j) * (colWidthY + padding)
             const key = (i + 1) + "x" + (j + 1)
             const props: AnimatedColumnProps = {
                 row: i,
                 col: j,
-                meshProps: { position: new Vector3(xPos, 0, yPos), material: material.clone() },
+                meshProps: { position: new Vector3(yPos, 0, xPos), material: material.clone() },
                 heightStart: heights.current[i][j],
                 heightTarget: (key in data) ? heightScaling(data[key]) : defaultHeight,
                 trackHeightChange: (h: number) => {
