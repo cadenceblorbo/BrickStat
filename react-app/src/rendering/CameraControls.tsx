@@ -18,19 +18,7 @@ interface CameraControlProps {
 function CameraControls({
     ref 
 }: CameraControlProps) {
-    const { invalidate, camera, gl } = useThree()
-    useEffect(() => {
-        const onOrbitChange = () => {
-            invalidate()
-            
-        }
-        if (ref !== undefined) {
-            ref.current.addEventListener('change', onOrbitChange)
-            const orbitRefVal = ref.current
-            return () => orbitRefVal.removeEventListener('change', onOrbitChange)
-        }
-        
-    });
+    const { camera, gl} = useThree()
     return <orbitControls
         ref={ref}
         args={[camera, gl.domElement]}

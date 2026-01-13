@@ -90,10 +90,8 @@ function App() {
         }
     }
 
-    function cameraChange(kind: string) {
-        setCameraType(kind);
-        camControlsRef.current.reset();
-    }
+    const [pos, setPos] = useState([0, 0]);
+    const [visible, setVisible] = useState(false)
 
     
     const perspectiveCam = <PerspectiveCamera
@@ -121,9 +119,11 @@ function App() {
                 headerLabel={GraphTitle(partType, quantityType, chronoType)}
                 defaultHeight={DEFAULT_BAR_HEIGHT}
                 heightScaling={heightScaling}
-                barMat={new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) })}
+                barMat={new THREE.MeshStandardMaterial()}
                 materialChange={materialChange}
-                cameraControls={<CameraControls ref={camControlsRef }></CameraControls>}
+                cameraControls={<CameraControls ref={camControlsRef}></CameraControls>}
+                colPointerOver={(e) => { setPos([e.clientX, e.clientY]); setVisible(true); console.log(pos); }}
+                colPointerLeave={() => setVisible(false) }
             />
         </div>
         <div className = "year-controls">
@@ -139,9 +139,10 @@ function App() {
             <LabeledDropdown label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
         </div>
         <div className="camera-selection-parent">
-            <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={cameraChange} />
+            <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
+        <p style={{ position: "absolute", top: pos[1] + "px", left: pos[0] + "px", visibility: (visible ? "visible" : "hidden") }}>{"test"}</p>
         
     </div>)
 }

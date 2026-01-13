@@ -9,6 +9,7 @@ import type { ReactElement } from 'react';
 
 interface StatsCanvasProps {
     data: { [key: string]: number };
+    cam?: ReactElement;
     xCols: number;
     yCols: number;
     xAxisLabel: string;
@@ -18,8 +19,9 @@ interface StatsCanvasProps {
     heightScaling?: (dataVal: number) => number;
     barMat?: THREE.Material;
     materialChange?: (mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
-    cam?: ReactElement;
-    cameraControls?: ReactElement
+    cameraControls?: ReactElement;
+    colPointerOver?: (e: MouseEvent) => void;
+    colPointerLeave?: (e: MouseEvent) => void;
 }
 
 export function StatsCanvas({
@@ -34,7 +36,9 @@ export function StatsCanvas({
     heightScaling = (dataVal: number) => { return dataVal },
     barMat = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) }),
     materialChange = () => { },
-    cameraControls
+    cameraControls,
+    colPointerOver = () => { },
+    colPointerLeave = () => { }
 }: StatsCanvasProps) {
 
     if (cameraControls === undefined) {
@@ -56,6 +60,8 @@ export function StatsCanvas({
                 yAxisLabel={yAxisLabel}
                 headerLabel={headerLabel}
                 defaultHeight={defaultHeight}
+                colPointerOver={colPointerOver}
+                colPointerLeave={colPointerLeave }
             />
             {cam}
             {cameraControls}

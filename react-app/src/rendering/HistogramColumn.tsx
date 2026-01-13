@@ -92,6 +92,9 @@ export function AnimatedHistogramColumn({
         }
     })
 
+    
+
+
     let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
     usedPosition = new Vector3(usedPosition.x, usedPosition.y + heightStart / 2, usedPosition.z);
     const newProps = { ...meshProps, position: usedPosition }
