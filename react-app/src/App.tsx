@@ -8,8 +8,8 @@ import * as JSONParse from './json-parser.ts'
 import { colorLerp3 } from './utils/ColorUtil.ts'
 import CameraControls from "./rendering/CameraControls.tsx"
 import './App.css'
-import type { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { degToRad } from 'three/src/math/MathUtils.js';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import {PerspectiveCamera, OrthographicCamera } from '@react-three/drei'
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
@@ -28,7 +28,8 @@ function App() {
     const [chronoType, setChronoType] = useState("Cumulative");
     const [quantityType, setQuantityType] = useState("Total Quantity");
     const [partType, setPartType] = useState("Bricks");
-    const [scalingType, setScalingType] = useState("Logarithmic")
+    const [scalingType, setScalingType] = useState("Logarithmic");
+    const [cameraType, setCameraType] = useState("Perspective");
     const currentData = data[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
     const camControlsRef = useRef<OrbitControls>(null!);
@@ -89,25 +90,31 @@ function App() {
         }
     }
 
-    const perspectiveCam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    perspectiveCam.position.z = 7
-    perspectiveCam.position.y = 30
-    perspectiveCam.updateProjectionMatrix();
-
-    const orthographicCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10000);
-    orthographicCam.position.y = 9000;
-    orthographicCam.rotation.x = degToRad(-90);
-    //orthographicCam.rotation.z = degToRad(90);
-    orthographicCam.zoom = Math.sqrt(Math.min(window.innerWidth, window.innerHeight)/2)/1.5;
+    function cameraChange(kind: string) {
+        setCameraType(kind);
+        camControlsRef.current.reset();
+    }
 
     
+    const perspectiveCam = <PerspectiveCamera
+        position={[0, 30, 7]}
+        fov={75}
+        makeDefault={true}>
+    </PerspectiveCamera>
+
+    const orthographicCam = <OrthographicCamera
+        position={[0, 9000, 0]}
+        far={10000}
+        zoom={Math.sqrt(Math.min(window.innerWidth, window.innerHeight) / 2) / 1.5}
+        makeDefault={true}>
+    </OrthographicCamera>
 
     return (<div>
         <div className = "stats-canvas-parent">
             <StatsCanvas
                 xCols={currentData.xCols}
                 yCols={currentData.yCols}
-                cam={orthographicCam}
+                cam={cameraType === "Perspective" ? perspectiveCam : orthographicCam}
                 data={currentData.dataset[yearVal]}
                 xAxisLabel={"Stud Length"}
                 yAxisLabel={"Stud Width"}
@@ -130,6 +137,9 @@ function App() {
             <LabeledDropdown label={"Quantity Format"} values={["Total Quantity", "Set Apperances"]} selected={quantityType} onChange={setQuantityType} />
             <LabeledDropdown label={"Time Format"} values={["Cumulative", "By Year"]} selected={chronoType} onChange={setChronoType} />
             <LabeledDropdown label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
+        </div>
+        <div className="camera-selection-parent">
+            <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={cameraChange} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
         

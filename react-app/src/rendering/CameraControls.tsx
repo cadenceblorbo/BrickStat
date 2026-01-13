@@ -21,10 +21,6 @@ function CameraControls({
     const { invalidate, camera, gl } = useThree()
     useEffect(() => {
         const onOrbitChange = () => {
-            //if (camera instanceof PerspectiveCamera) {
-            //    camera.aspect = window.innerWidth / window.innerHeight;
-            //    camera.updateProjectionMatrix();
-            //}
             invalidate()
             
         }

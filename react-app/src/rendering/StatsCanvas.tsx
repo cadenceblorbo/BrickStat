@@ -9,7 +9,6 @@ import type { ReactElement } from 'react';
 
 interface StatsCanvasProps {
     data: { [key: string]: number };
-    cam: THREE.Camera;
     xCols: number;
     yCols: number;
     xAxisLabel: string;
@@ -19,6 +18,7 @@ interface StatsCanvasProps {
     heightScaling?: (dataVal: number) => number;
     barMat?: THREE.Material;
     materialChange?: (mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
+    cam?: ReactElement;
     cameraControls?: ReactElement
 }
 
@@ -42,7 +42,7 @@ export function StatsCanvas({
     }
     
     return (
-        <Canvas className="stats-canvas" camera={cam}>
+        <Canvas className="stats-canvas">
             <ambientLight intensity={Math.PI / 2} />
             <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} />
             <Histogram3D
@@ -57,6 +57,7 @@ export function StatsCanvas({
                 headerLabel={headerLabel}
                 defaultHeight={defaultHeight}
             />
+            {cam}
             {cameraControls}
         </Canvas>
     )
