@@ -1,15 +1,16 @@
-﻿import { useState, useRef } from 'react'
+﻿import { useState, useRef } from 'react';
 import * as THREE from 'three';
-
-import { StatsCanvas } from './rendering/StatsCanvas.tsx'
-import LabeledDropdown from './react-components/LabeledDropdown.tsx'
-import { GraphTitle } from './graph-title.ts'
-import * as JSONParse from './json-parser.ts'
-import { colorLerp3 } from './utils/ColorUtil.ts'
-import CameraControls from "./rendering/CameraControls.tsx"
-import './App.css'
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import {PerspectiveCamera, OrthographicCamera } from '@react-three/drei'
+import { PerspectiveCamera, OrthographicCamera } from '@react-three/drei';
+
+import { StatsCanvas } from './rendering/StatsCanvas.tsx';
+import LabeledDropdown from './react-components/LabeledDropdown.tsx';
+import { GraphTitle } from './graph-title.ts';
+import * as JSONParse from './json-parser.ts';
+import { colorLerp3 } from './utils/ColorUtil.ts';
+import CameraControls from "./rendering/CameraControls.tsx";
+import MousePosTooltip from './react-components/MousePosTooltip.tsx'
+import './App.css';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
@@ -33,7 +34,7 @@ function App() {
     const currentData = data[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
     const camControlsRef = useRef<OrbitControls>(null!);
-    
+
     function buttonResetCamera() {
         camControlsRef.current.reset();
     }
@@ -64,11 +65,11 @@ function App() {
         } else {
             dataVal = Math.log2(dataVal)
         }
-        
+
         return Math.max(DEFAULT_BAR_HEIGHT, dataVal);
     }
 
-    
+
     function materialChange(mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void {
         if (isEmpty) {
             if (row > col) {
@@ -84,16 +85,26 @@ function App() {
                 COLOR_1,
                 COLOR_2,
                 COLOR_3,
-                height/heightDiv,
+                height / heightDiv,
                 midpoint
             )
         }
     }
 
-    const [pos, setPos] = useState([0, 0]);
-    const [visible, setVisible] = useState(false)
+    const [tooltipVisible, setTooltipVisible] = useState(false)
+    const [tooltipText, setTooltipText] = useState("aaa")
 
-    
+    function colPointerOver(e: MouseEvent) {
+        setTooltipVisible(true);
+        e.stopPropagation();
+    }
+
+    function onPointerOut(e: MouseEvent) {
+        setTooltipVisible(false);
+        e.stopPropagation();
+    }
+
+
     const perspectiveCam = <PerspectiveCamera
         position={[0, 30, 7]}
         fov={75}
@@ -108,7 +119,7 @@ function App() {
     </OrthographicCamera>
 
     return (<div>
-        <div className = "stats-canvas-parent">
+        <div className="stats-canvas-parent">
             <StatsCanvas
                 xCols={currentData.xCols}
                 yCols={currentData.yCols}
@@ -122,13 +133,13 @@ function App() {
                 barMat={new THREE.MeshStandardMaterial()}
                 materialChange={materialChange}
                 cameraControls={<CameraControls ref={camControlsRef}></CameraControls>}
-                colPointerOver={(e) => { setPos([e.clientX, e.clientY]); setVisible(true); console.log(pos); }}
-                colPointerLeave={() => setVisible(false) }
+                colPointerOver={colPointerOver}
+                colPointerOut={onPointerOut}
             />
         </div>
-        <div className = "year-controls">
+        <div className="year-controls">
             <input className="year-slider" type="range" min={currentData.firstYear} max={currentData.lastYear} onChange={sliderYearChange} value={yearVal}></input>
-            <button className="year-button" onClick={() => {buttonYearChange(-1)} }>{"<"}</button>
+            <button className="year-button" onClick={() => { buttonYearChange(-1) }}>{"<"}</button>
             <p>{yearVal}</p>
             <button className="year-button" onClick={() => { buttonYearChange(1) }}>{">"}</button>
         </div>
@@ -142,7 +153,7 @@ function App() {
             <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
-        <p style={{ position: "absolute", top: pos[1] + "px", left: pos[0] + "px", visibility: (visible ? "visible" : "hidden") }}>{"test"}</p>
+        {tooltipVisible ? <MousePosTooltip className="tooltip" content={"aaa"}></MousePosTooltip> :null}
         
     </div>)
 }

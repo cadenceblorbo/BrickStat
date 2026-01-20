@@ -86,9 +86,9 @@ export function AnimatedHistogramColumn({
 
             materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty)
             trackHeightChange(height);
-            if (flag === "x") {
-                console.log(height)
-            }
+            //if (flag === "x") {
+            //    console.log(height)
+            //}
         }
     })
 

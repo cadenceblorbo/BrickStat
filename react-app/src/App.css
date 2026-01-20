@@ -97,3 +97,22 @@ button:hover {
     margin-left: 6px;
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
+
+.tooltip {
+    border-style: solid;
+    border-color: var(--color-gray);
+    border-radius: 3px;
+    background: var(--color-black);
+    pointer-events: none;
+}
+
+.tooltip::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent var(--color-gray) transparent transparent;
+}

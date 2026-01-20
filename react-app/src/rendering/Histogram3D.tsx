@@ -140,7 +140,7 @@ interface Histogram3DProps {
     colWidthX?: number;
     colWidthY?: number;
     colPointerOver?: (e: MouseEvent) => void;
-    colPointerLeave?: (e: MouseEvent) => void;
+    colPointerOut?: (e: MouseEvent) => void;
     defaultHeight?: number;
     padding?: number;
 }
@@ -160,7 +160,7 @@ export function Histogram3D({
     defaultHeight = 0.1,
     padding = 0.5,
     colPointerOver = () => { },
-    colPointerLeave = () => { }
+    colPointerOut = () => { }
 }: Histogram3DProps) {
 
     const heights = useRef(Array<number>(xCols).fill(defaultHeight).map(() => new Array<number>(yCols).fill(defaultHeight)));
@@ -181,7 +181,7 @@ export function Histogram3D({
             const props: AnimatedColumnProps = {
                 row: i,
                 col: j,
-                meshProps: { position: new Vector3(yPos, 0, xPos), material: material.clone(), onPointerOver: colPointerOver, onPointerLeave: colPointerLeave },
+                meshProps: { position: new Vector3(yPos, 0, xPos), material: material.clone(), onPointerOver: colPointerOver, onPointerOut: colPointerOut },
                 heightStart: heights.current[i][j],
                 heightTarget: (key in data) ? heightScaling(data[key]) : defaultHeight,
                 trackHeightChange: (h: number) => {

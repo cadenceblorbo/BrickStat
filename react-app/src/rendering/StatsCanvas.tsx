@@ -21,7 +21,7 @@ interface StatsCanvasProps {
     materialChange?: (mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
     cameraControls?: ReactElement;
     colPointerOver?: (e: MouseEvent) => void;
-    colPointerLeave?: (e: MouseEvent) => void;
+    colPointerOut?: (e: MouseEvent) => void;
 }
 
 export function StatsCanvas({
@@ -38,12 +38,13 @@ export function StatsCanvas({
     materialChange = () => { },
     cameraControls,
     colPointerOver = () => { },
-    colPointerLeave = () => { }
+    colPointerOut = () => { }
 }: StatsCanvasProps) {
 
     if (cameraControls === undefined) {
         cameraControls = <></>
     }
+    
     
     return (
         <Canvas className="stats-canvas">
@@ -61,7 +62,7 @@ export function StatsCanvas({
                 headerLabel={headerLabel}
                 defaultHeight={defaultHeight}
                 colPointerOver={colPointerOver}
-                colPointerLeave={colPointerLeave }
+                colPointerOut={colPointerOut }
             />
             {cam}
             {cameraControls}
