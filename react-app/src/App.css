@@ -100,6 +100,7 @@ button:hover {
 
 .tooltip {
     border-style: solid;
+    border-width: 3px;
     border-color: var(--color-gray);
     border-radius: 3px;
     background: var(--color-black);
@@ -109,7 +110,7 @@ button:hover {
 .tooltip::after {
     content: " ";
     position: absolute;
-    top: 50%;
+    top: 10px;
     right: 100%;
     margin-top: -10px;
     border-width: 10px;

@@ -10,7 +10,7 @@ import * as JSONParse from './json-parser.ts';
 import { colorLerp3 } from './utils/ColorUtil.ts';
 import CameraControls from "./rendering/CameraControls.tsx";
 import MousePosTooltip from './react-components/MousePosTooltip.tsx'
-import './App.css';
+import * as Style from './App.css';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
@@ -100,7 +100,7 @@ function App() {
     }
 
     function onPointerOut(e: MouseEvent) {
-        setTooltipVisible(false);
+        setTooltipVisible(true);
         e.stopPropagation();
     }
 
@@ -153,7 +153,13 @@ function App() {
             <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
-        {tooltipVisible ? <MousePosTooltip className="tooltip" content={"aaa"}></MousePosTooltip> :null}
+        {tooltipVisible ? <MousePosTooltip className="tooltip" offsetX={-10} offsetY={-10 } content={
+            <div>
+                aaa
+                <br/>
+                aaa
+            </div>
+        }></MousePosTooltip> : null}
         
     </div>)
 }
