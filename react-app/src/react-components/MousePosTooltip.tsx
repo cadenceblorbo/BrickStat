@@ -1,10 +1,11 @@
-import {JSX } from 'react'
+import {type JSX } from 'react'
 
 import { useMousePos } from './Hooks.ts'
 
 export interface MousePosTooltipProps {
     className: string,
     content: JSX.Element,
+    arrowSize?: number
     offsetX?: number,
     offsetY?: number
 }
@@ -12,6 +13,7 @@ export interface MousePosTooltipProps {
 export default function MousePosTooltip({
     className,
     content,
+    arrowSize = 10,
     offsetX = 0,
     offsetY = 0
 }: MousePosTooltipProps) {
@@ -19,18 +21,30 @@ export default function MousePosTooltip({
     const mousePos = useMousePos();
 
 
-    return <div
+    return mousePos.moved ? <div
         style={{
             position: "absolute",
+            
             top: (mousePos.y + offsetY) + "px",
-            left: (mousePos.x + offsetX) + "px",
-            display: "flex"
+            left: (mousePos.x + offsetX) + "px"
         }}>
-        <div className={"tooltipafter"}>{" "}</div>
+        <div
+            className={className}
+            style={{
+                position: "absolute",
+                right: "100%",
+                backgroundColor: "transparent",
+                borderBottomColor: "transparent",
+                borderLeftColor: "transparent",
+                borderTopColor: "transparent",
+                borderWidth: arrowSize + "px",
+                borderRadius: "0px"
+            } }
+        >{" "}</div>
         <div className={className}>{content}</div>
 
 
-    </div>
+    </div> : null
 
     //return mousePos.moved ?
     //    <div

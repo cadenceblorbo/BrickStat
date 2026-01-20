@@ -93,6 +93,7 @@ function App() {
 
     const [tooltipVisible, setTooltipVisible] = useState(false)
     const [tooltipText, setTooltipText] = useState("aaa")
+    const tooltipArrowSize = 10
 
     function colPointerOver(e: MouseEvent) {
         setTooltipVisible(true);
@@ -100,7 +101,7 @@ function App() {
     }
 
     function onPointerOut(e: MouseEvent) {
-        setTooltipVisible(true);
+        setTooltipVisible(false);
         e.stopPropagation();
     }
 
@@ -153,7 +154,7 @@ function App() {
             <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
-        {tooltipVisible ? <MousePosTooltip className="tooltip" offsetX={-10} offsetY={-10 } content={
+        {tooltipVisible ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize } content={
             <div>
                 aaa
                 <br/>
