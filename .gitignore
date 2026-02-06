@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 *.vs
 
-dataset/
+dataset/*.csv
