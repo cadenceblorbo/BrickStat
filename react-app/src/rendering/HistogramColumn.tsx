@@ -92,7 +92,6 @@ export function AnimatedHistogramColumn({
         }
     })
 
-    
 
 
     let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
@@ -100,6 +99,7 @@ export function AnimatedHistogramColumn({
     const newProps = { ...meshProps, position: usedPosition }
     return <mesh ref={meshRef}
         {...newProps}
+        name = {row + "x" + col}
     >
         <boxGeometry args={[xWidth, 1, yWidth]} />
     </mesh>

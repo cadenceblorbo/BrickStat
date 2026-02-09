@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { PerspectiveCamera, OrthographicCamera } from '@react-three/drei';
+import { type ThreeEvent  } from '@react-three/fiber'
 
 import { StatsCanvas } from './rendering/StatsCanvas.tsx';
 import LabeledDropdown from './react-components/LabeledDropdown.tsx';
@@ -92,11 +93,12 @@ function App() {
     }
 
     const [tooltipVisible, setTooltipVisible] = useState(false)
-    const [tooltipText, setTooltipText] = useState("aaa")
+    const [tooltipContent, setTooltipContent] = useState(<p>{"aaa"}</p>)
     const tooltipArrowSize = 10
 
-    function colPointerOver(e: MouseEvent) {
+    function colPointerOver(e: ThreeEvent<PointerEvent>) {
         setTooltipVisible(true);
+        setTooltipContent(<p>{e.eventObject.name}</p>)
         e.stopPropagation();
     }
 
@@ -155,11 +157,7 @@ function App() {
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
         {tooltipVisible ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize } content={
-            <div>
-                aaa
-                <br/>
-                aaa
-            </div>
+            tooltipContent
         }></MousePosTooltip> : null}
         
     </div>)
