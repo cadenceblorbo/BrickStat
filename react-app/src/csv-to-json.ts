@@ -2,14 +2,16 @@ import * as fs from 'fs';
 import * as csvPromise from './csv-promise.ts';
 import * as partNumbers from './part-numbers/index.ts';
 
-//last data: sept 23 2025
+//last data: feb 10 2026
 
-const setsPath = "./dataset/sets.csv"
-const inventoriesPath = "./dataset/inventories.csv"
-const inventoryPartsPath = "./dataset/inventory_parts.csv"
+const setsPath = "./dataset/sets.csv";
+const inventoriesPath = "./dataset/inventories.csv";
+const inventoryPartsPath = "./dataset/inventory_parts.csv";
 
-const brickTotalOutputPath = "./dataset/brick-total-history.json"
-const brickSetOutputPath = "./dataset/brick-set-history.json"
+const brickTotalOutputPath = "./dataset/brick-total-history.json";
+const brickSetOutputPath = "./dataset/brick-set-history.json";
+const plateTotalOutputPath = "./dataset/plate-total-history.json";
+const plateSetOutputPath = "./dataset/plate-set-history.json";
 
 type InventoriesData = {
     id: string;
@@ -40,7 +42,7 @@ async function getIDToYearMapping(): Promise<Map<string, string>> {
 
     const onSetData = (row: SetsData) => {
         setNumToYear.set(row.set_num, row.year);
-    }
+    };
 
     await csvPromise.parseCSV<SetsData>(setsPath, onSetData);
 
@@ -50,7 +52,7 @@ async function getIDToYearMapping(): Promise<Map<string, string>> {
         if (row.version !== "1") {
             return;
         }
-        const year: string | undefined = setNumToYear.get(row.set_num)
+        const year: string | undefined = setNumToYear.get(row.set_num);
         
         if (year !== undefined) {
             invIDToYear.set(row.id, year);
@@ -59,7 +61,7 @@ async function getIDToYearMapping(): Promise<Map<string, string>> {
 
     await csvPromise.parseCSV<InventoriesData>(inventoriesPath, onInventoriesData);
 
-    return new Promise<Map<string, string>>((resolve) => { resolve(invIDToYear) });
+    return new Promise<Map<string, string>>((resolve) => { resolve(invIDToYear); });
 }
 
 function getTrimmedPartNumber(fullID: string): string {
@@ -80,7 +82,7 @@ function getTrimmedPartNumber(fullID: string): string {
     return fullID.substring(0, index);
 }
 
-async function getPartDataByYear(useQuantity: boolean = true): Promise<Map<number, Map<string, number>>> {
+async function getPartDataByYear(partsMap: Map<string, string>, useQuantity: boolean = true): Promise<Map<number, Map<string, number>>> {
     const idToYear = await getIDToYearMapping();
     
     const partDataByYear: Map<number, Map<string, number>> = new Map();
@@ -88,7 +90,7 @@ async function getPartDataByYear(useQuantity: boolean = true): Promise<Map<numbe
     const onInventoryPartsData = (row: InventoryPartsData) => {
         const trimmedNumber = getTrimmedPartNumber(row.part_num);
 
-        const dims: string | undefined = partNumbers.brickMap.get(trimmedNumber);
+        const dims: string | undefined = partsMap.get(trimmedNumber);
         const year: number = Number(idToYear.get(row.inventory_id));
         if (dims === undefined || isNaN(year) || row.is_spare == "True") {
             return;
@@ -103,9 +105,9 @@ async function getPartDataByYear(useQuantity: boolean = true): Promise<Map<numbe
             } else {
                 currentPartMap.set(dims, (currentPartMap.get(dims) ?? 0) + 1);
             }
-            
+
         }
-    }
+    };
 
     await csvPromise.parseCSV(inventoryPartsPath, onInventoryPartsData);
     
@@ -113,19 +115,23 @@ async function getPartDataByYear(useQuantity: boolean = true): Promise<Map<numbe
 }
 
 async function regenerateFiles() {
-    const totalBrickData = await getPartDataByYear(true);
-    const setBrickData = await getPartDataByYear(false);
+    const totalBrickData = await getPartDataByYear(partNumbers.brickMap, true);
+    const setBrickData = await getPartDataByYear(partNumbers.brickMap, false);
+    const totalPlateData = await getPartDataByYear(partNumbers.plateMap, true);
+    const setPlateData = await getPartDataByYear(partNumbers.plateMap, false);
 
     const replacer = (key: unknown, value: unknown) => {
         if (value instanceof Map) {
             return Object.fromEntries(value);
         }
-        return value
-    }
+        return value;
+    };
     //console.log(JSON.stringify(partDataByYear, replacer))
 
-    fs.writeFileSync(brickTotalOutputPath, JSON.stringify(totalBrickData, replacer, 4))
-    fs.writeFileSync(brickSetOutputPath, JSON.stringify(setBrickData, replacer, 4))
+    fs.writeFileSync(brickTotalOutputPath, JSON.stringify(totalBrickData, replacer, 4));
+    fs.writeFileSync(brickSetOutputPath, JSON.stringify(setBrickData, replacer, 4));
+    fs.writeFileSync(plateTotalOutputPath, JSON.stringify(totalPlateData, replacer, 4));
+    fs.writeFileSync(plateSetOutputPath, JSON.stringify(setPlateData, replacer, 4));
 }
 
 regenerateFiles();

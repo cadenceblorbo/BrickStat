@@ -197,9 +197,9 @@ function App() {
             <LabeledDropdown label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={setPartType} />
             <LabeledDropdown label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={setQuantityType} />
             <LabeledDropdown label={"Time Format"} values={Object.values(ChronoType)} selected={chronoType} onChange={setChronoType} />
-            <LabeledDropdown label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
         </div>
         <div className="camera-selection-parent">
+            <LabeledDropdown label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
             <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
