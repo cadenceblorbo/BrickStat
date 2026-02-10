@@ -49,7 +49,9 @@ export function StatsCanvas({
     return (
         <Canvas className={className}>
             <ambientLight intensity={Math.PI / 2} />
-            <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} />
+            <directionalLight position={[-7.5, 5, 10]} intensity={Math.PI} />
+            <pointLight position={[37.5, 0, 50]} decay={0} intensity={Math.PI / 2} />
+            <pointLight position={[-22.5, 2, -30]} decay={0} intensity={Math.PI / 3} />
             <Histogram3D
                 xCols={xCols}
                 yCols={yCols}

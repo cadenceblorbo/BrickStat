@@ -26,6 +26,7 @@ const COLOR_1 = new THREE.Color().setHex(0x60ba76);
 const COLOR_2 = new THREE.Color().setHex(0x4b9f4a);
 const COLOR_3 = new THREE.Color().setHex(0x237841);
 
+
 function App() {
     const data = JSONParse.retrieveData();
 
@@ -77,9 +78,13 @@ function App() {
     function materialChange(mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void {
         if (isEmpty) {
             if (row > col) {
-                (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x42423e);
+                (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x05131D);
             } else {
-                (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x6c6e68);
+                if (data.partLifetimeData[partType].hasPart(row + "x" + col)) {
+                    (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x6c6e68);
+                } else {
+                    (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x42423e);
+                }
             }
         }
         else {
