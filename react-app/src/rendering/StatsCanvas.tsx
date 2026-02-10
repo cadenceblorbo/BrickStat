@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Canvas, type ThreeElement } from '@react-three/fiber'
+import { Canvas, type ThreeElement, type ThreeEvent } from '@react-three/fiber'
 import { OrbitControls } from 'three/addons'
 import { Histogram3D, type HistogramColumnProps } from "./Histogram3D"
 import CameraControls from"./CameraControls"
@@ -20,8 +20,8 @@ interface StatsCanvasProps {
     barMat?: THREE.Material;
     materialChange?: (mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
     cameraControls?: ReactElement;
-    colPointerOver?: (e: MouseEvent) => void;
-    colPointerOut?: (e: MouseEvent) => void;
+    colPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
+    colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
 }
 
 export function StatsCanvas({

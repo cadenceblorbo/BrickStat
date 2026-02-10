@@ -94,19 +94,33 @@ function App() {
 
     const [tooltipVisible, setTooltipVisible] = useState(false)
     const [tooltipContent, setTooltipContent] = useState(<p>{"aaa"}</p>)
+    const [mouseDown, setMouseDown] = useState(false)
     const tooltipArrowSize = 10
 
     function colPointerOver(e: ThreeEvent<PointerEvent>) {
         setTooltipVisible(true);
+        console.log(e);
         setTooltipContent(<p>{e.eventObject.name}</p>)
         e.stopPropagation();
     }
 
-    function onPointerOut(e: MouseEvent) {
+    function colPointerOut(e: ThreeEvent<PointerEvent>) {
         setTooltipVisible(false);
         e.stopPropagation();
     }
 
+    function canvasPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+        if (e.pointerType === "mouse") {
+            setMouseDown(true)
+            console.log("hi")
+        }
+    }
+
+    function canvasPointerUp(e: React.PointerEvent<HTMLDivElement>) {
+        if (e.pointerType === "mouse") {
+            setMouseDown(false)
+        }
+    }
 
     const perspectiveCam = <PerspectiveCamera
         position={[0, 30, 7]}
@@ -122,7 +136,7 @@ function App() {
     </OrthographicCamera>
 
     return (<div>
-        <div className="stats-canvas-parent">
+        <div className="stats-canvas-parent" onPointerDown={e =>  canvasPointerDown(e) } onPointerUp={e => canvasPointerUp(e) }>
             <StatsCanvas
                 xCols={currentData.xCols}
                 yCols={currentData.yCols}
@@ -137,7 +151,7 @@ function App() {
                 materialChange={materialChange}
                 cameraControls={<CameraControls ref={camControlsRef}></CameraControls>}
                 colPointerOver={colPointerOver}
-                colPointerOut={onPointerOut}
+                colPointerOut={colPointerOut}
             />
         </div>
         <div className="year-controls">
@@ -156,7 +170,7 @@ function App() {
             <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
-        {tooltipVisible ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize } content={
+        {(tooltipVisible && !mouseDown) ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize } content={
             tooltipContent
         }></MousePosTooltip> : null}
         

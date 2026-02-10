@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { extend, type ThreeElement, useFrame } from "@react-three/fiber";
+import { extend, type ThreeElement, useFrame, type ThreeEvent } from "@react-three/fiber";
 import { Vector3, MeshBasicMaterial, type Material } from "three";
 import { FontLoader, type FontData} from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
@@ -139,8 +139,8 @@ interface Histogram3DProps {
     headerLabel?: string;
     colWidthX?: number;
     colWidthY?: number;
-    colPointerOver?: (e: MouseEvent) => void;
-    colPointerOut?: (e: MouseEvent) => void;
+    colPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
+    colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
     defaultHeight?: number;
     padding?: number;
 }
