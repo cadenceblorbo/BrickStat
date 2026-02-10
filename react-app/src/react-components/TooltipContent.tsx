@@ -45,7 +45,7 @@ export default function TooltipContent({
         default:
             break;
     }
-    contents.push(<h3>{title}</h3>);
+    contents.push(<h3 key={0}>{title}</h3>);
 
     //data value
     const data = NUMBER_FORMAT.format(currentValue);
@@ -53,10 +53,10 @@ export default function TooltipContent({
     if (currentValue >= pastValue) {
         change = "+" + change;
     }
-    contents.push(<p>{data + " " + DATA_LABELS[quantityFormat][timeFormat]} <i>{" (" + change + ")"}</i></p>);
+    contents.push(<p key={1}> {data + " " + DATA_LABELS[quantityFormat][timeFormat]} <i>{" (" + change + ")"}</i></p>);
 
     //chronology
-    contents.push(<p>{"First Appeared: " + startYear}<br></br>{"Last Appeared: " + endYear}</p>);
+    contents.push(<p key = { 2 }>{"First Appeared: " + startYear}<br></br>{"Last Appeared: " + endYear}</p>);
 
     return <div>
         {contents}
