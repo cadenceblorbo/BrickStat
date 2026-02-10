@@ -1,5 +1,6 @@
 import brickTotalHistory from './dataset/brick-total-history.json'
 import brickSetHistory from './dataset/brick-set-history.json'
+import { PartType, QuantityType, ChronoType } from './utils/lego-enum.ts';
 
 export class HistogramData {
 	public dataset: { [key: string]: { [key: string]: number } };
@@ -77,23 +78,33 @@ export class HistogramData {
 }
 
 //export class YearBounds() {
-	
+
 //}
 
 //function yearBounds()
 
-export function retrieveData(): { [key: string]: { [key: string]: { [key: string]: HistogramData } } } {
+export interface LegoDataset {
+	histogramData: { [key in PartType]: { [key in QuantityType]: { [key in ChronoType]: HistogramData } } }
+
+}
+
+export function retrieveData(): LegoDataset {
 	return {
-		"Bricks": {
-			"Total Quantity": {
-				"Cumulative": new HistogramData(brickTotalHistory, true),
-				"By Year": new HistogramData(brickTotalHistory)
-			},
-			"Set Apperances": {
-				"Cumulative": new HistogramData(brickSetHistory, true),
-				"By Year": new HistogramData(brickSetHistory)
+		histogramData: {
+			[PartType.Bricks]: {
+				[QuantityType.TotalQuantity]: {
+					[ChronoType.Cumulative]: new HistogramData(brickTotalHistory, true),
+					[ChronoType.ByYear]: new HistogramData(brickTotalHistory)
+				},
+				[QuantityType.SetApperances]: {
+					[ChronoType.Cumulative]: new HistogramData(brickSetHistory, true),
+					[ChronoType.ByYear]: new HistogramData(brickSetHistory)
+				}
 			}
 		}
 		
 	}
+		
+		
+	
 }

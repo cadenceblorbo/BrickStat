@@ -33,7 +33,7 @@ function App() {
     const [partType, setPartType] = useState(PartType.Bricks);
     const [scalingType, setScalingType] = useState("Logarithmic");
     const [cameraType, setCameraType] = useState("Perspective");
-    const currentData = data[partType][quantityType][chronoType];
+    const currentData = data.histogramData[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
     const camControlsRef = useRef<OrbitControls>(null!);
 
@@ -55,10 +55,10 @@ function App() {
     function heightScaling(dataVal: number): number {
         if (scalingType == "Linear") {
             switch (chronoType) {
-                case "Cumulative":
+                case ChronoType.Cumulative:
                     dataVal /= CUMULATIVE_LINEAR_HEIGHT_DIVISOR;
                     break;
-                case "By Year":
+                case ChronoType.ByYear:
                     dataVal /= BY_YEAR_HEIGHT_DIVISOR;
                     break;
                 default:
