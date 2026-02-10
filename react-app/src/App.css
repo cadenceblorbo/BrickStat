@@ -100,9 +100,19 @@ button:hover {
 
 .tooltip {
     border-style: solid;
-    border-width: 3px;
     border-color: var(--color-gray);
-    border-radius: 0 3px 3px 3px;
+    border-radius: 0 6px 6px 6px;
     background: var(--color-black);
     pointer-events: none;
+    text-align: start;
+    padding: 0.5rem;
+}
+
+.tooltip p, h1, h2, h3, h4, h5, h6{
+    margin-top:0;
+    margin-bottom:0.5rem;
+}
+
+.tooltip i {
+    color: var(--color-gray);
 }

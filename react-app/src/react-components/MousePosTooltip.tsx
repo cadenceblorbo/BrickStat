@@ -26,7 +26,8 @@ export default function MousePosTooltip({
             position: "absolute",
 
             top: (mousePos.y + offsetY) + "px",
-            left: (mousePos.x + offsetX) + "px"
+            left: (mousePos.x + offsetX) + "px",
+            pointerEvents: "none"
         }}>
         <div
             className={className}
@@ -38,7 +39,9 @@ export default function MousePosTooltip({
                 borderLeftColor: "transparent",
                 borderTopColor: "transparent",
                 borderWidth: arrowSize + "px",
-                borderRadius: "0px"
+                borderRadius: "0px",
+                pointerEvents: "none",
+                padding: "0",
             }}
         >{" "}</div>
         <div className={className}>{content}</div>
