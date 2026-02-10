@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { PerspectiveCamera, OrthographicCamera } from '@react-three/drei';
 import { type ThreeEvent  } from '@react-three/fiber'
 
+import { PartType, QuantityType, ChronoType } from './utils/lego-enum.ts';
 import { StatsCanvas } from './rendering/StatsCanvas.tsx';
 import LabeledDropdown from './react-components/LabeledDropdown.tsx';
 import { GraphTitle } from './graph-title.ts';
@@ -27,9 +28,9 @@ const COLOR_3 = new THREE.Color().setHex(0x237841);
 function App() {
     const data = JSONParse.retrieveData()
 
-    const [chronoType, setChronoType] = useState("Cumulative");
-    const [quantityType, setQuantityType] = useState("Total Quantity");
-    const [partType, setPartType] = useState("Bricks");
+    const [chronoType, setChronoType] = useState(ChronoType.Cumulative);
+    const [quantityType, setQuantityType] = useState(QuantityType.TotalQuantity);
+    const [partType, setPartType] = useState(PartType.Bricks);
     const [scalingType, setScalingType] = useState("Logarithmic");
     const [cameraType, setCameraType] = useState("Perspective");
     const currentData = data[partType][quantityType][chronoType];
@@ -161,9 +162,9 @@ function App() {
             <button className="year-button" onClick={() => { buttonYearChange(1) }}>{">"}</button>
         </div>
         <div className="dataset-selection-parent">
-            <LabeledDropdown label={"Part Types"} values={["Bricks"]} selected={partType} onChange={setPartType} />
-            <LabeledDropdown label={"Quantity Format"} values={["Total Quantity", "Set Apperances"]} selected={quantityType} onChange={setQuantityType} />
-            <LabeledDropdown label={"Time Format"} values={["Cumulative", "By Year"]} selected={chronoType} onChange={setChronoType} />
+            <LabeledDropdown label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={setPartType} />
+            <LabeledDropdown label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={setQuantityType} />
+            <LabeledDropdown label={"Time Format"} values={Object.values(ChronoType)} selected={chronoType} onChange={setChronoType} />
             <LabeledDropdown label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
         </div>
         <div className="camera-selection-parent">

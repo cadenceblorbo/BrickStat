@@ -1,7 +1,7 @@
 import brickTotalHistory from './dataset/brick-total-history.json'
 import brickSetHistory from './dataset/brick-set-history.json'
 
-class HistogramData {
+export class HistogramData {
 	public dataset: { [key: string]: { [key: string]: number } };
 	public xCols: number;
 	public yCols: number;
@@ -75,6 +75,12 @@ class HistogramData {
 	}
 	
 }
+
+//export class YearBounds() {
+	
+//}
+
+//function yearBounds()
 
 export function retrieveData(): { [key: string]: { [key: string]: { [key: string]: HistogramData } } } {
 	return {
