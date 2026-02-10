@@ -1,11 +1,11 @@
-import { useState, useRef } from 'react';
-import { extend, type ThreeElement, useFrame, type ThreeEvent } from "@react-three/fiber";
-import { Vector3, MeshBasicMaterial, type Material } from "three";
-import { FontLoader, type FontData} from 'three/addons/loaders/FontLoader.js';
+import { extend, type ThreeElement, type ThreeEvent } from "@react-three/fiber";
+import { useRef } from 'react';
+import { MeshBasicMaterial, Vector3, type Material } from "three";
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
-import Inter from '../assets/Inter_Regular.json'
+import { FontLoader, type FontData } from 'three/addons/loaders/FontLoader.js';
+import Inter from '../assets/Inter_Regular.json';
 
-import {HistogramColumn, AnimatedHistogramColumn, type AnimatedColumnProps, type HistogramColumnProps} from './HistogramColumn.tsx'
+import { AnimatedHistogramColumn, type AnimatedColumnProps } from './HistogramColumn.tsx';
 
 declare module '@react-three/fiber' {
     interface ThreeElements {

@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useReducer } from 'react';
-import { type ThreeElements, useFrame} from "@react-three/fiber";
-import { Vector3, Mesh, Material } from "three";
+import { useFrame, type ThreeElements } from "@react-three/fiber";
+import { useEffect, useRef } from 'react';
+import { Material, Mesh, Vector3 } from "three";
 
 import { Smoothstep } from "../utils/MathUtil";
 

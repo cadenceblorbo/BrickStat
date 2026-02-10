@@ -1,18 +1,18 @@
-﻿import { useState, useRef } from 'react';
+﻿import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
+import { type ThreeEvent } from '@react-three/fiber';
+import { useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { PerspectiveCamera, OrthographicCamera } from '@react-three/drei';
-import { type ThreeEvent  } from '@react-three/fiber'
 
-import { PartType, QuantityType, ChronoType } from './utils/lego-enum.ts';
-import { StatsCanvas } from './rendering/StatsCanvas.tsx';
-import LabeledDropdown from './react-components/LabeledDropdown.tsx';
+import './App.css';
 import { GraphTitle } from './graph-title.ts';
 import * as JSONParse from './json-parser.ts';
-import { colorLerp3 } from './utils/ColorUtil.ts';
+import LabeledDropdown from './react-components/LabeledDropdown.tsx';
+import MousePosTooltip from './react-components/MousePosTooltip.tsx';
 import CameraControls from "./rendering/CameraControls.tsx";
-import MousePosTooltip from './react-components/MousePosTooltip.tsx'
-import * as Style from './App.css';
+import { StatsCanvas } from './rendering/StatsCanvas.tsx';
+import { colorLerp3 } from './utils/ColorUtil.ts';
+import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;

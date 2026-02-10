@@ -1,6 +1,6 @@
-import brickTotalHistory from './dataset/brick-total-history.json'
-import brickSetHistory from './dataset/brick-set-history.json'
-import { PartType, QuantityType, ChronoType } from './utils/lego-enum.ts';
+import brickSetHistory from './dataset/brick-set-history.json';
+import brickTotalHistory from './dataset/brick-total-history.json';
+import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 
 export class HistogramData {
 	public dataset: { [key: string]: { [key: string]: number } };

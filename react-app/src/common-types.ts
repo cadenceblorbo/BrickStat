@@ -1,1 +1,0 @@
-export type Tuple2D = readonly[number, number];

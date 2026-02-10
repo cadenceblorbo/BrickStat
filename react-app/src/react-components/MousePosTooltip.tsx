@@ -1,6 +1,6 @@
-import {type JSX } from 'react'
+import { type JSX } from 'react';
 
-import { useMousePos } from './Hooks.ts'
+import { useMousePos } from './Hooks.ts';
 
 export interface MousePosTooltipProps {
     className: string,

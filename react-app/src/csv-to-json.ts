@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import * as partNumbers from './part-numbers/index.ts'
-import * as csvPromise from './csv-promise.ts'
+import * as csvPromise from './csv-promise.ts';
+import * as partNumbers from './part-numbers/index.ts';
 
 //last data: sept 23 2025
 

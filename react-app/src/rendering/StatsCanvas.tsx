@@ -1,9 +1,7 @@
-import * as THREE from 'three';
-import { Canvas, type ThreeElement, type ThreeEvent } from '@react-three/fiber'
-import { OrbitControls } from 'three/addons'
-import { Histogram3D, type HistogramColumnProps } from "./Histogram3D"
-import CameraControls from"./CameraControls"
+import { Canvas, type ThreeEvent } from '@react-three/fiber';
 import type { ReactElement } from 'react';
+import * as THREE from 'three';
+import { Histogram3D } from "./Histogram3D";
 
 
 

@@ -1,7 +1,6 @@
+import { extend, useThree, type ThreeElement } from '@react-three/fiber'
+import { RefObject } from 'react'
 import { OrbitControls } from 'three/addons'
-import { type ThreeElement, useThree, extend } from '@react-three/fiber'
-import { useRef, useEffect, RefObject, createRef } from 'react'
-import {PerspectiveCamera } from 'three'
 
 declare module '@react-three/fiber' {
     interface ThreeElements {

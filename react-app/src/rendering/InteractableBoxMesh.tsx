@@ -1,6 +1,6 @@
+import { useFrame, type ThreeElements } from '@react-three/fiber';
+import { useRef, useState } from 'react';
 import * as THREE from 'three';
-import { useState, useRef } from 'react'
-import { useFrame, type ThreeElements } from '@react-three/fiber'
 
 function InteractableBoxMesh(props: ThreeElements['mesh']) {
     const meshRef = useRef<THREE.Mesh>(null!);
