@@ -13,6 +13,7 @@ import CameraControls from "./rendering/CameraControls.tsx";
 import { StatsCanvas } from './rendering/StatsCanvas.tsx';
 import { colorLerp3 } from './utils/ColorUtil.ts';
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
+import TooltipContent from './react-components/TooltipContent.tsx';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
@@ -36,6 +37,7 @@ function App() {
     const currentData = data.histogramData[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
     const camControlsRef = useRef<OrbitControls>(null!);
+    const lastHoverRef = useRef("");
 
     function buttonResetCamera() {
         camControlsRef.current.reset();
@@ -65,7 +67,7 @@ function App() {
                     break;
             }
         } else {
-            ;
+            dataVal = Math.log2(dataVal);
         }
 
         return Math.max(DEFAULT_BAR_HEIGHT, dataVal);
@@ -101,13 +103,37 @@ function App() {
     function colPointerOver(e: ThreeEvent<PointerEvent>) {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
             setTooltipVisible(true);
-            setTooltipContent(<p>{e.eventObject.name}</p>);
+            lastHoverRef.current = e.object.name;
+
+            let currentValue = 0;
+            if (e.object.name in currentData.dataset[yearVal + ""]) {
+                currentValue = currentData.dataset[yearVal + ""][e.object.name];
+            }
+
+            const lastYear = (yearVal - 1) + "";
+            let pastValue = 0;
+            if (lastYear in currentData.dataset && e.object.name in currentData.dataset[lastYear]) {
+                pastValue = currentData.dataset[lastYear][e.object.name];
+            }
+
+            setTooltipContent(<TooltipContent
+                partName={e.object.name}
+                startYear={data.partLifetimeData[partType].firstYear(e.object.name)}
+                endYear={data.partLifetimeData[partType].lastYear(e.object.name) }
+                partType={partType }
+                quantityFormat={ quantityType}
+                timeFormat={ chronoType}
+                currentValue={currentValue}
+                pastValue={ pastValue}
+            ></TooltipContent>);
         }
         e.stopPropagation();
     }
 
     function colPointerOut(e: ThreeEvent<PointerEvent>) {
-        setTooltipVisible(false);
+        if (lastHoverRef.current === e.object.name) {
+            setTooltipVisible(false);
+        }
         e.stopPropagation();
     }
 

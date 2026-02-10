@@ -21,7 +21,7 @@ export default function MousePosTooltip({
     const mousePos = useMousePos();
 
 
-    return mousePos.moved ? <div
+    return (mousePos.moved ? <div
         style={{
             position: "absolute",
 
@@ -41,10 +41,10 @@ export default function MousePosTooltip({
                 borderRadius: "0px"
             }}
         >{" "}</div>
-        <div className={className}>{content}</div>;
+        <div className={className}>{content}</div>
 
 
-    </div> : null;
+    </div> : null);
 
     //return mousePos.moved ?
     //    <div

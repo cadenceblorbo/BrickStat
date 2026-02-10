@@ -2,6 +2,17 @@ import { ChronoType, PartType, QuantityType } from '../utils/lego-enum.ts';
 
 const NUMBER_FORMAT = Intl.NumberFormat();
 
+const DATA_LABELS = {
+    [QuantityType.TotalQuantity]: {
+        [ChronoType.ByYear]: "total apperances this year",
+        [ChronoType.Cumulative]: "cumulative total apperances"
+    },
+    [QuantityType.SetApperances]: {
+        [ChronoType.ByYear]: "set apperances this year",
+        [ChronoType.Cumulative]: "cumulative set apperances"
+    }
+};
+
 export interface TooltipContentProps {
     partName: string,
     startYear: number,
@@ -23,13 +34,13 @@ export default function TooltipContent({
     currentValue,
     pastValue
 }: TooltipContentProps) {
-    const contents = []
+    const contents = [];
 
     //title
     let title = partName;
     switch (partType) {
         case PartType.Bricks:
-            title += "Brick"
+            title += " Brick";
             break;
         default:
             break;
@@ -37,7 +48,12 @@ export default function TooltipContent({
     contents.push(<p>{title}</p>);
 
     //data value
-    let data = NUMBER_FORMAT.format(currentValue);
+    const data = NUMBER_FORMAT.format(currentValue);
+    let change = NUMBER_FORMAT.format(currentValue - pastValue);
+    if (currentValue >= pastValue) {
+        change = "+" + change;
+    }
+    contents.push(<p>{data + " " + DATA_LABELS[quantityFormat][timeFormat] + " (" + change + ")"}</p>);
 
     //chronology
     contents.push(<p>{"First Appeared: " + startYear}</p>);
