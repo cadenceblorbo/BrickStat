@@ -77,14 +77,44 @@ export class HistogramData {
 	
 }
 
-//export class YearBounds() {
+export class PartLifetimeData{
+	private dataset: {[key: string] : [number, number]}
+	constructor(rawJSON: { [key: string]: { [key: string]: number } }) {
+		this.dataset = {}
+		this.computeLifetimes(rawJSON);
+	}
 
-//}
+	private computeLifetimes(rawJSON: { [key: string]: { [key: string]: number } }) {
+		for (const year in rawJSON) {
+			const numYear = Number(year);
+			for (const part in rawJSON[year]) {
+				if (part in this.dataset) {
+					this.dataset[part][0] = Math.min(numYear, this.dataset[part][0]);
+					this.dataset[part][1] = Math.max(numYear, this.dataset[part][1]);
+				} else {
+					this.dataset[part] = [numYear, numYear];
+				}
+			}
+		}
+	}
 
-//function yearBounds()
+	public hasPart(part: string): boolean {
+		return part in this.dataset
+	}
+
+	public firstYear(part: string): number {
+		return this.dataset[part][0];
+	}
+
+	public lastYear(part: string): number {
+		return this.dataset[part][1];
+	}
+
+}
 
 export interface LegoDataset {
-	histogramData: { [key in PartType]: { [key in QuantityType]: { [key in ChronoType]: HistogramData } } }
+	histogramData: { [key in PartType]: { [key in QuantityType]: { [key in ChronoType]: HistogramData } } },
+	partLifetimeData: {[key in PartType]: PartLifetimeData}
 
 }
 
@@ -101,6 +131,9 @@ export function retrieveData(): LegoDataset {
 					[ChronoType.ByYear]: new HistogramData(brickSetHistory)
 				}
 			}
+		},
+		partLifetimeData: {
+			[PartType.Bricks] : new PartLifetimeData(brickTotalHistory)
 		}
 		
 	}

@@ -179,8 +179,8 @@ export function Histogram3D({
             const yPos = (yOffset + j) * (colWidthY + padding)
             const key = (i + 1) + "x" + (j + 1)
             const props: AnimatedColumnProps = {
-                row: i,
-                col: j,
+                row: i+1,
+                col: j+1,
                 meshProps: { position: new Vector3(yPos, 0, xPos), material: material.clone(), onPointerOver: colPointerOver, onPointerOut: colPointerOut },
                 heightStart: heights.current[i][j],
                 heightTarget: (key in data) ? heightScaling(data[key]) : defaultHeight,
