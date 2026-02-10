@@ -1,1 +1,1 @@
-export * from "./bricks.ts"
+export * from "./bricks.ts";
