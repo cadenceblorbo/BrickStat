@@ -94,13 +94,15 @@ function App() {
     }
 
     const [tooltipVisible, setTooltipVisible] = useState(false)
-    const [tooltipContent, setTooltipContent] = useState(<p>{"aaa"}</p>)
+    const [tooltipContent, setTooltipContent] = useState(<div></div>)
     const [mouseDown, setMouseDown] = useState(false)
     const tooltipArrowSize = 10
 
     function colPointerOver(e: ThreeEvent<PointerEvent>) {
-        setTooltipVisible(true);
-        console.log(e);
+        if ((e.object.name) in data.partLifetimeData[partType]) {
+            setTooltipVisible(true);
+            
+        }
         setTooltipContent(<p>{e.eventObject.name}</p>)
         e.stopPropagation();
     }
@@ -113,7 +115,6 @@ function App() {
     function canvasPointerDown(e: React.PointerEvent<HTMLDivElement>) {
         if (e.pointerType === "mouse") {
             setMouseDown(true)
-            console.log("hi")
         }
     }
 
