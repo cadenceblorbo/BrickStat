@@ -48,9 +48,9 @@ export class HistogramData {
 		for (const partType of encounteredParts) {
 			const prev = this.dataset[(i - 1) + ""][partType];
 			if (partType in this.dataset[key]) {
-				this.dataset[key][partType] += prev
+				this.dataset[key][partType] += prev;
 			} else {
-				this.dataset[key][partType] = prev
+				this.dataset[key][partType] = prev;
 			}
 		}
 		
@@ -58,10 +58,10 @@ export class HistogramData {
 
 	private computeYearBounds() {
 		for (const year in this.dataset) {
-			const numYear = Number(year)
+			const numYear = Number(year);
 			if (!isNaN(numYear)) {
-				this.firstYear = Math.min(numYear, this.firstYear)
-				this.lastYear = Math.max(numYear, this.lastYear)
+				this.firstYear = Math.min(numYear, this.firstYear);
+				this.lastYear = Math.max(numYear, this.lastYear);
 			}
 		}
 	}
@@ -78,9 +78,9 @@ export class HistogramData {
 }
 
 export class PartLifetimeData{
-	private dataset: {[key: string] : [number, number]}
+	private dataset: { [key: string]: [number, number] };
 	constructor(rawJSON: { [key: string]: { [key: string]: number } }) {
-		this.dataset = {}
+		this.dataset = {};
 		this.computeLifetimes(rawJSON);
 	}
 
@@ -99,7 +99,7 @@ export class PartLifetimeData{
 	}
 
 	public hasPart(part: string): boolean {
-		return part in this.dataset
+		return part in this.dataset;
 	}
 
 	public firstYear(part: string): number {
@@ -133,10 +133,10 @@ export function retrieveData(): LegoDataset {
 			}
 		},
 		partLifetimeData: {
-			[PartType.Bricks] : new PartLifetimeData(brickTotalHistory)
+			[PartType.Bricks]: new PartLifetimeData(brickTotalHistory)
 		}
-		
-	}
+
+	};
 		
 		
 	

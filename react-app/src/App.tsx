@@ -26,7 +26,7 @@ const COLOR_2 = new THREE.Color().setHex(0x4b9f4a);
 const COLOR_3 = new THREE.Color().setHex(0x237841);
 
 function App() {
-    const data = JSONParse.retrieveData()
+    const data = JSONParse.retrieveData();
 
     const [chronoType, setChronoType] = useState(ChronoType.Cumulative);
     const [quantityType, setQuantityType] = useState(QuantityType.TotalQuantity);
@@ -65,7 +65,7 @@ function App() {
                     break;
             }
         } else {
-            dataVal = Math.log2(dataVal)
+            ;
         }
 
         return Math.max(DEFAULT_BAR_HEIGHT, dataVal);
@@ -89,21 +89,20 @@ function App() {
                 COLOR_3,
                 height / heightDiv,
                 midpoint
-            )
+            );
         }
     }
 
-    const [tooltipVisible, setTooltipVisible] = useState(false)
-    const [tooltipContent, setTooltipContent] = useState(<div></div>)
-    const [mouseDown, setMouseDown] = useState(false)
-    const tooltipArrowSize = 10
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [tooltipContent, setTooltipContent] = useState(<div></div>);
+    const [mouseDown, setMouseDown] = useState(false);
+    const tooltipArrowSize = 10;
 
     function colPointerOver(e: ThreeEvent<PointerEvent>) {
-        if ((e.object.name) in data.partLifetimeData[partType]) {
+        if (data.partLifetimeData[partType].hasPart(e.object.name)) {
             setTooltipVisible(true);
-            
+            setTooltipContent(<p>{e.eventObject.name}</p>);
         }
-        setTooltipContent(<p>{e.eventObject.name}</p>)
         e.stopPropagation();
     }
 
@@ -114,13 +113,13 @@ function App() {
 
     function canvasPointerDown(e: React.PointerEvent<HTMLDivElement>) {
         if (e.pointerType === "mouse") {
-            setMouseDown(true)
+            setMouseDown(true);
         }
     }
 
     function canvasPointerUp(e: React.PointerEvent<HTMLDivElement>) {
         if (e.pointerType === "mouse") {
-            setMouseDown(false)
+            setMouseDown(false);
         }
     }
 
@@ -128,18 +127,19 @@ function App() {
         position={[0, 30, 7]}
         fov={75}
         makeDefault={true}>
-    </PerspectiveCamera>
+    </PerspectiveCamera>;
 
     const orthographicCam = <OrthographicCamera
         position={[0, 9000, 0]}
         far={10000}
         zoom={Math.sqrt(Math.min(window.innerWidth, window.innerHeight) / 2) / 1.5}
         makeDefault={true}>
-    </OrthographicCamera>
+    </OrthographicCamera>;
 
     return (<div>
-        <div className="stats-canvas-parent" onPointerDown={e =>  canvasPointerDown(e) } onPointerUp={e => canvasPointerUp(e) }>
+        <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)}>
             <StatsCanvas
+                className="stats-canvas"
                 xCols={currentData.xCols}
                 yCols={currentData.yCols}
                 cam={cameraType === "Perspective" ? perspectiveCam : orthographicCam}
@@ -158,9 +158,9 @@ function App() {
         </div>
         <div className="year-controls">
             <input className="year-slider" type="range" min={currentData.firstYear} max={currentData.lastYear} onChange={sliderYearChange} value={yearVal}></input>
-            <button className="year-button" onClick={() => { buttonYearChange(-1) }}>{"<"}</button>
+            <button className="year-button" onClick={() => { buttonYearChange(-1); }}>{"<"}</button>
             <p>{yearVal}</p>
-            <button className="year-button" onClick={() => { buttonYearChange(1) }}>{">"}</button>
+            <button className="year-button" onClick={() => { buttonYearChange(1); }}>{">"}</button>
         </div>
         <div className="dataset-selection-parent">
             <LabeledDropdown label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={setPartType} />
@@ -172,11 +172,11 @@ function App() {
             <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
-        {(tooltipVisible && !mouseDown) ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize } content={
+        {(tooltipVisible && !mouseDown) ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize} content={
             tooltipContent
         }></MousePosTooltip> : null}
-        
-    </div>)
+
+    </div>);
 }
 
-export default App
+export default App;

@@ -19,12 +19,12 @@ export function HistogramColumn({
 }: HistogramColumnProps) {
     let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
     usedPosition = new Vector3(usedPosition.x, usedPosition.y + height / 2, usedPosition.z);
-    const newProps = { ...meshProps, position: usedPosition }
+    const newProps = { ...meshProps, position: usedPosition };
     return <mesh
         {...newProps}
     >
         <boxGeometry args={[xWidth, height, yWidth]} />
-    </mesh>
+    </mesh>;
 }
 
 export interface AnimatedColumnProps {
@@ -68,14 +68,14 @@ export function AnimatedHistogramColumn({
 
     useEffect(() => {
         time.current = 0;
-    }, [heightTarget])
+    }, [heightTarget]);
 
     useEffect(() => {
-        materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty)
-    }, [meshProps, row, col, isEmpty, materialChange])
+        materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty);
+    }, [meshProps, row, col, isEmpty, materialChange]);
 
     useFrame((state, delta) => {
-        
+
         if (time.current < 1) {
             delta = delta * (1 / animSpeed);
             time.current += delta;
@@ -84,25 +84,25 @@ export function AnimatedHistogramColumn({
             meshRef.current.position.y = height / 2 + ((meshProps?.position as Vector3).y as number || 0);
             meshRef.current.scale.y = height;
 
-            materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty)
+            materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty);
             trackHeightChange(height);
             //if (flag === "x") {
             //    console.log(height)
             //}
         }
-    })
+    });
 
 
 
     let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
     usedPosition = new Vector3(usedPosition.x, usedPosition.y + heightStart / 2, usedPosition.z);
-    const newProps = { ...meshProps, position: usedPosition }
+    const newProps = { ...meshProps, position: usedPosition };
     return <mesh ref={meshRef}
         {...newProps}
-        name = {row + "x" + col}
+        name={row + "x" + col}
     >
         <boxGeometry args={[xWidth, 1, yWidth]} />
-    </mesh>
+    </mesh>;
 }
 
 

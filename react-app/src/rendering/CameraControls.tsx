@@ -1,6 +1,6 @@
-import { extend, useThree, type ThreeElement } from '@react-three/fiber'
-import { RefObject } from 'react'
-import { OrbitControls } from 'three/addons'
+import { extend, useThree, type ThreeElement } from '@react-three/fiber';
+import { type RefObject } from 'react';
+import { OrbitControls } from 'three/addons';
 
 declare module '@react-three/fiber' {
     interface ThreeElements {
@@ -8,7 +8,7 @@ declare module '@react-three/fiber' {
     }
 }
 
-extend({OrbitControls})
+extend({ OrbitControls });
 
 interface CameraControlProps {
     ref?: RefObject<OrbitControls>
@@ -17,13 +17,13 @@ interface CameraControlProps {
 function CameraControls({
     ref 
 }: CameraControlProps) {
-    const { camera, gl} = useThree()
+    const { camera, gl } = useThree();
     return <orbitControls
         ref={ref}
         args={[camera, gl.domElement]}
         target={[0, 0, 0]}
-        maxPolarAngle={Math.PI/2}
-    />
+        maxPolarAngle={Math.PI / 2}
+    />;
 }
 
-export default CameraControls
+export default CameraControls;

@@ -24,7 +24,7 @@ export default function MousePosTooltip({
     return mousePos.moved ? <div
         style={{
             position: "absolute",
-            
+
             top: (mousePos.y + offsetY) + "px",
             left: (mousePos.x + offsetX) + "px"
         }}>
@@ -39,12 +39,12 @@ export default function MousePosTooltip({
                 borderTopColor: "transparent",
                 borderWidth: arrowSize + "px",
                 borderRadius: "0px"
-            } }
+            }}
         >{" "}</div>
-        <div className={className}>{content}</div>
+        <div className={className}>{content}</div>;
 
 
-    </div> : null
+    </div> : null;
 
     //return mousePos.moved ?
     //    <div

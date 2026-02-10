@@ -8,6 +8,7 @@ import { Histogram3D } from "./Histogram3D";
 interface StatsCanvasProps {
     data: { [key: string]: number };
     cam?: ReactElement;
+    className?: string;
     xCols: number;
     yCols: number;
     xAxisLabel: string;
@@ -25,6 +26,7 @@ interface StatsCanvasProps {
 export function StatsCanvas({
     data,
     cam,
+    className = "",
     xCols,
     yCols,
     xAxisLabel,
@@ -40,12 +42,12 @@ export function StatsCanvas({
 }: StatsCanvasProps) {
 
     if (cameraControls === undefined) {
-        cameraControls = <></>
+        cameraControls = <></>;
     }
     
     
     return (
-        <Canvas className="stats-canvas">
+        <Canvas className={className}>
             <ambientLight intensity={Math.PI / 2} />
             <pointLight position={[10, 10, 10]} decay={0} intensity={Math.PI} />
             <Histogram3D
@@ -60,10 +62,10 @@ export function StatsCanvas({
                 headerLabel={headerLabel}
                 defaultHeight={defaultHeight}
                 colPointerOver={colPointerOver}
-                colPointerOut={colPointerOut }
+                colPointerOut={colPointerOut}
             />
             {cam}
             {cameraControls}
         </Canvas>
-    )
+    );
 }

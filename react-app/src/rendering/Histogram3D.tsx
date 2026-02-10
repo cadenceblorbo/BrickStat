@@ -13,7 +13,7 @@ declare module '@react-three/fiber' {
     }
 }
 
-extend({ TextGeometry })
+extend({ TextGeometry });
 
 const loader = new FontLoader;
 const font = loader.parse(Inter as unknown as FontData);
@@ -87,7 +87,7 @@ function Histogram3DLabels({
             (yOffset - 1) * (colWidthY + padding),
             0,
             (xOffset + i) * (colWidthX + padding)
-        ]
+        ];
         labels.push(makeTextMesh(String(i+1), xNumberSize, numberPos, rotationHorizontal, i));
     }
 
@@ -97,7 +97,7 @@ function Histogram3DLabels({
             (yOffset + i) * (colWidthY + padding),
             0,
             (xOffset - 1) * (colWidthX + padding)
-        ]
+        ];
         labels.push(makeTextMesh(String(i+1), yNumberSize, numberPos, rotationHorizontal, i+xCols));
     }
 
@@ -106,23 +106,23 @@ function Histogram3DLabels({
         0,
         0,
         (xOffset - 1) * (colWidthX + padding) - ((xNumberSize) + 0.5 * axisLabelSize)
-    ]
+    ];
     const yLabelPos: [number, number, number] = [
         (yOffset - 1) * (colWidthY + padding) - ((yNumberSize) + 0.5 * axisLabelSize),
         0,
         0
-    ]
+    ];
     const headerPos: [number, number, number] = [
         0,
         0,
         xLabelPos[2] - (axisLabelSize * 2 + padding)
-    ]
+    ];
 
     labels.push(makeTextMesh(xAxisLabel, axisLabelSize, xLabelPos, rotationHorizontal, xCols + yCols));
     labels.push(makeTextMesh(yAxisLabel, axisLabelSize, yLabelPos, rotationVertical, xCols + yCols + 1));
     labels.push(makeTextMesh(headerLabel, 2 * axisLabelSize, headerPos, rotationHorizontal, xCols + yCols + 2));
 
-    return <>{labels}</>
+    return <>{labels}</>;
 }
 
 
@@ -149,7 +149,7 @@ export function Histogram3D({
     xCols,
     yCols,
     data,
-    heightScaling = (dataVal) => { return dataVal },
+    heightScaling = (dataVal) => { return dataVal; },
     material,
     materialChange = () => { },
     xAxisLabel = "X Axis",
@@ -165,8 +165,8 @@ export function Histogram3D({
 
     const heights = useRef(Array<number>(xCols).fill(defaultHeight).map(() => new Array<number>(yCols).fill(defaultHeight)));
 
-    const xOffset = -(xCols - 1) / 2
-    const yOffset = -(yCols - 1) / 2
+    const xOffset = -(xCols - 1) / 2;
+    const yOffset = -(yCols - 1) / 2;
 
     
 
@@ -175,9 +175,9 @@ export function Histogram3D({
     for (let i = 0; i < xCols; i++) {
         for (let j = 0; j < yCols; j++) {
             //grid position
-            const xPos = (xOffset + i) * (colWidthX + padding)
-            const yPos = (yOffset + j) * (colWidthY + padding)
-            const key = (i + 1) + "x" + (j + 1)
+            const xPos = (xOffset + i) * (colWidthX + padding);
+            const yPos = (yOffset + j) * (colWidthY + padding);
+            const key = (i + 1) + "x" + (j + 1);
             const props: AnimatedColumnProps = {
                 row: i+1,
                 col: j+1,
@@ -200,7 +200,7 @@ export function Histogram3D({
             grid.push(<AnimatedHistogramColumn
                 {...props}
                 key={i * yCols + j}
-            />)
+            />);
         }
     }
 
