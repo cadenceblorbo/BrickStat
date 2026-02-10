@@ -14,6 +14,7 @@ import { StatsCanvas } from './rendering/StatsCanvas.tsx';
 import { colorLerp3 } from './utils/ColorUtil.ts';
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 import TooltipContent from './react-components/TooltipContent.tsx';
+import { Clamp } from './utils/MathUtil.ts'
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
@@ -154,6 +155,15 @@ function App() {
         }
     }
 
+    function partTypeChange(s: string) {
+        setPartType(s as PartType);
+        setYearVal(Clamp(
+            yearVal,
+            data.histogramData[s as PartType][quantityType][chronoType].firstYear,
+            data.histogramData[s as PartType][quantityType][chronoType].lastYear
+        ));
+    }
+
     const perspectiveCam = <PerspectiveCamera
         position={[0, 30, 7]}
         fov={75}
@@ -194,7 +204,7 @@ function App() {
             <button className="year-button" onClick={() => { buttonYearChange(1); }}>{">"}</button>
         </div>
         <div className="dataset-selection-parent">
-            <LabeledDropdown label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={setPartType} />
+            <LabeledDropdown label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={partTypeChange} />
             <LabeledDropdown label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={setQuantityType} />
             <LabeledDropdown label={"Time Format"} values={Object.values(ChronoType)} selected={chronoType} onChange={setChronoType} />
         </div>

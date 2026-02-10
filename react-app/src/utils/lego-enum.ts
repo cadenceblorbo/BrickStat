@@ -1,5 +1,6 @@
 export enum PartType {
-	Bricks = "Bricks"
+	Bricks = "Bricks",
+	Plates = "Plates"
 }
 
 export enum ChronoType {

@@ -1,5 +1,7 @@
 import brickSetHistory from './dataset/brick-set-history.json';
 import brickTotalHistory from './dataset/brick-total-history.json';
+import plateSetHistory from './dataset/plate-set-history.json';
+import plateTotalHistory from './dataset/plate-total-history.json';
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 
 export class HistogramData {
@@ -130,10 +132,21 @@ export function retrieveData(): LegoDataset {
 					[ChronoType.Cumulative]: new HistogramData(brickSetHistory, true),
 					[ChronoType.ByYear]: new HistogramData(brickSetHistory)
 				}
+			},
+			[PartType.Plates]: {
+				[QuantityType.TotalQuantity]: {
+					[ChronoType.Cumulative]: new HistogramData(plateTotalHistory, true),
+					[ChronoType.ByYear]: new HistogramData(plateTotalHistory)
+				},
+				[QuantityType.SetApperances]: {
+					[ChronoType.Cumulative]: new HistogramData(plateSetHistory, true),
+					[ChronoType.ByYear]: new HistogramData(plateSetHistory)
+				}
 			}
 		},
 		partLifetimeData: {
-			[PartType.Bricks]: new PartLifetimeData(brickTotalHistory)
+			[PartType.Bricks]: new PartLifetimeData(brickTotalHistory),
+			[PartType.Plates]: new PartLifetimeData(plateTotalHistory)
 		}
 
 	};

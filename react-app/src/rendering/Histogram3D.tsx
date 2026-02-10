@@ -163,12 +163,12 @@ export function Histogram3D({
     colPointerOut = () => { }
 }: Histogram3DProps) {
 
-    const heights = useRef(Array<number>(xCols).fill(defaultHeight).map(() => new Array<number>(yCols).fill(defaultHeight)));
+    const heights = useRef<Map<string,number>>(new Map);
 
     const xOffset = -(xCols - 1) / 2;
     const yOffset = -(yCols - 1) / 2;
 
-    
+    console.log(data);
 
     //create columns
     const grid = [];
@@ -178,14 +178,17 @@ export function Histogram3D({
             const xPos = (xOffset + i) * (colWidthX + padding);
             const yPos = (yOffset + j) * (colWidthY + padding);
             const key = (i + 1) + "x" + (j + 1);
+            if (!heights.current.has(key)) {
+                heights.current.set(key, defaultHeight);
+            }
             const props: AnimatedColumnProps = {
                 row: i+1,
                 col: j+1,
                 meshProps: { position: new Vector3(yPos, 0, xPos), material: material.clone(), onPointerOver: colPointerOver, onPointerOut: colPointerOut },
-                heightStart: heights.current[i][j],
+                heightStart: heights.current.get(key),
                 heightTarget: (key in data) ? heightScaling(data[key]) : defaultHeight,
                 trackHeightChange: (h: number) => {
-                    heights.current[i][j] = h;
+                    heights.current.set(key, h);
                 },
                 materialChange: materialChange,
                 xWidth: colWidthX,
