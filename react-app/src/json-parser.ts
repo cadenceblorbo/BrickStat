@@ -2,7 +2,21 @@ import brickSetHistory from './dataset/brick-set-history.json';
 import brickTotalHistory from './dataset/brick-total-history.json';
 import plateSetHistory from './dataset/plate-set-history.json';
 import plateTotalHistory from './dataset/plate-total-history.json';
+import tileSetHistory from './dataset/tile-set-history.json';
+import tileTotalHistory from './dataset/tile-total-history.json';
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
+
+const totalHistories: { [key in PartType]: { [key: string]: { [key: string]: number } } } = {
+	[PartType.Bricks]: brickTotalHistory,
+	[PartType.Plates]: plateTotalHistory,
+	[PartType.Tiles]: tileTotalHistory,
+};
+
+const setHistories: { [key in PartType]: { [key: string]: { [key: string]: number } } } = {
+	[PartType.Bricks]: brickSetHistory,
+	[PartType.Plates]: plateSetHistory,
+	[PartType.Tiles]: tileSetHistory,
+};
 
 export class HistogramData {
 	public dataset: { [key: string]: { [key: string]: number } };
@@ -121,36 +135,30 @@ export interface LegoDataset {
 }
 
 export function retrieveData(): LegoDataset {
-	return {
-		histogramData: {
-			[PartType.Bricks]: {
-				[QuantityType.TotalQuantity]: {
-					[ChronoType.Cumulative]: new HistogramData(brickTotalHistory, true),
-					[ChronoType.ByYear]: new HistogramData(brickTotalHistory)
-				},
-				[QuantityType.SetApperances]: {
-					[ChronoType.Cumulative]: new HistogramData(brickSetHistory, true),
-					[ChronoType.ByYear]: new HistogramData(brickSetHistory)
-				}
-			},
-			[PartType.Plates]: {
-				[QuantityType.TotalQuantity]: {
-					[ChronoType.Cumulative]: new HistogramData(plateTotalHistory, true),
-					[ChronoType.ByYear]: new HistogramData(plateTotalHistory)
-				},
-				[QuantityType.SetApperances]: {
-					[ChronoType.Cumulative]: new HistogramData(plateSetHistory, true),
-					[ChronoType.ByYear]: new HistogramData(plateSetHistory)
-				}
-			}
-		},
-		partLifetimeData: {
-			[PartType.Bricks]: new PartLifetimeData(brickTotalHistory),
-			[PartType.Plates]: new PartLifetimeData(plateTotalHistory)
-		}
 
+	const result: LegoDataset = {
+		histogramData: {},
+		partLifetimeData: {}
 	};
-		
-		
-	
+
+	for (const type in PartType) {
+		result.histogramData[type as PartType] = {};
+	}
+
+	for (const [key, value] of Object.entries(totalHistories)){
+		result.histogramData[key as PartType][QuantityType.TotalQuantity] = {
+			[ChronoType.Cumulative]: new HistogramData(value, true),
+			[ChronoType.ByYear]: new HistogramData(value)
+		};
+		result.partLifetimeData[key as PartType] = new PartLifetimeData(value);
+	}
+
+	for (const [key, value] of Object.entries(setHistories)) {
+		result.histogramData[key as PartType][QuantityType.SetApperances] = {
+			[ChronoType.Cumulative]: new HistogramData(value, true),
+			[ChronoType.ByYear]: new HistogramData(value)
+		};
+	}
+
+	return result;
 }

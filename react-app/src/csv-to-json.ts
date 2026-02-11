@@ -12,6 +12,8 @@ const brickTotalOutputPath = "./dataset/brick-total-history.json";
 const brickSetOutputPath = "./dataset/brick-set-history.json";
 const plateTotalOutputPath = "./dataset/plate-total-history.json";
 const plateSetOutputPath = "./dataset/plate-set-history.json";
+const tileTotalOutputPath = "./dataset/tile-total-history.json";
+const tileSetOutputPath = "./dataset/tile-set-history.json";
 
 type InventoriesData = {
     id: string;
@@ -119,6 +121,8 @@ async function regenerateFiles() {
     const setBrickData = await getPartDataByYear(partNumbers.brickMap, false);
     const totalPlateData = await getPartDataByYear(partNumbers.plateMap, true);
     const setPlateData = await getPartDataByYear(partNumbers.plateMap, false);
+    const totalTileData = await getPartDataByYear(partNumbers.tileMap, true);
+    const setTileData = await getPartDataByYear(partNumbers.tileMap, false);
 
     const replacer = (key: unknown, value: unknown) => {
         if (value instanceof Map) {
@@ -132,6 +136,8 @@ async function regenerateFiles() {
     fs.writeFileSync(brickSetOutputPath, JSON.stringify(setBrickData, replacer, 4));
     fs.writeFileSync(plateTotalOutputPath, JSON.stringify(totalPlateData, replacer, 4));
     fs.writeFileSync(plateSetOutputPath, JSON.stringify(setPlateData, replacer, 4));
+    fs.writeFileSync(tileTotalOutputPath, JSON.stringify(totalTileData, replacer, 4));
+    fs.writeFileSync(tileSetOutputPath, JSON.stringify(setTileData, replacer, 4));
 }
 
 regenerateFiles();
