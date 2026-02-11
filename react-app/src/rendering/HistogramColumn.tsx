@@ -65,6 +65,7 @@ export function AnimatedHistogramColumn({
     }
     const time = useRef(0);
     const meshRef = useRef<Mesh>(null!);
+    let frameHappened = false;
 
     useEffect(() => {
         time.current = 0;
@@ -76,7 +77,7 @@ export function AnimatedHistogramColumn({
 
     useFrame((state, delta) => {
 
-        if (time.current < 1) {
+       if (time.current < 1 || !frameHappened) {
             delta = delta * (1 / animSpeed);
             time.current += delta;
             const height = Smoothstep(heightStart, heightTarget, time.current);
@@ -88,7 +89,8 @@ export function AnimatedHistogramColumn({
             trackHeightChange(height);
             //if (flag === "x") {
             //    console.log(height)
-            //}
+           //}
+           frameHappened = true;
         }
     });
 
@@ -96,7 +98,7 @@ export function AnimatedHistogramColumn({
 
     let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
     usedPosition = new Vector3(usedPosition.x, usedPosition.y + heightStart / 2, usedPosition.z);
-    const newProps = { ...meshProps, position: usedPosition };
+    const newProps = { ...meshProps, position: usedPosition, scale: new Vector3(1, heightStart,1) };
     return <mesh ref={meshRef}
         {...newProps}
         name={row + "x" + col}

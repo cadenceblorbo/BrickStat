@@ -196,9 +196,9 @@ export function Histogram3D({
                 isEmpty: !(key in data),
             };
 
-            if (i == 0 && j == 1) {
-                props.flag = 'x';
-            }
+            //if (i == 1 && j == 5) {
+            //    props.flag = 'x';
+            //}
 
             grid.push(<AnimatedHistogramColumn
                 {...props}
