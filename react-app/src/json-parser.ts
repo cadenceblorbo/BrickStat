@@ -4,18 +4,23 @@ import plateSetHistory from './dataset/plate-set-history.json';
 import plateTotalHistory from './dataset/plate-total-history.json';
 import tileSetHistory from './dataset/tile-set-history.json';
 import tileTotalHistory from './dataset/tile-total-history.json';
+import axleSetHistory from './dataset/axle-set-history.json';
+import axleTotalHistory from './dataset/axle-total-history.json';
+
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 
 const totalHistories: { [key in PartType]: { [key: string]: { [key: string]: number } } } = {
 	[PartType.Bricks]: brickTotalHistory,
 	[PartType.Plates]: plateTotalHistory,
 	[PartType.Tiles]: tileTotalHistory,
+	[PartType.Axles] : axleTotalHistory,
 };
 
 const setHistories: { [key in PartType]: { [key: string]: { [key: string]: number } } } = {
 	[PartType.Bricks]: brickSetHistory,
 	[PartType.Plates]: plateSetHistory,
 	[PartType.Tiles]: tileSetHistory,
+	[PartType.Axles]: axleTotalHistory,
 };
 
 export class HistogramData {

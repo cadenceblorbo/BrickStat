@@ -14,6 +14,8 @@ const plateTotalOutputPath = "./dataset/plate-total-history.json";
 const plateSetOutputPath = "./dataset/plate-set-history.json";
 const tileTotalOutputPath = "./dataset/tile-total-history.json";
 const tileSetOutputPath = "./dataset/tile-set-history.json";
+const axleTotalOutputPath = "./dataset/axle-total-history.json";
+const axleSetOutputPath = "./dataset/axle-set-history.json";
 
 type InventoriesData = {
     id: string;
@@ -123,6 +125,8 @@ async function regenerateFiles() {
     const setPlateData = await getPartDataByYear(partNumbers.plateMap, false);
     const totalTileData = await getPartDataByYear(partNumbers.tileMap, true);
     const setTileData = await getPartDataByYear(partNumbers.tileMap, false);
+    const totalAxleData = await getPartDataByYear(partNumbers.axleMap, true);
+    const setAxleData = await getPartDataByYear(partNumbers.axleMap, false);
 
     const replacer = (key: unknown, value: unknown) => {
         if (value instanceof Map) {
@@ -138,6 +142,8 @@ async function regenerateFiles() {
     fs.writeFileSync(plateSetOutputPath, JSON.stringify(setPlateData, replacer, 4));
     fs.writeFileSync(tileTotalOutputPath, JSON.stringify(totalTileData, replacer, 4));
     fs.writeFileSync(tileSetOutputPath, JSON.stringify(setTileData, replacer, 4));
+    fs.writeFileSync(axleTotalOutputPath, JSON.stringify(totalAxleData, replacer, 4));
+    fs.writeFileSync(axleSetOutputPath, JSON.stringify(setAxleData, replacer, 4));
 }
 
 regenerateFiles();

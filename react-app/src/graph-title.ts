@@ -13,6 +13,9 @@ export function GraphTitle(partType: PartType, quantityType: QuantityType, chron
         case PartType.Tiles:
             result = "Tile";
             break;
+        case PartType.Axles:
+            result = "Axle";
+            break;
         default:
             result = "Default Part";
             break;
