@@ -10,7 +10,7 @@ export default function LabeledColorPicker({
     onChange
 
 }: LabeledColorPickerProps) {
-    return <div>
+    return(
         <label>
             {label}
             <input
@@ -18,6 +18,5 @@ export default function LabeledColorPicker({
                 value={value}
                 onChange={e => onChange(e.target.value)}
             ></input>
-        </label>
-    </div>;
+        </label>);
 }

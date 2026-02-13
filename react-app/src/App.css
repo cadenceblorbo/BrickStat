@@ -116,3 +116,9 @@ button:hover {
 .tooltip i {
     color: var(--color-gray);
 }
+
+.advanced-options{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}

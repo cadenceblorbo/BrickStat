@@ -24,7 +24,7 @@ export default function LabeledDropdown({
         i++;
     }
 
-    return <div>
+    return(
         <label>
             {label}
             <select
@@ -33,7 +33,5 @@ export default function LabeledDropdown({
             >
                 {...dropdownOptions}
             </select>
-        </label>
-
-    </div>;
+        </label>);
 }

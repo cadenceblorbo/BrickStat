@@ -40,12 +40,23 @@ function App() {
     const [mouseDown, setMouseDown] = useState(false);
 
     const [advancedOptionsVisible, setAdvancedOptionsVisible] = useState(false);
+
     const [barColor1, setBarColor1] = useState("#60ba76");
     const [barColor2, setBarColor2] = useState("#4b9f4a");
     const [barColor3, setBarColor3] = useState("#237841");
     const threeBarColor1 = useMemo(() => new THREE.Color(barColor1), [barColor1]);
     const threeBarColor2 = useMemo(() => new THREE.Color(barColor2), [barColor2]);
     const threeBarColor3 = useMemo(() => new THREE.Color(barColor3), [barColor3]);
+
+    const [emptyBarColor, setEmptyBarColor] = useState("#6c6e68");
+    const [unusedBarColor, setUnusedBarColor] = useState("#42423e");
+    const [impossibleBarColor, setImpossibleBarColor] = useState("#05131D");
+    const threeEmptyBarColor = useMemo(() => new THREE.Color(emptyBarColor), [emptyBarColor]);
+    const threeUnusedBarColor = useMemo(() => new THREE.Color(unusedBarColor), [unusedBarColor]);
+    const threeImpossibleBarColor = useMemo(() => new THREE.Color(impossibleBarColor), [impossibleBarColor]);
+
+    const [linearLerpMidpoint, setLinearLerpMidpoint] = useState(0.25);
+    const [logarithmicLerpMidpoint, setLogarithmicLerpMidpoint] = useState(0.8);
 
     function buttonResetCamera() {
         camControlsRef.current.reset();
@@ -85,18 +96,18 @@ function App() {
     function materialChange(mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void {
         if (isEmpty) {
             if (row > col) {
-                (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x05131D);
+                (mat as THREE.MeshStandardMaterial).color = threeImpossibleBarColor;
             } else {
                 if (data.partLifetimeData[partType].hasPart(row + "x" + col)) {
-                    (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x6c6e68);
+                    (mat as THREE.MeshStandardMaterial).color = threeEmptyBarColor;
                 } else {
-                    (mat as THREE.MeshStandardMaterial).color = new THREE.Color().setHex(0x42423e);
+                    (mat as THREE.MeshStandardMaterial).color = threeUnusedBarColor;
                 }
             }
         }
         else {
             const heightDiv = (scalingType === "Linear") ? 20 : 6;
-            const midpoint = (scalingType === "Linear") ? 0.25 : 0.8;
+            const midpoint = (scalingType === "Linear") ? linearLerpMidpoint : logarithmicLerpMidpoint;
             (mat as THREE.MeshStandardMaterial).color = colorLerp3(
                 threeBarColor1,
                 threeBarColor2,
@@ -229,23 +240,43 @@ function App() {
         </button>
 
         {(advancedOptionsVisible) ?
-            <div>
-                <LabeledColorPicker
-                    label={"Active Bar Color 1"}
-                    value={barColor1}
-                    onChange={ setBarColor1 }
-                ></LabeledColorPicker>
-                <LabeledColorPicker
-                    label={"Active Bar Color 2"}
-                    value={barColor2}
-                    onChange={setBarColor2}
-                ></LabeledColorPicker>
-                <LabeledColorPicker
-                    label={"Active Bar Color 3"}
-                    value={barColor3}
-                    onChange={setBarColor3}
-                ></LabeledColorPicker>
-            </div>
+            (<div className="advanced-options">
+                <h3>Color Options</h3>
+                <div>
+                    <LabeledColorPicker
+                        label={"Active Bar Color 1"}
+                        value={barColor1}
+                        onChange={ setBarColor1 }
+                    ></LabeledColorPicker>
+                    <LabeledColorPicker
+                        label={"Active Bar Color 2"}
+                        value={barColor2}
+                        onChange={setBarColor2}
+                    ></LabeledColorPicker>
+                    <LabeledColorPicker
+                        label={"Active Bar Color 3"}
+                        value={barColor3}
+                        onChange={setBarColor3}
+                    ></LabeledColorPicker>
+                </div>
+                <div>
+                    <LabeledColorPicker
+                        label={"Empty Bar Color"}
+                        value={emptyBarColor}
+                        onChange={setEmptyBarColor}
+                    ></LabeledColorPicker>
+                    <LabeledColorPicker
+                        label={"Unused Bar Color"}
+                        value={unusedBarColor}
+                        onChange={setUnusedBarColor}
+                    ></LabeledColorPicker>
+                    <LabeledColorPicker
+                        label={"Impossible Bar Color"}
+                        value={impossibleBarColor}
+                        onChange={setImpossibleBarColor}
+                    ></LabeledColorPicker>
+                </div>
+            </div>)
         : null
         }
 
