@@ -1,12 +1,13 @@
 ﻿import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
 import { type ThreeEvent } from '@react-three/fiber';
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 import './App.css';
 import { GraphTitle } from './graph-title.ts';
 import * as JSONParse from './json-parser.ts';
+import LabeledColorPicker from './react-components/LabeledColorPicker.tsx';
 import LabeledDropdown from './react-components/LabeledDropdown.tsx';
 import MousePosTooltip from './react-components/MousePosTooltip.tsx';
 import CameraControls from "./rendering/CameraControls.tsx";
@@ -14,19 +15,12 @@ import { StatsCanvas } from './rendering/StatsCanvas.tsx';
 import { colorLerp3 } from './utils/ColorUtil.ts';
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 import TooltipContent from './react-components/TooltipContent.tsx';
-import { Clamp } from './utils/MathUtil.ts'
+import { Clamp } from './utils/MathUtil.ts';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_HEIGHT_DIVISOR = 100;
 const DEFAULT_BAR_HEIGHT = 0.1;
-
-//73dca1
-//4b9f4a
-//237841
-const COLOR_1 = new THREE.Color().setHex(0x60ba76);
-const COLOR_2 = new THREE.Color().setHex(0x4b9f4a);
-const COLOR_3 = new THREE.Color().setHex(0x237841);
-
+const tooltipArrowSize = 10;
 
 function App() {
     const data = JSONParse.retrieveData();
@@ -39,7 +33,19 @@ function App() {
     const currentData = data.histogramData[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
     const camControlsRef = useRef<OrbitControls>(null!);
+
     const lastHoverRef = useRef("");
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [tooltipContent, setTooltipContent] = useState(<div></div>);
+    const [mouseDown, setMouseDown] = useState(false);
+
+    const [advancedOptionsVisible, setAdvancedOptionsVisible] = useState(false);
+    const [barColor1, setBarColor1] = useState("#60ba76");
+    const [barColor2, setBarColor2] = useState("#4b9f4a");
+    const [barColor3, setBarColor3] = useState("#237841");
+    const threeBarColor1 = useMemo(() => new THREE.Color(barColor1), [barColor1]);
+    const threeBarColor2 = useMemo(() => new THREE.Color(barColor2), [barColor2]);
+    const threeBarColor3 = useMemo(() => new THREE.Color(barColor3), [barColor3]);
 
     function buttonResetCamera() {
         camControlsRef.current.reset();
@@ -92,19 +98,16 @@ function App() {
             const heightDiv = (scalingType === "Linear") ? 20 : 6;
             const midpoint = (scalingType === "Linear") ? 0.25 : 0.8;
             (mat as THREE.MeshStandardMaterial).color = colorLerp3(
-                COLOR_1,
-                COLOR_2,
-                COLOR_3,
+                threeBarColor1,
+                threeBarColor2,
+                threeBarColor3,
                 height / heightDiv,
                 midpoint
             );
         }
     }
 
-    const [tooltipVisible, setTooltipVisible] = useState(false);
-    const [tooltipContent, setTooltipContent] = useState(<div></div>);
-    const [mouseDown, setMouseDown] = useState(false);
-    const tooltipArrowSize = 10;
+    
 
     function colPointerOver(e: ThreeEvent<PointerEvent>) {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
@@ -197,25 +200,55 @@ function App() {
                 colPointerOut={colPointerOut}
             />
         </div>
+
         <div className="year-controls">
             <input className="year-slider" type="range" min={currentData.firstYear} max={currentData.lastYear} onChange={sliderYearChange} value={yearVal}></input>
             <button className="year-button" onClick={() => { buttonYearChange(-1); }}>{"<"}</button>
             <p>{yearVal}</p>
             <button className="year-button" onClick={() => { buttonYearChange(1); }}>{">"}</button>
         </div>
+
         <div className="dataset-selection-parent">
             <LabeledDropdown label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={partTypeChange} />
             <LabeledDropdown label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={setQuantityType} />
             <LabeledDropdown label={"Time Format"} values={Object.values(ChronoType)} selected={chronoType} onChange={setChronoType} />
         </div>
-        <div className="camera-selection-parent">
+
+        <div className="scene-control-parent">
             <LabeledDropdown label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
             <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
+
         {(tooltipVisible && !mouseDown) ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize} content={
             tooltipContent
         }></MousePosTooltip> : null}
+
+        <button onClick={() => { setAdvancedOptionsVisible(!advancedOptionsVisible); }} >
+            {(advancedOptionsVisible) ? "Hide Advanced Options" : "Show Advanced Options"}
+        </button>
+
+        {(advancedOptionsVisible) ?
+            <div>
+                <LabeledColorPicker
+                    label={"Active Bar Color 1"}
+                    value={barColor1}
+                    onChange={ setBarColor1 }
+                ></LabeledColorPicker>
+                <LabeledColorPicker
+                    label={"Active Bar Color 2"}
+                    value={barColor2}
+                    onChange={setBarColor2}
+                ></LabeledColorPicker>
+                <LabeledColorPicker
+                    label={"Active Bar Color 3"}
+                    value={barColor3}
+                    onChange={setBarColor3}
+                ></LabeledColorPicker>
+            </div>
+        : null
+        }
+
 
     </div>);
 }

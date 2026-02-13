@@ -81,7 +81,7 @@ button:hover {
     height: 26px;
 }
 
-.dataset-selection-parent, .camera-selection-parent {
+.dataset-selection-parent, .scene-control-parent {
     display: flex;
     gap:2.5vw;
     justify-content: center;
@@ -90,7 +90,7 @@ button:hover {
     padding: 5px;
 }
 
-.dataset-selection-parent select, .camera-selection-parent select {
+.dataset-selection-parent select, .scene-control-parent select {
     background: var(--color-black);
     border-color: var(--color-gray);
     border-radius: 6px;

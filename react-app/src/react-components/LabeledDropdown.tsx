@@ -29,11 +29,11 @@ export default function LabeledDropdown({
             {label}
             <select
                 value={selected}
-                onChange={e => onChange(e.target.value) }
+                onChange={e => onChange(e.target.value)}
             >
                 {...dropdownOptions}
             </select>
         </label>
 
-    </div>
+    </div>;
 }
