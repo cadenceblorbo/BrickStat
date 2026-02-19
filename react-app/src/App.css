@@ -30,7 +30,6 @@
     appearance: none;
     background: var(--color-gray);
     border-radius: 200px;
-    outline: none;
     opacity: var(--base-opacity);
     -webkit-transition: var(--transition-time);
     transition: opacity var(--transition-time);
@@ -77,9 +76,6 @@ button:hover {
     font-size: 20px;
 }
 
-.camera-button{
-    height: 26px;
-}
 
 .dataset-selection-parent, .scene-control-parent {
     display: flex;

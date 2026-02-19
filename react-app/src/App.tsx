@@ -192,6 +192,7 @@ function App() {
     </OrthographicCamera>;
 
     return (<div>
+        <title>Lego Stat 3D Histogram Viewer</title>
         <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)}>
             <StatsCanvas
                 className="stats-canvas"
@@ -220,14 +221,14 @@ function App() {
         </div>
 
         <div className="dataset-selection-parent">
-            <LabeledDropdown label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={partTypeChange} />
-            <LabeledDropdown label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={setQuantityType} />
-            <LabeledDropdown label={"Time Format"} values={Object.values(ChronoType)} selected={chronoType} onChange={setChronoType} />
+            <LabeledDropdown id={"parttypes"} label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={partTypeChange} />
+            <LabeledDropdown id={"quantityformat"} label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={setQuantityType} />
+            <LabeledDropdown id={"timeformat"} label={"Time Format"} values={Object.values(ChronoType)} selected={chronoType} onChange={setChronoType} />
         </div>
 
         <div className="scene-control-parent">
-            <LabeledDropdown label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
-            <LabeledDropdown label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
+            <LabeledDropdown id={"verticalscaling"} label={"Vertical Scaling"} values={["Logarithmic", "Linear"]} selected={scalingType} onChange={setScalingType} />
+            <LabeledDropdown id={"cameratype"} label={"Camera Type"} values={["Perspective", "Orthographic"]} selected={cameraType} onChange={setCameraType} />
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
 
@@ -244,16 +245,19 @@ function App() {
                 <h3>Color Options</h3>
                 <div>
                     <LabeledColorPicker
+                        id={"activebarcolor1"}
                         label={"Active Bar Color 1"}
                         value={barColor1}
                         onChange={ setBarColor1 }
                     ></LabeledColorPicker>
                     <LabeledColorPicker
+                        id={"activebarcolor2"}
                         label={"Active Bar Color 2"}
                         value={barColor2}
                         onChange={setBarColor2}
                     ></LabeledColorPicker>
                     <LabeledColorPicker
+                        id={"activebarcolor3"}
                         label={"Active Bar Color 3"}
                         value={barColor3}
                         onChange={setBarColor3}
@@ -261,20 +265,26 @@ function App() {
                 </div>
                 <div>
                     <LabeledColorPicker
+                        id={"emptybarcolor"}
                         label={"Empty Bar Color"}
                         value={emptyBarColor}
                         onChange={setEmptyBarColor}
                     ></LabeledColorPicker>
                     <LabeledColorPicker
+                        id={"unusedbarcolor"}
                         label={"Unused Bar Color"}
                         value={unusedBarColor}
                         onChange={setUnusedBarColor}
                     ></LabeledColorPicker>
                     <LabeledColorPicker
+                        id={"impossiblebarcolor"}
                         label={"Impossible Bar Color"}
                         value={impossibleBarColor}
                         onChange={setImpossibleBarColor}
                     ></LabeledColorPicker>
+                </div>
+                <div>
+                    
                 </div>
             </div>)
         : null

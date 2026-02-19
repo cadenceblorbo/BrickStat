@@ -1,5 +1,6 @@
 
 interface LabeledDropdownProps {
+    id: string;
     label: string;
     values: string[];
     selected: string;
@@ -7,6 +8,7 @@ interface LabeledDropdownProps {
 }
 
 export default function LabeledDropdown({
+    id,
     label,
     values,
     selected,
@@ -25,9 +27,10 @@ export default function LabeledDropdown({
     }
 
     return(
-        <label>
+        <label htmlFor={id}>
             {label}
             <select
+                id={id}
                 value={selected}
                 onChange={e => onChange(e.target.value)}
             >
