@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as csvPromise from './csv-promise.ts';
 import * as partNumbers from './part-numbers/index.ts';
 
-//last data: feb 10 2026
+//last data: feb 23 2026
 
 const setsPath = "./dataset/sets.csv";
 const inventoriesPath = "./dataset/inventories.csv";
