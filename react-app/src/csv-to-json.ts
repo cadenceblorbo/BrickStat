@@ -103,6 +103,7 @@ async function getPartDataByYear(partsMap: Map<string, string>, useQuantity: boo
         const trimmedNumber = getTrimmedPartNumber(row.part_num);
 
         const dims: string | undefined = partsMap.get(trimmedNumber);
+
         if (skipSet.has(dims)) {
             return;
         }
@@ -123,6 +124,7 @@ async function getPartDataByYear(partsMap: Map<string, string>, useQuantity: boo
                 currentPartMap.set(dims, (currentPartMap.get(dims) ?? 0) + 1);
                 skipID = row.inventory_id;
                 skipSet.add(dims);
+                
             }
 
         }
@@ -134,13 +136,13 @@ async function getPartDataByYear(partsMap: Map<string, string>, useQuantity: boo
 }
 
 async function regenerateFiles() {
-    //const totalBrickData = await getPartDataByYear(partNumbers.brickMap, true);
-    //const setBrickData = await getPartDataByYear(partNumbers.brickMap, false);
-    //const totalPlateData = await getPartDataByYear(partNumbers.plateMap, true);
-    //const setPlateData = await getPartDataByYear(partNumbers.plateMap, false);
-    //const totalTileData = await getPartDataByYear(partNumbers.tileMap, true);
-    //const setTileData = await getPartDataByYear(partNumbers.tileMap, false);
-    //const totalAxleData = await getPartDataByYear(partNumbers.axleMap, true);
+    const totalBrickData = await getPartDataByYear(partNumbers.brickMap, true);
+    const setBrickData = await getPartDataByYear(partNumbers.brickMap, false);
+    const totalPlateData = await getPartDataByYear(partNumbers.plateMap, true);
+    const setPlateData = await getPartDataByYear(partNumbers.plateMap, false);
+    const totalTileData = await getPartDataByYear(partNumbers.tileMap, true);
+    const setTileData = await getPartDataByYear(partNumbers.tileMap, false);
+    const totalAxleData = await getPartDataByYear(partNumbers.axleMap, true);
     const setAxleData = await getPartDataByYear(partNumbers.axleMap, false);
 
     const replacer = (key: unknown, value: unknown) => {
@@ -150,30 +152,14 @@ async function regenerateFiles() {
         return value;
     };
 
-    //fs.writeFileSync(brickTotalOutputPath, JSON.stringify(totalBrickData, replacer, 4));
-    //fs.writeFileSync(brickSetOutputPath, JSON.stringify(setBrickData, replacer, 4));
-    //fs.writeFileSync(plateTotalOutputPath, JSON.stringify(totalPlateData, replacer, 4));
-    //fs.writeFileSync(plateSetOutputPath, JSON.stringify(setPlateData, replacer, 4));
-    //fs.writeFileSync(tileTotalOutputPath, JSON.stringify(totalTileData, replacer, 4));
-    //fs.writeFileSync(tileSetOutputPath, JSON.stringify(setTileData, replacer, 4));
-    //fs.writeFileSync(axleTotalOutputPath, JSON.stringify(totalAxleData, replacer, 4));
+    fs.writeFileSync(brickTotalOutputPath, JSON.stringify(totalBrickData, replacer, 4));
+    fs.writeFileSync(brickSetOutputPath, JSON.stringify(setBrickData, replacer, 4));
+    fs.writeFileSync(plateTotalOutputPath, JSON.stringify(totalPlateData, replacer, 4));
+    fs.writeFileSync(plateSetOutputPath, JSON.stringify(setPlateData, replacer, 4));
+    fs.writeFileSync(tileTotalOutputPath, JSON.stringify(totalTileData, replacer, 4));
+    fs.writeFileSync(tileSetOutputPath, JSON.stringify(setTileData, replacer, 4));
+    fs.writeFileSync(axleTotalOutputPath, JSON.stringify(totalAxleData, replacer, 4));
     fs.writeFileSync(axleSetOutputPath, JSON.stringify(setAxleData, replacer, 4));
-
-    ////console.log(temp);
-
-    //const onInventoriesData = (row: InventoriesData) => {
-    //    if (temp.has(row.id)) {
-    //        console.log(row.id);
-    //    }
-    //};
-
-    //console.log("----------------");
-
-    //for (const item of temp) {
-    //    console.log(item);
-    //}
-
-    //await csvPromise.parseCSV<InventoriesData>(inventoriesPath, onInventoriesData);
 
 
 }
