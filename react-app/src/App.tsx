@@ -19,7 +19,7 @@ import TooltipContent from './react-components/TooltipContent.tsx';
 import { Clamp } from './utils/MathUtil.ts';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
-const BY_YEAR_HEIGHT_DIVISOR = 100;
+const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
 const DEFAULT_BAR_HEIGHT = 0.1;
 const tooltipArrowSize = 10;
 
@@ -83,7 +83,7 @@ function App() {
                     dataVal /= CUMULATIVE_LINEAR_HEIGHT_DIVISOR;
                     break;
                 case ChronoType.ByYear:
-                    dataVal /= BY_YEAR_HEIGHT_DIVISOR;
+                    dataVal /= BY_YEAR_LINEAR_HEIGHT_DIVISOR;
                     break;
                 default:
                     break;
@@ -245,7 +245,7 @@ function App() {
 
         {(advancedOptionsVisible) ?
             (<div className="advanced-options">
-                <h3>Color Options</h3>
+                <h2>Color Options</h2>
                 <div className="advanced-options-row">
                     <LabeledColorPicker
                         id={"activebarcolor1"}

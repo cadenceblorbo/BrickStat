@@ -17,19 +17,10 @@
     height: 70vh;
 }
 
-.year-controls{
-    display:flex;
-    gap: 10px;
-    justify-content:center;
-    align-items:center;
-}
-
-.year-slider {
-    width: 80vw;
+input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
     background: var(--color-gray);
-    border-radius: 200px;
     opacity: var(--base-opacity);
     -webkit-transition: var(--transition-time);
     transition: opacity var(--transition-time);
@@ -37,20 +28,32 @@
     --thumb-height: 175%;
 }
 
-.year-slider:hover{
-    opacity:1;
+.year-controls {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
 }
 
-.year-slider::-webkit-slider-thumb {
+.year-slider {
+    width: 80vw;
+    border-radius: 0.5rem;
+}
+
+input[type="range"]:hover {
+    opacity: 1;
+}
+
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     background: var(--thumb-color);
     cursor: pointer;
     height: var(--thumb-height);
-    border:none
+    border: none
 }
 
-.year-slider::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
     background: var(--thumb-color);
     cursor: pointer;
     height: var(--thumb-height);
@@ -73,7 +76,7 @@ button:hover {
 }
 
 .year-button {
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 
 
@@ -144,5 +147,9 @@ legend{
     width: 3rem;
     height: 1rem;
     align-self: center;
-    
+}
+
+.advanced-options input[type="range"]{
+    border-radius: 0.5rem;
+    height: 1rem;
 }

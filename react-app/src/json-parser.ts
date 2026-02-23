@@ -20,7 +20,7 @@ const setHistories: { [key in PartType]: { [key: string]: { [key: string]: numbe
 	[PartType.Bricks]: brickSetHistory,
 	[PartType.Plates]: plateSetHistory,
 	[PartType.Tiles]: tileSetHistory,
-	[PartType.Axles]: axleTotalHistory,
+	[PartType.Axles]: axleSetHistory,
 };
 
 export class HistogramData {

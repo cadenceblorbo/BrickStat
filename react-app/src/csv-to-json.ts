@@ -96,6 +96,7 @@ async function getPartDataByYear(partsMap: Map<string, string>, useQuantity: boo
 
         const dims: string | undefined = partsMap.get(trimmedNumber);
         const year: number = Number(idToYear.get(row.inventory_id));
+
         if (dims === undefined || isNaN(year) || row.is_spare == "True") {
             return;
         }
@@ -134,7 +135,6 @@ async function regenerateFiles() {
         }
         return value;
     };
-    //console.log(JSON.stringify(partDataByYear, replacer))
 
     fs.writeFileSync(brickTotalOutputPath, JSON.stringify(totalBrickData, replacer, 4));
     fs.writeFileSync(brickSetOutputPath, JSON.stringify(setBrickData, replacer, 4));
