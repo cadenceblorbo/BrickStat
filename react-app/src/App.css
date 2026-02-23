@@ -118,3 +118,31 @@ button:hover {
     justify-content: center;
     flex-direction: column;
 }
+
+fieldset {
+    display: flex;
+    justify-content: center;
+    border:none;
+}
+
+legend{
+    float:left;
+}
+
+.advanced-options-row {
+    display: flex;
+    justify-content: center;
+    gap: 2.5vw;
+    padding: 0.25rem;
+}
+
+.advanced-options input {
+    margin-left: 0.5rem;
+}
+
+.advanced-options input[type="text"] {
+    width: 3rem;
+    height: 1rem;
+    align-self: center;
+    
+}

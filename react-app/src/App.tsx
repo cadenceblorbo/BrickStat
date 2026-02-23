@@ -9,6 +9,7 @@ import { GraphTitle } from './graph-title.ts';
 import * as JSONParse from './json-parser.ts';
 import LabeledColorPicker from './react-components/LabeledColorPicker.tsx';
 import LabeledDropdown from './react-components/LabeledDropdown.tsx';
+import LabeledTextboxSlider from './react-components/LabeledTextboxSlider.tsx';
 import MousePosTooltip from './react-components/MousePosTooltip.tsx';
 import CameraControls from "./rendering/CameraControls.tsx";
 import { StatsCanvas } from './rendering/StatsCanvas.tsx';
@@ -57,6 +58,8 @@ function App() {
 
     const [linearLerpMidpoint, setLinearLerpMidpoint] = useState(0.25);
     const [logarithmicLerpMidpoint, setLogarithmicLerpMidpoint] = useState(0.8);
+    const [linearColorHeightDiv, setLinearColorHeightDiv] = useState(20);
+    const [logColorHeightDiv, setLogColorHeightDiv] = useState(6);
 
     function buttonResetCamera() {
         camControlsRef.current.reset();
@@ -106,7 +109,7 @@ function App() {
             }
         }
         else {
-            const heightDiv = (scalingType === "Linear") ? 20 : 6;
+            const heightDiv = (scalingType === "Linear") ? linearColorHeightDiv : logColorHeightDiv;
             const midpoint = (scalingType === "Linear") ? linearLerpMidpoint : logarithmicLerpMidpoint;
             (mat as THREE.MeshStandardMaterial).color = colorLerp3(
                 threeBarColor1,
@@ -243,7 +246,7 @@ function App() {
         {(advancedOptionsVisible) ?
             (<div className="advanced-options">
                 <h3>Color Options</h3>
-                <div>
+                <div className="advanced-options-row">
                     <LabeledColorPicker
                         id={"activebarcolor1"}
                         label={"Active Bar Color 1"}
@@ -263,7 +266,7 @@ function App() {
                         onChange={setBarColor3}
                     ></LabeledColorPicker>
                 </div>
-                <div>
+                <div className="advanced-options-row">
                     <LabeledColorPicker
                         id={"emptybarcolor"}
                         label={"Empty Bar Color"}
@@ -283,8 +286,39 @@ function App() {
                         onChange={setImpossibleBarColor}
                     ></LabeledColorPicker>
                 </div>
-                <div>
-                    
+                <div className="advanced-options-row">
+                    <LabeledTextboxSlider
+                        label={"Logarithmic Lerp Midpoint"}
+                        value={logarithmicLerpMidpoint}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        onChange={setLogarithmicLerpMidpoint}
+                    ></LabeledTextboxSlider>
+                    <LabeledTextboxSlider
+                        label={"Linear Lerp Midpoint"}
+                        value={linearLerpMidpoint}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        onChange={setLinearLerpMidpoint}
+                    ></LabeledTextboxSlider>
+                </div>
+                <div className="advanced-options-row">
+                    <LabeledTextboxSlider
+                        label={"Logarithmic Height Contribution Divisor"}
+                        value={logColorHeightDiv}
+                        min={1}
+                        max={100}
+                        onChange={setLogColorHeightDiv}
+                    ></LabeledTextboxSlider>
+                    <LabeledTextboxSlider
+                        label={"Linear Height Contribution Divisor"}
+                        value={linearColorHeightDiv}
+                        min={1}
+                        max={100}
+                        onChange={setLinearColorHeightDiv}
+                    ></LabeledTextboxSlider>
                 </div>
             </div>)
         : null
