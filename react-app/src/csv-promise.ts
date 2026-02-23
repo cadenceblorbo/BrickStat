@@ -2,7 +2,7 @@ import csvParser from 'csv-parser';
 import fs from 'fs';
 
 export async function parseCSV<T>(path: string, onData: (row: T) => void): Promise<void> {
-    console.log("Started parsing CSV at " + path)
+    console.log("Started parsing CSV at " + path);
 
     return new Promise<void>(function (resolve, reject) {
         fs.createReadStream(path)
