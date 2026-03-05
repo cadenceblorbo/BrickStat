@@ -59,8 +59,8 @@ export function StatsCanvas({
             <pointLight position={[37.5, 0, 50]} decay={0} intensity={Math.PI / 3} />
             <pointLight position={[-22.5, 15, -30]} decay={0} intensity={Math.PI / 2} />
             <Histogram3D
-                xCols={rows}
-                yCols={cols}
+                rows={rows}
+                cols={cols}
                 data={data}
                 heightScaling={heightScaling}
                 material={barMat}
