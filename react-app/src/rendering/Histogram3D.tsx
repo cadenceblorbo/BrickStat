@@ -137,12 +137,12 @@ interface Histogram3DProps {
     xAxisLabel?: string;
     yAxisLabel?: string;
     headerLabel?: string;
-    colWidthX?: number;
-    colWidthY?: number;
+    colWidthX: number;
+    colWidthY: number;
     colPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
-    defaultHeight?: number;
-    padding?: number;
+    defaultHeight: number;
+    padding: number;
 }
 
 export function Histogram3D({
@@ -155,10 +155,10 @@ export function Histogram3D({
     xAxisLabel = "X Axis",
     yAxisLabel = "Y Axis",
     headerLabel = "Histogram3D",
-    colWidthX = 1,
-    colWidthY = 1,
-    defaultHeight = 0.1,
-    padding = 0.5,
+    colWidthX,
+    colWidthY,
+    defaultHeight,
+    padding,
     colPointerOver = () => { },
     colPointerOut = () => { }
 }: Histogram3DProps) {
@@ -168,7 +168,7 @@ export function Histogram3D({
     const xOffset = -(xCols - 1) / 2;
     const yOffset = -(yCols - 1) / 2;
 
-    console.log(data);
+    //console.log(data);
 
     //create columns
     const grid = [];

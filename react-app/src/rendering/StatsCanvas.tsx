@@ -14,6 +14,9 @@ interface StatsCanvasProps {
     xAxisLabel: string;
     yAxisLabel: string;
     headerLabel: string;
+    padding?: number;
+    xColWidth?: number;
+    yColWidth?: number;
     defaultHeight?: number;
     heightScaling?: (dataVal: number) => number;
     barMat?: THREE.Material;
@@ -32,6 +35,9 @@ export function StatsCanvas({
     xAxisLabel,
     yAxisLabel,
     headerLabel,
+    padding = 0.5,
+    xColWidth = 1,
+    yColWidth = 1,
     defaultHeight = 0.1,
     heightScaling = (dataVal: number) => { return dataVal },
     barMat = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) }),
@@ -62,6 +68,9 @@ export function StatsCanvas({
                 xAxisLabel={xAxisLabel}
                 yAxisLabel={yAxisLabel}
                 headerLabel={headerLabel}
+                padding={padding}
+                colWidthX={xColWidth}
+                colWidthY={yColWidth}
                 defaultHeight={defaultHeight}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}

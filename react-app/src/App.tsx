@@ -61,6 +61,11 @@ function App() {
     const [linearColorHeightDiv, setLinearColorHeightDiv] = useState(20);
     const [logColorHeightDiv, setLogColorHeightDiv] = useState(6);
 
+    const [colXWidth, setColXWidth] = useState(1);
+    const [colYWidth, setColYWidth] = useState(1);
+    const [defaultHeight, setDefaultHeight] = useState(0.1);
+    const [padding, setPadding] = useState(0.5);
+
     function buttonResetCamera() {
         camControlsRef.current.reset();
     }
@@ -95,7 +100,6 @@ function App() {
         return Math.max(DEFAULT_BAR_HEIGHT, dataVal);
     }
 
-
     function materialChange(mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void {
         if (isEmpty) {
             if (row > col) {
@@ -120,8 +124,6 @@ function App() {
             );
         }
     }
-
-    
 
     function colPointerOver(e: ThreeEvent<PointerEvent>) {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
@@ -206,7 +208,7 @@ function App() {
                 xAxisLabel={"Stud Length"}
                 yAxisLabel={"Stud Width"}
                 headerLabel={GraphTitle(partType, quantityType, chronoType)}
-                defaultHeight={DEFAULT_BAR_HEIGHT}
+                defaultHeight={defaultHeight}
                 heightScaling={heightScaling}
                 barMat={new THREE.MeshStandardMaterial()}
                 materialChange={materialChange}
@@ -318,6 +320,45 @@ function App() {
                         min={1}
                         max={100}
                         onChange={setLinearColorHeightDiv}
+                    ></LabeledTextboxSlider>
+                </div>
+
+
+                <h2>Geometry Options</h2>
+                <div className="advanced-options-row">
+                    <LabeledTextboxSlider
+                        label={"Column X Width"}
+                        value={colXWidth}
+                        min={0.25}
+                        max={10}
+                        step={0.25}
+                        onChange={setColXWidth}
+                    ></LabeledTextboxSlider>
+                    <LabeledTextboxSlider
+                        label={"Column Y Width"}
+                        value={colYWidth}
+                        min={0.25}
+                        max={10}
+                        step={0.25}
+                        onChange={setColYWidth}
+                    ></LabeledTextboxSlider>
+                </div>
+                <div className="advanced-options-row">
+                    <LabeledTextboxSlider
+                        label={"Default Column Height"}
+                        value={defaultHeight}
+                        min={0}
+                        max={5}
+                        step={0.1}
+                        onChange={setDefaultHeight}
+                    ></LabeledTextboxSlider>
+                    <LabeledTextboxSlider
+                        label={"Padding"}
+                        value={padding}
+                        min={0}
+                        max={10}
+                        step={0.5}
+                        onChange={setPadding}
                     ></LabeledTextboxSlider>
                 </div>
             </div>)
