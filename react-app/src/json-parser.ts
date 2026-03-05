@@ -25,8 +25,8 @@ const setHistories: { [key in PartType]: { [key: string]: { [key: string]: numbe
 
 export class HistogramData {
 	public dataset: { [key: string]: { [key: string]: number } };
-	public xCols: number;
-	public yCols: number;
+	public rows: number;
+	public cols: number;
 	public firstYear: number;
 	public lastYear: number;
 	public isCumulative: boolean = false;
@@ -37,8 +37,8 @@ export class HistogramData {
 		this.dataset = structuredClone(rawJSON);
 		this.firstYear = Infinity;
 		this.lastYear = -Infinity;
-		this.xCols = 0;
-		this.yCols = 0;
+		this.rows = 0;
+		this.cols = 0;
 		this.isCumulative = isCumulative;
 		this.computeYearBounds();
 
@@ -91,8 +91,8 @@ export class HistogramData {
 		encounteredParts.add(partType);
 		const splitParts = partType.split("x");
 		if (splitParts.length >= 2) {
-			this.xCols = Math.max(this.xCols, Number(splitParts[0]));
-			this.yCols = Math.max(this.yCols, Number(splitParts[1]));
+			this.rows = Math.max(this.rows, Number(splitParts[0]));
+			this.cols = Math.max(this.cols, Number(splitParts[1]));
 		}
 	}
 	

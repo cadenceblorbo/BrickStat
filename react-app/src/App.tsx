@@ -61,8 +61,8 @@ function App() {
     const [linearColorHeightDiv, setLinearColorHeightDiv] = useState(20);
     const [logColorHeightDiv, setLogColorHeightDiv] = useState(6);
 
-    const [colXWidth, setColXWidth] = useState(1);
-    const [colYWidth, setColYWidth] = useState(1);
+    const [colWidth, setColXWidth] = useState(1);
+    const [rowWidth, setColYWidth] = useState(1);
     const [defaultHeight, setDefaultHeight] = useState(0.1);
     const [padding, setPadding] = useState(0.5);
 
@@ -201,14 +201,17 @@ function App() {
         <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)}>
             <StatsCanvas
                 className="stats-canvas"
-                xCols={currentData.xCols}
-                yCols={currentData.yCols}
+                rows={currentData.rows}
+                cols={currentData.cols}
                 cam={cameraType === "Perspective" ? perspectiveCam : orthographicCam}
                 data={currentData.dataset[yearVal]}
                 xAxisLabel={"Stud Length"}
                 yAxisLabel={"Stud Width"}
                 headerLabel={GraphTitle(partType, quantityType, chronoType)}
                 defaultHeight={defaultHeight}
+                padding={padding}
+                colWidth={colWidth}
+                rowWidth={rowWidth}
                 heightScaling={heightScaling}
                 barMat={new THREE.MeshStandardMaterial()}
                 materialChange={materialChange}
@@ -327,21 +330,21 @@ function App() {
                 <h2>Geometry Options</h2>
                 <div className="advanced-options-row">
                     <LabeledTextboxSlider
-                        label={"Column X Width"}
-                        value={colXWidth}
-                        min={0.25}
-                        max={10}
-                        step={0.25}
-                        onChange={setColXWidth}
-                    ></LabeledTextboxSlider>
-                    <LabeledTextboxSlider
-                        label={"Column Y Width"}
-                        value={colYWidth}
+                        label={"Row Width"}
+                        value={rowWidth}
                         min={0.25}
                         max={10}
                         step={0.25}
                         onChange={setColYWidth}
                     ></LabeledTextboxSlider>
+                    <LabeledTextboxSlider
+                        label={"Column Width"}
+                        value={colWidth}
+                        min={0.25}
+                        max={10}
+                        step={0.25}
+                        onChange={setColXWidth}
+                    ></LabeledTextboxSlider>  
                 </div>
                 <div className="advanced-options-row">
                     <LabeledTextboxSlider

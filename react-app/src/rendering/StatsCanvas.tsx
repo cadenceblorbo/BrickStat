@@ -9,14 +9,14 @@ interface StatsCanvasProps {
     data: { [key: string]: number };
     cam?: ReactElement;
     className?: string;
-    xCols: number;
-    yCols: number;
+    rows: number;
+    cols: number;
     xAxisLabel: string;
     yAxisLabel: string;
     headerLabel: string;
     padding?: number;
-    xColWidth?: number;
-    yColWidth?: number;
+    colWidth?: number;
+    rowWidth?: number;
     defaultHeight?: number;
     heightScaling?: (dataVal: number) => number;
     barMat?: THREE.Material;
@@ -30,14 +30,14 @@ export function StatsCanvas({
     data,
     cam,
     className = "",
-    xCols,
-    yCols,
+    rows,
+    cols,
     xAxisLabel,
     yAxisLabel,
     headerLabel,
     padding = 0.5,
-    xColWidth = 1,
-    yColWidth = 1,
+    colWidth = 1,
+    rowWidth = 1,
     defaultHeight = 0.1,
     heightScaling = (dataVal: number) => { return dataVal },
     barMat = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) }),
@@ -59,8 +59,8 @@ export function StatsCanvas({
             <pointLight position={[37.5, 0, 50]} decay={0} intensity={Math.PI / 3} />
             <pointLight position={[-22.5, 15, -30]} decay={0} intensity={Math.PI / 2} />
             <Histogram3D
-                xCols={xCols}
-                yCols={yCols}
+                xCols={rows}
+                yCols={cols}
                 data={data}
                 heightScaling={heightScaling}
                 material={barMat}
@@ -69,8 +69,8 @@ export function StatsCanvas({
                 yAxisLabel={yAxisLabel}
                 headerLabel={headerLabel}
                 padding={padding}
-                colWidthX={xColWidth}
-                colWidthY={yColWidth}
+                colWidth={colWidth}
+                rowWidth={rowWidth}
                 defaultHeight={defaultHeight}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
