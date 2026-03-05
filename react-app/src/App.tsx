@@ -1,5 +1,5 @@
 ﻿import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
-import { type ThreeEvent } from '@react-three/fiber';
+import { type ThreeEvent} from '@react-three/fiber';
 import { useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
@@ -12,7 +12,7 @@ import LabeledDropdown from './react-components/LabeledDropdown.tsx';
 import LabeledTextboxSlider from './react-components/LabeledTextboxSlider.tsx';
 import MousePosTooltip from './react-components/MousePosTooltip.tsx';
 import CameraControls from "./rendering/CameraControls.tsx";
-import { StatsCanvas } from './rendering/StatsCanvas.tsx';
+import StatsCanvas from './rendering/StatsCanvas.tsx';
 import { colorLerp3 } from './utils/ColorUtil.ts';
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 import TooltipContent from './react-components/TooltipContent.tsx';
@@ -34,6 +34,7 @@ function App() {
     const currentData = data.histogramData[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
     const camControlsRef = useRef<OrbitControls>(null!);
+    const canvasParentRef = useRef(null!);
 
     const lastHoverRef = useRef("");
     const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -198,7 +199,7 @@ function App() {
 
     return (<div>
         <title>Lego Stat 3D Histogram Viewer</title>
-        <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)}>
+        <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)} ref={canvasParentRef}>
             <StatsCanvas
                 className="stats-canvas"
                 rows={currentData.rows}
@@ -215,7 +216,7 @@ function App() {
                 heightScaling={heightScaling}
                 barMat={new THREE.MeshStandardMaterial()}
                 materialChange={materialChange}
-                cameraControls={<CameraControls ref={camControlsRef}></CameraControls>}
+                cameraControls={<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef }></CameraControls>}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
             />

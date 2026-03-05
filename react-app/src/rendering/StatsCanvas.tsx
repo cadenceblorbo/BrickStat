@@ -1,5 +1,5 @@
 import { Canvas, type ThreeEvent } from '@react-three/fiber';
-import type { ReactElement } from 'react';
+import { type ReactElement, forwardRef, type RefObject, type ForwardedRef } from 'react';
 import * as THREE from 'three';
 import { Histogram3D } from "./Histogram3D";
 
@@ -26,7 +26,7 @@ interface StatsCanvasProps {
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
 }
 
-export function StatsCanvas({
+function StatsCanvas({
     data,
     cam,
     className = "",
@@ -39,7 +39,7 @@ export function StatsCanvas({
     colWidth = 1,
     rowWidth = 1,
     defaultHeight = 0.1,
-    heightScaling = (dataVal: number) => { return dataVal },
+    heightScaling = (dataVal: number) => { return dataVal; },
     barMat = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) }),
     materialChange = () => { },
     cameraControls,
@@ -50,33 +50,34 @@ export function StatsCanvas({
     if (cameraControls === undefined) {
         cameraControls = <></>;
     }
-    
-    
+
     return (
-        <Canvas className={className}>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[-7.5, 5, 10]} intensity={Math.PI} />
-            <pointLight position={[37.5, 0, 50]} decay={0} intensity={Math.PI / 3} />
-            <pointLight position={[-22.5, 15, -30]} decay={0} intensity={Math.PI / 2} />
-            <Histogram3D
-                rows={rows}
-                cols={cols}
-                data={data}
-                heightScaling={heightScaling}
-                material={barMat}
-                materialChange={materialChange}
-                xAxisLabel={xAxisLabel}
-                yAxisLabel={yAxisLabel}
-                headerLabel={headerLabel}
-                padding={padding}
-                colWidth={colWidth}
-                rowWidth={rowWidth}
-                defaultHeight={defaultHeight}
-                colPointerOver={colPointerOver}
-                colPointerOut={colPointerOut}
-            />
-            {cam}
-            {cameraControls}
-        </Canvas>
+            <Canvas className={className} tabIndex={0}>
+                <ambientLight intensity={0.5} />
+                <directionalLight position={[-7.5, 5, 10]} intensity={Math.PI} />
+                <pointLight position={[37.5, 0, 50]} decay={0} intensity={Math.PI / 3} />
+                <pointLight position={[-22.5, 15, -30]} decay={0} intensity={Math.PI / 2} />
+                <Histogram3D
+                    rows={rows}
+                    cols={cols}
+                    data={data}
+                    heightScaling={heightScaling}
+                    material={barMat}
+                    materialChange={materialChange}
+                    xAxisLabel={xAxisLabel}
+                    yAxisLabel={yAxisLabel}
+                    headerLabel={headerLabel}
+                    padding={padding}
+                    colWidth={colWidth}
+                    rowWidth={rowWidth}
+                    defaultHeight={defaultHeight}
+                    colPointerOver={colPointerOver}
+                    colPointerOut={colPointerOut}
+                />
+                {cam}
+                {cameraControls}
+            </Canvas>
     );
-}
+};
+
+export default StatsCanvas;

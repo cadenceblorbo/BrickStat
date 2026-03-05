@@ -1,5 +1,5 @@
 import { extend, useThree, type ThreeElement } from '@react-three/fiber';
-import { type RefObject } from 'react';
+import { type RefObject, useEffect } from 'react';
 import { OrbitControls } from 'three/addons';
 
 declare module '@react-three/fiber' {
@@ -11,12 +11,21 @@ declare module '@react-three/fiber' {
 extend({ OrbitControls });
 
 interface CameraControlProps {
-    ref?: RefObject<OrbitControls>
+    ref: RefObject<OrbitControls>,
+    keyboardDOMCapture?: RefObject<HTMLElement>
 }
 
+
+
 function CameraControls({
-    ref 
+    ref,
+    keyboardDOMCapture
 }: CameraControlProps) {
+
+    useEffect(() => {
+        ref.current.listenToKeyEvents(keyboardDOMCapture && keyboardDOMCapture.current? keyboardDOMCapture.current: window);
+    });
+
     const { camera, gl } = useThree();
     return <orbitControls
         ref={ref}

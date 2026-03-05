@@ -171,8 +171,6 @@ export function Histogram3D({
     const rowOffset = -(rows - 1) / 2;
     const colOffset = -(cols - 1) / 2;
 
-    console.log(rows);
-
     //create columns
     const grid = [];
     for (let i = 0; i < rows; i++) {
