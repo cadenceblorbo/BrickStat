@@ -11,22 +11,6 @@ export interface HistogramColumnProps {
     yWidth?: number;
 }
 
-export function HistogramColumn({
-    meshProps,
-    height = 1,
-    xWidth = 1,
-    yWidth = 1,
-}: HistogramColumnProps) {
-    let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
-    usedPosition = new Vector3(usedPosition.x, usedPosition.y + height / 2, usedPosition.z);
-    const newProps = { ...meshProps, position: usedPosition };
-    return <mesh
-        {...newProps}
-    >
-        <boxGeometry args={[xWidth, height, yWidth]} />
-    </mesh>;
-}
-
 export interface AnimatedColumnProps {
     row: number,
     col: number,

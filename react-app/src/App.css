@@ -120,6 +120,7 @@ button:hover {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    margin: 1.5rem auto;
 }
 
 fieldset {

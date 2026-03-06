@@ -251,7 +251,8 @@ function App() {
 
         {(advancedOptionsVisible) ?
             (<div className="advanced-options">
-                <h2>Color Options</h2>
+                <div/>
+                <h3>Color Options</h3>
                 <div className="advanced-options-row">
                     <LabeledColorPicker
                         id={"activebarcolor1"}
@@ -328,7 +329,7 @@ function App() {
                 </div>
 
 
-                <h2>Geometry Options</h2>
+                <h3>Geometry Options</h3>
                 <div className="advanced-options-row">
                     <LabeledTextboxSlider
                         label={"Row Width"}
