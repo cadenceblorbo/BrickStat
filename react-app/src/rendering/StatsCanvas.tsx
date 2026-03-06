@@ -4,7 +4,6 @@ import * as THREE from 'three';
 import { Histogram3D } from "./Histogram3D";
 
 
-
 interface StatsCanvasProps {
     data: { [key: string]: number };
     cam?: ReactElement;
@@ -24,6 +23,10 @@ interface StatsCanvasProps {
     cameraControls?: ReactElement;
     colPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
+    accessibilityLabel: string;
+    accessibilityDescription: string;
+    accessibilityDescribedBy?: string;
+    columnPostProcess?: (e: ReactElement) => ReactElement;
 }
 
 function StatsCanvas({
@@ -44,39 +47,55 @@ function StatsCanvas({
     materialChange = () => { },
     cameraControls,
     colPointerOver = () => { },
-    colPointerOut = () => { }
+    colPointerOut = () => { },
+    accessibilityLabel,
+    accessibilityDescription,
+    accessibilityDescribedBy,
+    columnPostProcess = (e) => { return e; }
 }: StatsCanvasProps) {
 
     if (cameraControls === undefined) {
         cameraControls = <></>;
     }
 
+    const canvasProps = {
+        'className': className,
+        'role': "img",
+        'aria-label': accessibilityLabel,
+        'aria-description': accessibilityDescription,
+        'aria-described-by': accessibilityDescribedBy
+    };
+
     return (
-            <Canvas className={className} tabIndex={0}>
-                <ambientLight intensity={0.5} />
-                <directionalLight position={[-7.5, 5, 10]} intensity={Math.PI} />
-                <pointLight position={[37.5, 0, 50]} decay={0} intensity={Math.PI / 3} />
-                <pointLight position={[-22.5, 15, -30]} decay={0} intensity={Math.PI / 2} />
-                <Histogram3D
-                    rows={rows}
-                    cols={cols}
-                    data={data}
-                    heightScaling={heightScaling}
-                    material={barMat}
-                    materialChange={materialChange}
-                    xAxisLabel={xAxisLabel}
-                    yAxisLabel={yAxisLabel}
-                    headerLabel={headerLabel}
-                    padding={padding}
-                    colWidth={colWidth}
-                    rowWidth={rowWidth}
-                    defaultHeight={defaultHeight}
-                    colPointerOver={colPointerOver}
-                    colPointerOut={colPointerOut}
-                />
-                {cam}
-                {cameraControls}
-            </Canvas>
+        <Canvas
+            {...canvasProps }
+        >
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[-7.5, 5, 10]} intensity={Math.PI} />
+            <pointLight position={[37.5, 0, 50]} decay={0} intensity={Math.PI / 3} />
+            <pointLight position={[-22.5, 15, -30]} decay={0} intensity={Math.PI / 2} />
+            <Histogram3D
+                rows={rows}
+                cols={cols}
+                data={data}
+                heightScaling={heightScaling}
+                material={barMat}
+                materialChange={materialChange}
+                xAxisLabel={xAxisLabel}
+                yAxisLabel={yAxisLabel}
+                headerLabel={headerLabel}
+                padding={padding}
+                colWidth={colWidth}
+                rowWidth={rowWidth}
+                defaultHeight={defaultHeight}
+                colPointerOver={colPointerOver}
+                colPointerOut={colPointerOut}
+                columnPostProcess={columnPostProcess}
+            />
+            {cam}
+            {cameraControls}
+        </Canvas>
+            
     );
 };
 

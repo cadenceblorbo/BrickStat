@@ -3,6 +3,7 @@ import { type ThreeEvent} from '@react-three/fiber';
 import { useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { A11yAnnouncer } from '@react-three/a11y';
 
 import './App.css';
 import { GraphTitle } from './graph-title.ts';
@@ -20,7 +21,6 @@ import { Clamp } from './utils/MathUtil.ts';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
-const DEFAULT_BAR_HEIGHT = 0.1;
 const tooltipArrowSize = 10;
 
 function App() {
@@ -98,7 +98,7 @@ function App() {
             dataVal = Math.log2(dataVal);
         }
 
-        return Math.max(DEFAULT_BAR_HEIGHT, dataVal);
+        return Math.max(defaultHeight, dataVal);
     }
 
     function materialChange(mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void {
@@ -216,10 +216,13 @@ function App() {
                 heightScaling={heightScaling}
                 barMat={new THREE.MeshStandardMaterial()}
                 materialChange={materialChange}
-                cameraControls={<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef }></CameraControls>}
+                cameraControls={<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
+                accessibilityLabel={"3D Histogram"}
+                accessibilityDescription={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below." }
             />
+            <A11yAnnouncer/>
         </div>
 
         <div className="year-controls">

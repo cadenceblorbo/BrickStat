@@ -1,6 +1,7 @@
-import { useFrame, type ThreeElements } from "@react-three/fiber";
-import { useEffect, useRef } from 'react';
+import { useFrame, type ThreeElements} from "@react-three/fiber";
+import { useEffect, useRef, type ReactElement } from 'react';
 import { Material, Mesh, Vector3 } from "three";
+import { A11y } from '@react-three/a11y';
 
 import { Smoothstep } from "../utils/MathUtil";
 
@@ -24,6 +25,7 @@ export interface AnimatedColumnProps {
     yWidth?: number;
     isEmpty: boolean;
     flag?: string;
+    columnPostProcess?: (e: ReactElement) => ReactElement;
 }
 
 //function reducer(state, action) {
@@ -43,6 +45,7 @@ export function AnimatedHistogramColumn({
     yWidth = 1,
     isEmpty,
     flag = "",
+    columnPostProcess = (e) => { return e; }
 }: AnimatedColumnProps) {
     if (animSpeed === 0) {
         animSpeed = 0.0000001;
@@ -83,12 +86,17 @@ export function AnimatedHistogramColumn({
     let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
     usedPosition = new Vector3(usedPosition.x, usedPosition.y + heightStart / 2, usedPosition.z);
     const newProps = { ...meshProps, position: usedPosition, scale: new Vector3(xWidth, heightStart, yWidth) };
-    return <mesh ref={meshRef}
+
+    let result = <mesh ref={meshRef}
         {...newProps}
         name={row + "x" + col}
     >
-        <boxGeometry/>
+        <boxGeometry />
     </mesh>;
+
+    result = columnPostProcess(result);
+
+    return result;
 }
 
 

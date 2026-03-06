@@ -1,11 +1,11 @@
 import { extend, type ThreeElement, type ThreeEvent } from "@react-three/fiber";
-import { useRef } from 'react';
+import { useRef, type ReactElement } from 'react';
 import { MeshBasicMaterial, Vector3, type Material } from "three";
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader, type FontData } from 'three/addons/loaders/FontLoader.js';
 import Inter from '../assets/Inter_Regular.json';
 
-import { AnimatedHistogramColumn, type AnimatedColumnProps } from './HistogramColumn.tsx';
+import { AnimatedHistogramColumn, type AnimatedColumnProps } from './AnimatedHistogramColumn.tsx';
 
 declare module '@react-three/fiber' {
     interface ThreeElements {
@@ -146,6 +146,7 @@ interface Histogram3DProps {
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
     defaultHeight: number;
     padding: number;
+    columnPostProcess?: (e: ReactElement) => ReactElement;
 }
 
 export function Histogram3D({
@@ -163,7 +164,8 @@ export function Histogram3D({
     defaultHeight,
     padding,
     colPointerOver = () => { },
-    colPointerOut = () => { }
+    colPointerOut = () => { },
+    columnPostProcess = (e) => { return e; }
 }: Histogram3DProps) {
 
     const heights = useRef<Map<string,number>>(new Map);
@@ -195,6 +197,7 @@ export function Histogram3D({
                 xWidth: colWidth,
                 yWidth: rowWidth,
                 isEmpty: !(key in data),
+                columnPostProcess: columnPostProcess
             };
 
             //if (i == 1 && j == 5) {
