@@ -1,5 +1,5 @@
 import { Canvas, type ThreeEvent } from '@react-three/fiber';
-import { type ReactElement, forwardRef, type RefObject, type ForwardedRef } from 'react';
+import { type ReactElement} from 'react';
 import * as THREE from 'three';
 import { Histogram3D } from "./Histogram3D";
 
