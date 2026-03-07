@@ -142,13 +142,14 @@ function App() {
     }
 
     function addAccessibleDescription(e: ReactElement<ThreeElements['mesh']>) {
+
+        
         if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
             return e;
         }
         return <A11y
             role="content"
             key={e.props.name}
-            tabIndex={0}
             description={e.props.name}
         >
             {e}

@@ -64,7 +64,7 @@ function StatsCanvas({
         'role': "img",
         'aria-label': accessibilityLabel,
         'aria-description': accessibilityDescription,
-        'aria-described-by': accessibilityDescribedBy,
+        'aria-describedby': accessibilityDescribedBy,
     };
 
     return (
