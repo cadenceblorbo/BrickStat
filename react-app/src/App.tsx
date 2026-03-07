@@ -1,9 +1,9 @@
 ﻿import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
-import { type ThreeEvent} from '@react-three/fiber';
-import { useRef, useState, useMemo } from 'react';
+import { type ThreeEvent, type ThreeElements} from '@react-three/fiber';
+import { useRef, useState, useMemo, type ReactElement } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { A11yAnnouncer } from '@react-three/a11y';
+import { A11yAnnouncer, A11y } from '@react-three/a11y';
 
 import './App.css';
 import { GraphTitle } from './graph-title.ts';
@@ -126,21 +126,40 @@ function App() {
         }
     }
 
+    function getCurrentValue(name: string) {
+        if (name in currentData.dataset[yearVal + ""]) {
+            return currentData.dataset[yearVal + ""][name];
+        }
+        return 0;
+    }
+
+    function getPreviousValue(name: string) {
+        const lastYear = (yearVal - 1) + "";
+        if (lastYear in currentData.dataset && name in currentData.dataset[lastYear]) {
+            return currentData.dataset[lastYear][name];
+        }
+        return 0;
+    }
+
+    function addAccessibleDescription(e: ReactElement<ThreeElements['mesh']>) {
+        if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
+            return e;
+        }
+        return <A11y
+            role="content"
+            key={e.props.name}
+            tabIndex={0}
+            description={e.props.name}
+        >
+            {e}
+        </A11y>;
+
+    }
+
     function colPointerOver(e: ThreeEvent<PointerEvent>) {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
             setTooltipVisible(true);
             lastHoverRef.current = e.object.name;
-
-            let currentValue = 0;
-            if (e.object.name in currentData.dataset[yearVal + ""]) {
-                currentValue = currentData.dataset[yearVal + ""][e.object.name];
-            }
-
-            const lastYear = (yearVal - 1) + "";
-            let pastValue = 0;
-            if (lastYear in currentData.dataset && e.object.name in currentData.dataset[lastYear]) {
-                pastValue = currentData.dataset[lastYear][e.object.name];
-            }
 
             setTooltipContent(<TooltipContent
                 partName={e.object.name}
@@ -149,8 +168,8 @@ function App() {
                 partType={partType }
                 quantityFormat={ quantityType}
                 timeFormat={ chronoType}
-                currentValue={currentValue}
-                pastValue={ pastValue}
+                currentValue={getCurrentValue(e.object.name)}
+                pastValue={ getPreviousValue(e.object.name)}
             ></TooltipContent>);
         }
         e.stopPropagation();
@@ -220,7 +239,8 @@ function App() {
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
                 accessibilityLabel={"3D Histogram"}
-                accessibilityDescription={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below." }
+                accessibilityDescription={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}
+                columnPostProcess={(e) => addAccessibleDescription(e) }
             />
             <A11yAnnouncer/>
         </div>

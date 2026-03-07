@@ -38,13 +38,7 @@ export default function TooltipContent({
 
     //title
     let title = partName;
-    switch (partType) {
-        case PartType.Bricks:
-            title += " Brick";
-            break;
-        default:
-            break;
-    }
+    title += " " + partType.toString().slice(0, -1);
     contents.push(<h3 key={0}>{title}</h3>);
 
     //data value

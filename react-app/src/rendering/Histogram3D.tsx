@@ -1,4 +1,4 @@
-import { extend, type ThreeElement, type ThreeEvent } from "@react-three/fiber";
+import { extend, type ThreeElement, type ThreeEvent, type ThreeElements } from "@react-three/fiber";
 import { useRef, type ReactElement } from 'react';
 import { MeshBasicMaterial, Vector3, type Material } from "three";
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
@@ -146,7 +146,7 @@ interface Histogram3DProps {
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
     defaultHeight: number;
     padding: number;
-    columnPostProcess?: (e: ReactElement) => ReactElement;
+    columnPostProcess?: (e: ReactElement<ThreeElements['mesh']>) => ReactElement;
 }
 
 export function Histogram3D({

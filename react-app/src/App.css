@@ -154,3 +154,7 @@ legend{
     border-radius: 0.5rem;
     height: 1rem;
 }
+
+.stats-canvas p {
+    pointer-events: none;
+}

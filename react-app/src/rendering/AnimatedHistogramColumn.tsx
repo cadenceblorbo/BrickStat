@@ -5,6 +5,8 @@ import { A11y } from '@react-three/a11y';
 
 import { Smoothstep } from "../utils/MathUtil";
 
+const FRAMERATE = 60;
+
 export interface HistogramColumnProps {
     meshProps: ThreeElements['mesh'];
     height?: number;
@@ -25,7 +27,7 @@ export interface AnimatedColumnProps {
     yWidth?: number;
     isEmpty: boolean;
     flag?: string;
-    columnPostProcess?: (e: ReactElement) => ReactElement;
+    columnPostProcess?: (e: ReactElement<ThreeElements['mesh']>) => ReactElement;
 }
 
 //function reducer(state, action) {
@@ -51,11 +53,13 @@ export function AnimatedHistogramColumn({
         animSpeed = 0.0000001;
     }
     const time = useRef(0);
+    const nextFrame = useRef(1 / FRAMERATE);
     const meshRef = useRef<Mesh>(null!);
     let frameHappened = false;
 
     useEffect(() => {
         time.current = 0;
+        nextFrame.current = 0;
     }, [heightTarget]);
 
     useEffect(() => {
@@ -67,17 +71,21 @@ export function AnimatedHistogramColumn({
        if (time.current < 1 || !frameHappened) {
             delta = delta * (1 / animSpeed);
             time.current += delta;
-            const height = Smoothstep(heightStart, heightTarget, time.current);
+           if (time.current >= nextFrame.current) {
+               nextFrame.current += 1 / FRAMERATE;
+               const height = Smoothstep(heightStart, heightTarget, time.current);
 
-            meshRef.current.position.y = height / 2 + ((meshProps?.position as Vector3).y as number || 0);
-            meshRef.current.scale.y = height;
+               meshRef.current.position.y = height / 2 + ((meshProps?.position as Vector3).y as number || 0);
+               meshRef.current.scale.y = height;
 
-            materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty);
-            trackHeightChange(height);
-            //if (flag === "x") {
-            //    console.log(height)
-           //}
-           frameHappened = true;
+               materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty);
+               trackHeightChange(height);
+               //if (flag === "x") {
+               //    console.log(height)
+               //}
+               frameHappened = true;
+           }
+            
         }
     });
 

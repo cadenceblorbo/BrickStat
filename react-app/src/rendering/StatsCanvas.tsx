@@ -1,4 +1,4 @@
-import { Canvas, type ThreeEvent } from '@react-three/fiber';
+import { Canvas, type ThreeEvent, type ThreeElements } from '@react-three/fiber';
 import { type ReactElement} from 'react';
 import * as THREE from 'three';
 import { Histogram3D } from "./Histogram3D";
@@ -26,7 +26,7 @@ interface StatsCanvasProps {
     accessibilityLabel: string;
     accessibilityDescription: string;
     accessibilityDescribedBy?: string;
-    columnPostProcess?: (e: ReactElement) => ReactElement;
+    columnPostProcess?: (e: ReactElement<ThreeElements['mesh']>) => ReactElement;
 }
 
 function StatsCanvas({
@@ -60,10 +60,11 @@ function StatsCanvas({
 
     const canvasProps = {
         'className': className,
+        'tabIndex': 0,
         'role': "img",
         'aria-label': accessibilityLabel,
         'aria-description': accessibilityDescription,
-        'aria-described-by': accessibilityDescribedBy
+        'aria-described-by': accessibilityDescribedBy,
     };
 
     return (
