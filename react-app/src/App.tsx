@@ -1,4 +1,4 @@
-﻿import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
+﻿import { OrthographicCamera, PerspectiveCamera} from '@react-three/drei';
 import { type ThreeEvent, type ThreeElements} from '@react-three/fiber';
 import { useRef, useState, useMemo, type ReactElement } from 'react';
 import * as THREE from 'three';
@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js';
 //import { A11yAnnouncer, A11y } from '@react-three/a11y';
 import { A11yAnnouncer } from './a11y/A11yAnnouncer.tsx';
 import { A11y } from './a11y/A11y.tsx';
+import { Html } from './a11y/Html.tsx';
 
 
 import './App.css';
@@ -147,12 +148,16 @@ function App() {
         return 0;
     }
 
+    const test = useRef(<h1>hello</h1>);
+
     function addAccessibleDescription(e: ReactElement<ThreeElements['mesh']>) {
 
         
         if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
             return e;
         }
+        return [e, <Html key={"0"}><h1>hi</h1>{test.current}</Html>];
+
         return <A11y
             role="content"
             key={e.props.name + partType.slice(0, -1)}

@@ -9,7 +9,7 @@ import {
   PerspectiveCamera,
   OrthographicCamera,
 } from 'three';
-import { Assign } from 'utility-types';
+import { type Assign } from 'utility-types';
 import { ReactThreeFiber, useFrame, useThree } from '@react-three/fiber';
 
 const v1 = new Vector3();
@@ -67,7 +67,7 @@ export interface HtmlProps
     'ref'
   > {
   eps?: number;
-  portal?: React.MutableRefObject<HTMLElement>;
+  portal?: React.RefObject<HTMLElement>;
   zIndexRange?: Array<number>;
 }
 
@@ -84,37 +84,26 @@ export const Html = React.forwardRef(
     }: HtmlProps,
     ref: React.Ref<HTMLDivElement>
   ) => {
-    const gl = useThree(({ gl }) => gl);
-    const camera = useThree(({ camera }) => camera);
-    const scene = useThree(({ scene }) => scene);
-    const size = useThree(({ size }) => size);
-    const el = React.useRef<HTMLDivElement>(null!);
-    const root = React.useRef<ReactDOM.Root>(null!);
-    const group = React.useRef<Group>(null);
+    const { gl, camera, scene, size } = useThree();
+    const [el] = React.useState<HTMLDivElement>(() => document.createElement('div'));
+    const root = React.useRef<ReactDOM.Root>(null);
+    const group = React.useRef<Group>(null!);
     const oldZoom = React.useRef(0);
     const oldPosition = React.useRef([0, 0]);
     const target = portal?.current ?? gl.domElement.parentNode;
 
     React.useEffect(() => {        
-      if (!el.current) {
-        el.current = document.createElement('div');
-      }
-      if (el.current && !root.current) {
-        root.current = ReactDOM.createRoot(el.current);
-      }
-      const currEl = el.current;
-      const currRoot = root.current;
       if (group.current) {
+        const currRoot = (root.current = ReactDOM.createRoot(el));
         scene.updateMatrixWorld();
         const vec = calculatePosition(group.current, camera, size);
-        el.current.style.cssText = `position:absolute;top:0;left:0;transform:translate3d(${vec[0]}px,${vec[1]}px,0);transform-origin:0 0;`;
+        el.style.cssText = `position:absolute;top:0;left:0;transform:translate3d(${vec[0]}px,${vec[1]}px,0);transform-origin:0 0;`;
         if (target) {
-          target.appendChild(el.current);
+          target.appendChild(el);
         }
         return () => {
-          if (target && currEl) target.removeChild(currEl);
-          if (currRoot) currRoot.unmount();
-          root.current = null!;
+            if (target) target.removeChild(el);
+            currRoot.unmount();
         };
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,10 +115,10 @@ export const Html = React.forwardRef(
         transform: 'none',
         ...style,
       };
-    }, [style, size]);
+    }, [style]);
 
     React.useLayoutEffect(() => {
-      if (root.current) root.current.render(
+      root.current?.render(
         <div
           ref={ref}
           style={styles}
@@ -145,19 +134,19 @@ export const Html = React.forwardRef(
         const vec = calculatePosition(group.current, camera, size);
 
         if (
-          (Math.abs(oldZoom.current - camera.zoom) > eps ||
+          Math.abs(oldZoom.current - camera.zoom) > eps ||
           Math.abs(oldPosition.current[0] - vec[0]) > eps ||
-          Math.abs(oldPosition.current[1] - vec[1]) > eps) && el.current
+          Math.abs(oldPosition.current[1] - vec[1]) > eps
         ) {
-          el.current.style.display = !isObjectBehindCamera(group.current, camera)
+          el.style.display = !isObjectBehindCamera(group.current, camera)
             ? 'block'
             : 'none';
-          el.current.style.zIndex = `${objectZIndex(
+          el.style.zIndex = `${objectZIndex(
             group.current,
             camera,
             zIndexRange
           )}`;
-          el.current.style.transform = `translate3d(${vec[0]}px,${vec[1]}px,0) scale(1)`;
+          el.style.transform = `translate3d(${vec[0]}px,${vec[1]}px,0) scale(1)`;
           oldPosition.current = vec;
           oldZoom.current = camera.zoom;
         }

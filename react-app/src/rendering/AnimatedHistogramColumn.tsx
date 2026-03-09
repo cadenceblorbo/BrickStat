@@ -98,6 +98,7 @@ export function AnimatedHistogramColumn({
     let result = <mesh ref={meshRef}
         {...newProps}
         name={row + "x" + col}
+        key={"1" }
     >
         <boxGeometry />
     </mesh>;
