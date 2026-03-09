@@ -88,31 +88,22 @@ export const Html = React.forwardRef(
     const camera = useThree(({ camera }) => camera);
     const scene = useThree(({ scene }) => scene);
     const size = useThree(({ size }) => size);
-        const el = React.useRef<HTMLDivElement>(null!);
-        const root = React.useRef<ReactDOM.Root>(null!);
-        //React.useEffect(() => {
-        //    if (!el.current) {
-        //        el.current = document.createElement('div');   
-        //    }
-        //    if(el.current && )
-                                
-        //});
-
+    const el = React.useRef<HTMLDivElement>(null!);
+    const root = React.useRef<ReactDOM.Root>(null!);
     const group = React.useRef<Group>(null);
     const oldZoom = React.useRef(0);
     const oldPosition = React.useRef([0, 0]);
     const target = portal?.current ?? gl.domElement.parentNode;
 
-      React.useEffect(() => {
-            
-        if (!el.current) {
-          el.current = document.createElement('div');
-        }
-        if (el.current && !root.current) {
-          root.current = ReactDOM.createRoot(el.current);
-        }
-        const currEl = el.current;
-        const currRoot = root.current;
+    React.useEffect(() => {        
+      if (!el.current) {
+        el.current = document.createElement('div');
+      }
+      if (el.current && !root.current) {
+        root.current = ReactDOM.createRoot(el.current);
+      }
+      const currEl = el.current;
+      const currRoot = root.current;
       if (group.current) {
         scene.updateMatrixWorld();
         const vec = calculatePosition(group.current, camera, size);
