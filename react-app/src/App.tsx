@@ -3,7 +3,10 @@ import { type ThreeEvent, type ThreeElements} from '@react-three/fiber';
 import { useRef, useState, useMemo, type ReactElement } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { A11yAnnouncer, A11y } from '@react-three/a11y';
+//import { A11yAnnouncer, A11y } from '@react-three/a11y';
+import { A11yAnnouncer } from './a11y/A11yAnnouncer.tsx';
+import { A11y } from './a11y/A11y.tsx';
+
 
 import './App.css';
 import { GraphTitle } from './graph-title.ts';
@@ -25,6 +28,9 @@ const tooltipArrowSize = 10;
 
 function App() {
     const data = JSONParse.retrieveData();
+
+    //document.body.insertBefore(document.createElement("hi"), document.getElementById('root'));
+    //document.body.insertBefore(document.createElement("hi"), document.getElementById('root'));
 
     const [chronoType, setChronoType] = useState(ChronoType.Cumulative);
     const [quantityType, setQuantityType] = useState(QuantityType.TotalQuantity);
@@ -149,8 +155,8 @@ function App() {
         }
         return <A11y
             role="content"
-            key={e.props.name}
-            description={e.props.name}
+            key={e.props.name + partType.slice(0, -1)}
+            description={e.props.name + partType.slice(0, -1)}
         >
             {e}
         </A11y>;
