@@ -255,8 +255,7 @@ function App() {
                 cameraControls={<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
-                accessibilityLabel={"3D Histogram"}
-                accessibilityDescription={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}
+                accessibilityLabel={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}
                 columnPostProcess={(e) => addAccessibleDescription(e) }
             />
             <A11yAnnouncer/>
@@ -271,8 +270,8 @@ function App() {
 
         <div className="dataset-selection-parent">
             <LabeledDropdown id={"parttypes"} label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={partTypeChange} />
-            <LabeledDropdown id={"quantityformat"} label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={setQuantityType} />
-            <LabeledDropdown id={"timeformat"} label={"Time Format"} values={Object.values(ChronoType)} selected={chronoType} onChange={setChronoType} />
+            <LabeledDropdown id={"quantityformat"} label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={(s) => { setQuantityType(s as QuantityType); }} />
+            <LabeledDropdown id={"timeformat"} label={"Time Format"} values={Object.values(ChronoType)} selected={chronoType} onChange={(s) => { setChronoType(s as ChronoType); }} />
         </div>
 
         <div className="scene-control-parent">

@@ -1,5 +1,5 @@
-import { Canvas, type ThreeEvent, type ThreeElements } from '@react-three/fiber';
-import { type ReactElement} from 'react';
+import { Canvas, type ThreeEvent, type ThreeElements} from '@react-three/fiber';
+import { type ReactElement, useRef, useEffect} from 'react';
 import * as THREE from 'three';
 import { Histogram3D } from "./Histogram3D";
 
@@ -24,8 +24,6 @@ interface StatsCanvasProps {
     colPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
     accessibilityLabel: string;
-    accessibilityDescription: string;
-    accessibilityDescribedBy?: string;
     columnPostProcess?: (e: ReactElement<ThreeElements['mesh']>) => ReactElement;
 }
 
@@ -49,8 +47,6 @@ function StatsCanvas({
     colPointerOver = () => { },
     colPointerOut = () => { },
     accessibilityLabel,
-    accessibilityDescription,
-    accessibilityDescribedBy,
     columnPostProcess = (e) => { return e; }
 }: StatsCanvasProps) {
 
@@ -58,18 +54,21 @@ function StatsCanvas({
         cameraControls = <></>;
     }
 
-    const canvasProps = {
-        'className': className,
-        'tabIndex': 0,
-        'role': "img",
-        'aria-label': accessibilityLabel,
-        'aria-description': accessibilityDescription,
-        'aria-describedby': accessibilityDescribedBy,
-    };
+    const canvasRef = useRef<HTMLCanvasElement>(null!);
+
+    useEffect(() => {
+        if (!canvasRef) {
+            return;
+        }
+        canvasRef.current.role = "img";
+        canvasRef.current.ariaLabel = accessibilityLabel;
+    }, [canvasRef, accessibilityLabel]);
+
+    
 
     return (
         <Canvas
-            {...canvasProps }
+            ref={canvasRef} className={className} tabIndex={0}
         >
             <ambientLight intensity={0.5} />
             <directionalLight position={[-7.5, 5, 10]} intensity={Math.PI} />

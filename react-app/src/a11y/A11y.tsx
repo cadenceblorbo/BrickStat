@@ -109,7 +109,7 @@ export const A11y: React.FC<Props> = ({
   let constHiddenButScreenreadable = Object.assign(
     {},
     stylesHiddenButScreenreadable,
-    { opacity: debug ? 1 : 0 },
+    { clipPath: debug? 'unused' : 'rect(0 0 0 0)' },
     a11yElStyle
   );
 

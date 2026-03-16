@@ -1,5 +1,4 @@
 let stylesHiddenButScreenreadable = {
-  opacity: 0,
   borderRadius: '50%',
   width: '50px',
   height: '50px',
