@@ -156,7 +156,7 @@ function App() {
         if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
             return e;
         }
-        return [e, <Html key={"0"}><h1>hi</h1>{test.current}</Html>];
+        //return [e, <Html key={"0"}><h1>hi</h1>{test.current}</Html>];
 
         return <A11y
             role="content"

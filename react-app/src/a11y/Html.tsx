@@ -9,7 +9,7 @@ import {
   PerspectiveCamera,
   OrthographicCamera,
 } from 'three';
-import { type Assign } from 'utility-types';
+import { Assign } from 'utility-types';
 import { ReactThreeFiber, useFrame, useThree } from '@react-three/fiber';
 
 const v1 = new Vector3();
@@ -86,13 +86,13 @@ export const Html = React.forwardRef(
   ) => {
     const { gl, camera, scene, size } = useThree();
     const [el] = React.useState<HTMLDivElement>(() => document.createElement('div'));
-    const root = React.useRef<ReactDOM.Root>(null);
+    const root = React.useRef<ReactDOM.Root>(null!);
     const group = React.useRef<Group>(null!);
     const oldZoom = React.useRef(0);
     const oldPosition = React.useRef([0, 0]);
     const target = portal?.current ?? gl.domElement.parentNode;
 
-    React.useEffect(() => {        
+    React.useLayoutEffect(() => {        
       if (group.current) {
         const currRoot = (root.current = ReactDOM.createRoot(el));
         scene.updateMatrixWorld();
