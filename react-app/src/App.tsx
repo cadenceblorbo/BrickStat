@@ -6,7 +6,6 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js';
 //import { A11yAnnouncer, A11y } from '@react-three/a11y';
 import { A11yAnnouncer } from './a11y/A11yAnnouncer.tsx';
 import { A11y } from './a11y/A11y.tsx';
-import { Html } from './a11y/Html.tsx';
 
 
 import './App.css';
@@ -22,6 +21,7 @@ import { colorLerp3 } from './utils/ColorUtil.ts';
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 import TooltipContent from './react-components/TooltipContent.tsx';
 import { Clamp } from './utils/MathUtil.ts';
+import makeBarLabel from './utils/bar-label-factory.ts';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
@@ -148,20 +148,25 @@ function App() {
         return 0;
     }
 
-    const test = useRef(<h1>hello</h1>);
-
     function addAccessibleDescription(e: ReactElement<ThreeElements['mesh']>) {
 
-        
         if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
             return e;
         }
-        //return [e, <Html key={"0"}><h1>hi</h1>{test.current}</Html>];
 
         return <A11y
             role="content"
             key={e.props.name + partType.slice(0, -1)}
-            description={e.props.name + partType.slice(0, -1)}
+            description={makeBarLabel({
+                partName: e.props.name,
+                startYear: data.partLifetimeData[partType].firstYear(e.props.name),
+                endYear: data.partLifetimeData[partType].lastYear(e.props.name),
+                partType: partType,
+                quantityFormat: quantityType,
+                timeFormat: chronoType,
+                currentValue: getCurrentValue(e.props.name),
+                pastValue: getPreviousValue(e.props.name),
+            })}
         >
             {e}
         </A11y>;

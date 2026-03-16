@@ -1,28 +1,7 @@
-import { ChronoType, PartType, QuantityType } from '../utils/lego-enum.ts';
+import { type TooltipContentProps } from '../interfaces/tooltip-content-props.ts';
+import { DATA_LABELS } from '../utils/data-labels.ts';
 
 const NUMBER_FORMAT = Intl.NumberFormat();
-
-const DATA_LABELS = {
-    [QuantityType.TotalQuantity]: {
-        [ChronoType.ByYear]: "total apperances this year",
-        [ChronoType.Cumulative]: "cumulative total apperances"
-    },
-    [QuantityType.SetApperances]: {
-        [ChronoType.ByYear]: "set apperances this year",
-        [ChronoType.Cumulative]: "cumulative set apperances"
-    }
-};
-
-export interface TooltipContentProps {
-    partName: string,
-    startYear: number,
-    endYear: number,
-    partType: PartType,
-    quantityFormat: QuantityType,
-    timeFormat: ChronoType,
-    currentValue: number,
-    pastValue: number
-}
 
 export default function TooltipContent({
     partName,
