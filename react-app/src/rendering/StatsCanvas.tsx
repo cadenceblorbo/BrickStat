@@ -60,15 +60,14 @@ function StatsCanvas({
         if (!canvasRef) {
             return;
         }
-        canvasRef.current.role = "img";
-        canvasRef.current.ariaLabel = accessibilityLabel;
+        canvasRef.current.role = "application";
     }, [canvasRef, accessibilityLabel]);
 
     
 
     return (
         <Canvas
-            ref={canvasRef} className={className} tabIndex={0}
+            ref={canvasRef} className={className} role={"img"} aria-label={accessibilityLabel} tabIndex={0}
         >
             <ambientLight intensity={0.5} />
             <directionalLight position={[-7.5, 5, 10]} intensity={Math.PI} />
