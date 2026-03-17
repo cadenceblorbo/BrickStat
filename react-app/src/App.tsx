@@ -167,6 +167,7 @@ function App() {
                 currentValue: getCurrentValue(e.props.name),
                 pastValue: getPreviousValue(e.props.name),
             })}
+
         >
             {e}
         </A11y>;
@@ -262,10 +263,13 @@ function App() {
         </div>
 
         <div className="year-controls">
-            <input className="year-slider" type="range" min={currentData.firstYear} max={currentData.lastYear} onChange={sliderYearChange} value={yearVal}></input>
-            <button className="year-button" onClick={() => { buttonYearChange(-1); }}>{"<"}</button>
-            <p>{yearVal}</p>
-            <button className="year-button" onClick={() => { buttonYearChange(1); }}>{">"}</button>
+            <label htmlFor="year-slider"><b>Year</b></label>
+                
+            <input className="year-slider" id="year-slider" type="range" min={currentData.firstYear} max={currentData.lastYear} onChange={sliderYearChange} value={yearVal}></input>
+            
+            <button className="year-button" aria-label="Decrease year" onClick={() => { buttonYearChange(-1); }}>{"<"}</button>
+            <p aria-label="Current year">{yearVal}</p>
+            <button className="year-button" aria-label="Increase year" onClick={() => { buttonYearChange(1); }}>{">"}</button>
         </div>
 
         <div className="dataset-selection-parent">
