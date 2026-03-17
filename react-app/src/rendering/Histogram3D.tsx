@@ -1,5 +1,5 @@
 import { extend, type ThreeElement, type ThreeEvent, type ThreeElements } from "@react-three/fiber";
-import { useRef, type ReactElement } from 'react';
+import { useRef, useMemo, useEffect, type ReactElement } from 'react';
 import { MeshBasicMaterial, Vector3, type Material } from "three";
 import { TextGeometry, type TextGeometryParameters } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader, type FontData } from 'three/addons/loaders/FontLoader.js';
@@ -168,48 +168,111 @@ export function Histogram3D({
     columnPostProcess = (e) => { return e; }
 }: Histogram3DProps) {
 
-    const heights = useRef<Map<string,number>>(new Map);
+    const heights = useRef<Map<string, number>>(new Map);
 
     const rowOffset = -(rows - 1) / 2;
     const colOffset = -(cols - 1) / 2;
 
     //create columns
-    const grid = [];
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cols; j++) {
-            //grid position
-            const rowPos = (rowOffset + i) * (rowWidth + padding);
-            const colPos = (colOffset + j) * (colWidth + padding);
-            const key = (i + 1) + "x" + (j + 1);
-            if (!heights.current.has(key)) {
-                heights.current.set(key, defaultHeight);
+    const grid = useMemo(() => {
+        const result = [];
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                //grid position
+                const rowPos = (rowOffset + i) * (rowWidth + padding);
+                const colPos = (colOffset + j) * (colWidth + padding);
+                const key = (i + 1) + "x" + (j + 1);
+                if (!heights.current.has(key)) {
+                    heights.current.set(key, defaultHeight);
+                }
+                const props: AnimatedColumnProps = {
+                    row: i + 1,
+                    col: j + 1,
+                    meshProps: { position: new Vector3(colPos, 0, rowPos), material: material.clone(), onPointerOver: colPointerOver, onPointerOut: colPointerOut },
+                    heightStart: heights.current.get(key),
+                    heightTarget: (key in data) ? heightScaling(data[key]) : defaultHeight,
+                    trackHeightChange: (h: number) => {
+                        heights.current.set(key, h);
+                    },
+                    materialChange: materialChange,
+                    xWidth: colWidth,
+                    yWidth: rowWidth,
+                    isEmpty: !(key in data),
+                    columnPostProcess: columnPostProcess
+                };
+
+                //if (i == 1 && j == 5) {
+                //    props.flag = 'x';
+                //}
+
+                result.push(<AnimatedHistogramColumn
+                    {...props}
+                    key={i * cols + j}
+                />);
             }
-            const props: AnimatedColumnProps = {
-                row: i+1,
-                col: j+1,
-                meshProps: { position: new Vector3(colPos, 0, rowPos), material: material.clone(), onPointerOver: colPointerOver, onPointerOut: colPointerOut },
-                heightStart: heights.current.get(key),
-                heightTarget: (key in data) ? heightScaling(data[key]) : defaultHeight,
-                trackHeightChange: (h: number) => {
-                    heights.current.set(key, h);
-                },
-                materialChange: materialChange,
-                xWidth: colWidth,
-                yWidth: rowWidth,
-                isEmpty: !(key in data),
-                columnPostProcess: columnPostProcess
-            };
-
-            //if (i == 1 && j == 5) {
-            //    props.flag = 'x';
-            //}
-
-            grid.push(<AnimatedHistogramColumn
-                {...props}
-                key={i * cols + j}
-            />);
         }
-    }
+        return result;
+    }, [colOffset, rowOffset, colPointerOver, colWidth, cols, colPointerOut, columnPostProcess, data, defaultHeight, heightScaling, material, materialChange, padding, rowWidth, rows]);
+
+    //useEffect(() => {
+    //    console.log("col offset");
+    //}, [colOffset]);
+
+    //useEffect(() => {
+    //    console.log("row offset");
+    //}, [rowOffset]);
+
+    //useEffect(() => {
+    //    console.log("col pointer over");
+    //}, [colPointerOver]);
+
+    //useEffect(() => {
+    //    console.log("col width");
+    //}, [colWidth]);
+
+    //useEffect(() => {
+    //    console.log("cols");
+    //}, [cols]);
+
+    //useEffect(() => {
+    //    console.log("col pointer out");
+    //}, [colPointerOut]);
+
+    //useEffect(() => {
+    //    console.log("column post process");
+    //}, [columnPostProcess]);
+
+    //useEffect(() => {
+    //    console.log("data");
+    //}, [data]);
+
+    //useEffect(() => {
+    //    console.log("default height");
+    //}, [defaultHeight]);
+
+    //useEffect(() => {
+    //    console.log("height scalinhg");
+    //}, [heightScaling]);
+
+    //useEffect(() => {
+    //    console.log("material");
+    //}, [material]);
+
+    //useEffect(() => {
+    //    console.log("material change");
+    //}, [materialChange]);
+
+    //useEffect(() => {
+    //    console.log("padding");
+    //}, [padding]);
+
+    //useEffect(() => {
+    //    console.log("row width");
+    //}, [rowWidth]);
+
+    //useEffect(() => {
+    //    console.log("rows");
+    //}, [rows]);
 
     return (<>
         {grid}

@@ -1,4 +1,5 @@
-import { Canvas, type ThreeEvent, type ThreeElements} from '@react-three/fiber';
+import { Canvas, type ThreeEvent, type ThreeElements } from '@react-three/fiber';
+import { Stats } from '@react-three/drei';
 import { type ReactElement, useRef, useEffect} from 'react';
 import * as THREE from 'three';
 import { Histogram3D } from "./Histogram3D";
@@ -93,6 +94,7 @@ function StatsCanvas({
             />
             {cam}
             {cameraControls}
+            <Stats></Stats>
         </Canvas>
             
     );

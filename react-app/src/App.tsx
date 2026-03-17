@@ -1,6 +1,6 @@
 ﻿import { OrthographicCamera, PerspectiveCamera} from '@react-three/drei';
 import { type ThreeEvent, type ThreeElements} from '@react-three/fiber';
-import { useRef, useState, useMemo, type ReactElement } from 'react';
+import { useRef, useState, useMemo, useCallback, type ReactElement } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 //import { A11yAnnouncer, A11y } from '@react-three/a11y';
@@ -22,13 +22,14 @@ import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 import TooltipContent from './react-components/TooltipContent.tsx';
 import { Clamp } from './utils/MathUtil.ts';
 import makeBarLabel from './utils/bar-label-factory.ts';
+import { useThrottle } from './react-components/Hooks.ts';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
 const tooltipArrowSize = 10;
 
 function App() {
-    const data = JSONParse.retrieveData();
+    const data = useRef(JSONParse.retrieveData());
 
     //document.body.insertBefore(document.createElement("hi"), document.getElementById('root'));
     //document.body.insertBefore(document.createElement("hi"), document.getElementById('root'));
@@ -38,8 +39,9 @@ function App() {
     const [partType, setPartType] = useState(PartType.Bricks);
     const [scalingType, setScalingType] = useState("Logarithmic");
     const [cameraType, setCameraType] = useState("Perspective");
-    const currentData = data.histogramData[partType][quantityType][chronoType];
+    const currentData = data.current.histogramData[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
+    const throttledYearVal = useThrottle(yearVal, 150);
     const camControlsRef = useRef<OrbitControls>(null!);
     const canvasParentRef = useRef(null!);
 
@@ -89,7 +91,7 @@ function App() {
         }
     }
 
-    function heightScaling(dataVal: number): number {
+    const heightScaling = useCallback((dataVal: number): number => {
         if (scalingType == "Linear") {
             switch (chronoType) {
                 case ChronoType.Cumulative:
@@ -106,14 +108,14 @@ function App() {
         }
 
         return Math.max(defaultHeight, dataVal);
-    }
+    }, [chronoType, defaultHeight, scalingType]);
 
-    function materialChange(mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void {
+    const materialChange = useCallback((mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void => {
         if (isEmpty) {
             if (row > col) {
                 (mat as THREE.MeshStandardMaterial).color = threeImpossibleBarColor;
             } else {
-                if (data.partLifetimeData[partType].hasPart(row + "x" + col)) {
+                if (data.current.partLifetimeData[partType].hasPart(row + "x" + col)) {
                     (mat as THREE.MeshStandardMaterial).color = threeEmptyBarColor;
                 } else {
                     (mat as THREE.MeshStandardMaterial).color = threeUnusedBarColor;
@@ -131,26 +133,26 @@ function App() {
                 midpoint
             );
         }
-    }
+    }, [linearColorHeightDiv, logColorHeightDiv, partType, linearLerpMidpoint, logarithmicLerpMidpoint, scalingType, threeBarColor1,threeBarColor2, threeBarColor3, threeEmptyBarColor, threeUnusedBarColor, threeImpossibleBarColor]);
 
-    function getCurrentValue(name: string) {
-        if (name in currentData.dataset[yearVal + ""]) {
-            return currentData.dataset[yearVal + ""][name];
+    const getCurrentValue = useCallback((name: string) => {
+        if (name in currentData.dataset[throttledYearVal + ""]) {
+            return currentData.dataset[throttledYearVal + ""][name];
         }
         return 0;
-    }
+    },[throttledYearVal, currentData]);
 
-    function getPreviousValue(name: string) {
-        const lastYear = (yearVal - 1) + "";
+    const getPreviousValue = useCallback((name: string) => {
+        const lastYear = (throttledYearVal - 1) + "";
         if (lastYear in currentData.dataset && name in currentData.dataset[lastYear]) {
             return currentData.dataset[lastYear][name];
         }
         return 0;
-    }
+    }, [currentData, throttledYearVal]);
 
-    function addAccessibleDescription(e: ReactElement<ThreeElements['mesh']>) {
+    const addAccessibleDescription = useCallback((e: ReactElement<ThreeElements['mesh']>) => {
 
-        if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
+        if (!e.props.name || !data.current.partLifetimeData[partType].hasPart(e.props.name)) {
             return e;
         }
 
@@ -159,8 +161,8 @@ function App() {
             key={e.props.name + partType.slice(0, -1)}
             description={makeBarLabel({
                 partName: e.props.name,
-                startYear: data.partLifetimeData[partType].firstYear(e.props.name),
-                endYear: data.partLifetimeData[partType].lastYear(e.props.name),
+                startYear: data.current.partLifetimeData[partType].firstYear(e.props.name),
+                endYear: data.current.partLifetimeData[partType].lastYear(e.props.name),
                 partType: partType,
                 quantityFormat: quantityType,
                 timeFormat: chronoType,
@@ -172,17 +174,17 @@ function App() {
             {e}
         </A11y>;
 
-    }
+    }, [chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
-    function colPointerOver(e: ThreeEvent<PointerEvent>) {
-        if (data.partLifetimeData[partType].hasPart(e.object.name)) {
+    const colPointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
+        if (data.current.partLifetimeData[partType].hasPart(e.object.name)) {
             setTooltipVisible(true);
             lastHoverRef.current = e.object.name;
 
             setTooltipContent(<TooltipContent
                 partName={e.object.name}
-                startYear={data.partLifetimeData[partType].firstYear(e.object.name)}
-                endYear={data.partLifetimeData[partType].lastYear(e.object.name) }
+                startYear={data.current.partLifetimeData[partType].firstYear(e.object.name)}
+                endYear={data.current.partLifetimeData[partType].lastYear(e.object.name) }
                 partType={partType }
                 quantityFormat={ quantityType}
                 timeFormat={ chronoType}
@@ -191,14 +193,14 @@ function App() {
             ></TooltipContent>);
         }
         e.stopPropagation();
-    }
+    }, [chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
-    function colPointerOut(e: ThreeEvent<PointerEvent>) {
+    const colPointerOut = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (lastHoverRef.current === e.object.name) {
             setTooltipVisible(false);
         }
         e.stopPropagation();
-    }
+    },[]);
 
     function canvasPointerDown(e: React.PointerEvent<HTMLDivElement>) {
         if (e.pointerType === "mouse") {
@@ -216,23 +218,25 @@ function App() {
         setPartType(s as PartType);
         setYearVal(Clamp(
             yearVal,
-            data.histogramData[s as PartType][quantityType][chronoType].firstYear,
-            data.histogramData[s as PartType][quantityType][chronoType].lastYear
+            data.current.histogramData[s as PartType][quantityType][chronoType].firstYear,
+            data.current.histogramData[s as PartType][quantityType][chronoType].lastYear
         ));
     }
 
-    const perspectiveCam = <PerspectiveCamera
+    const perspectiveCam = useRef(<PerspectiveCamera
         position={[0, 30, 7]}
         fov={75}
         makeDefault={true}>
-    </PerspectiveCamera>;
+    </PerspectiveCamera>);
 
-    const orthographicCam = <OrthographicCamera
+    const orthographicCam = useRef (<OrthographicCamera
         position={[0, 9000, 0]}
         far={10000}
         zoom={Math.sqrt(Math.min(window.innerWidth, window.innerHeight) / 2) / 1.5}
         makeDefault={true}>
-    </OrthographicCamera>;
+    </OrthographicCamera>);
+
+    const barMat = useRef(new THREE.MeshStandardMaterial());
 
     return (<div>
         <title>Lego Stat 3D Histogram Viewer</title>
@@ -241,8 +245,8 @@ function App() {
                 className="stats-canvas"
                 rows={currentData.rows}
                 cols={currentData.cols}
-                cam={cameraType === "Perspective" ? perspectiveCam : orthographicCam}
-                data={currentData.dataset[yearVal]}
+                cam={cameraType === "Perspective" ? perspectiveCam.current : orthographicCam.current}
+                data={currentData.dataset[throttledYearVal]}
                 xAxisLabel={"Stud Length"}
                 yAxisLabel={"Stud Width"}
                 headerLabel={GraphTitle(partType, quantityType, chronoType)}
@@ -251,13 +255,13 @@ function App() {
                 colWidth={colWidth}
                 rowWidth={rowWidth}
                 heightScaling={heightScaling}
-                barMat={new THREE.MeshStandardMaterial()}
+                barMat={barMat.current}
                 materialChange={materialChange}
                 cameraControls={<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
                 accessibilityLabel={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}
-                columnPostProcess={(e) => addAccessibleDescription(e) }
+                columnPostProcess={addAccessibleDescription }
             />
             <A11yAnnouncer/>
         </div>

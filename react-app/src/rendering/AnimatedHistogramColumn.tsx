@@ -1,5 +1,5 @@
 import { useFrame, type ThreeElements} from "@react-three/fiber";
-import { useEffect, useRef, type ReactElement } from 'react';
+import { useEffect, useRef, type ReactElement, useMemo } from 'react';
 import { Material, Mesh, Vector3 } from "three";
 import { A11y } from '@react-three/a11y';
 
@@ -42,7 +42,7 @@ export function AnimatedHistogramColumn({
     heightTarget = 1,
     trackHeightChange = () => { },
     materialChange = () => { },
-    animSpeed = 0.1,
+    animSpeed = 0.2,
     xWidth = 1,
     yWidth = 1,
     isEmpty,
@@ -56,6 +56,17 @@ export function AnimatedHistogramColumn({
     const nextFrame = useRef(1 / FRAMERATE);
     const meshRef = useRef<Mesh>(null!);
     let frameHappened = false;
+
+    const geom = useMemo(() => {
+        return <boxGeometry></boxGeometry>;
+    }
+        , []);
+
+    const newProps = useMemo(() => {
+        let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
+        usedPosition = new Vector3(usedPosition.x, usedPosition.y + heightStart / 2, usedPosition.z);
+        return { ...meshProps, position: usedPosition, scale: new Vector3(xWidth, heightStart, yWidth) };
+    }, [heightStart, meshProps, xWidth, yWidth]);
 
     useEffect(() => {
         time.current = 0;
@@ -89,18 +100,13 @@ export function AnimatedHistogramColumn({
         }
     });
 
-
-
-    let usedPosition = meshProps?.position as Vector3 || new Vector3(0, 0, 0);
-    usedPosition = new Vector3(usedPosition.x, usedPosition.y + heightStart / 2, usedPosition.z);
-    const newProps = { ...meshProps, position: usedPosition, scale: new Vector3(xWidth, heightStart, yWidth) };
-
+   
     let result = <mesh ref={meshRef}
         {...newProps}
         name={row + "x" + col}
         key={"1" }
     >
-        <boxGeometry />
+        {geom}
     </mesh>;
 
     result = columnPostProcess(result);
