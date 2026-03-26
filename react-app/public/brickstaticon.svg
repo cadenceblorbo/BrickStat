@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="brickstaticon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     showguides="true"
+     inkscape:zoom="1.78125"
+     inkscape:cx="200.70175"
+     inkscape:cy="280.14035"
+     inkscape:window-width="1918"
+     inkscape:window-height="2054"
+     inkscape:window-x="3830"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <sodipodi:guide
+       position="170.66667,556.91228"
+       orientation="-1,0"
+       id="guide1"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="341.33333,501.33333"
+       orientation="-1,0"
+       id="guide2"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="268.91228,256"
+       orientation="0,1"
+       id="guide3"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="256,533.33333"
+       orientation="-1,0"
+       id="guide4"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="102.4,512"
+       orientation="-1,0"
+       id="guide5"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="409.6,513.12281"
+       orientation="-1,0"
+       id="guide6"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="143.7193,409.6"
+       orientation="0,1"
+       id="guide8"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="152.14035,102.4"
+       orientation="0,1"
+       id="guide9"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g6"
+       transform="matrix(2.048,0,0,2.048,-242.09516,-307.28338)">
+      <rect
+         style="fill:#4b9f4a;fill-opacity:1;stroke-width:0.652008"
+         id="rect3"
+         width="30"
+         height="10.625"
+         x="-63.263161"
+         y="-129.64255"
+         transform="translate(291.47368,329.37076)" />
+      <rect
+         style="fill:#4b9f4a;fill-opacity:1;stroke-width:0.447994"
+         id="rect2"
+         width="50"
+         height="140"
+         x="218.21053"
+         y="210.35321" />
+    </g>
+    <g
+       id="g8"
+       transform="matrix(2.048,0,0,2.048,-378.62845,-226.00338)">
+      <rect
+         style="fill:#4b9f4a;fill-opacity:1;stroke-width:0.652008"
+         id="rect7"
+         width="30"
+         height="10.625"
+         x="-63.263161"
+         y="-129.64255"
+         transform="translate(291.47368,329.37076)" />
+      <rect
+         style="fill:#4b9f4a;fill-opacity:1;stroke-width:0.378624"
+         id="rect8"
+         width="50"
+         height="100"
+         x="218.21053"
+         y="210.35321" />
+    </g>
+    <g
+       id="g10"
+       transform="matrix(2.048,0,0,2.048,-105.56183,-144.08337)">
+      <rect
+         style="fill:#4b9f4a;fill-opacity:1;stroke-width:0.652008"
+         id="rect9"
+         width="30"
+         height="10.625"
+         x="-63.263161"
+         y="-129.64255"
+         transform="translate(291.47368,329.37076)" />
+      <rect
+         style="fill:#4b9f4a;fill-opacity:1;stroke-width:0.293281"
+         id="rect10"
+         width="50"
+         height="60"
+         x="218.21053"
+         y="210.35321" />
+    </g>
+  </g>
+</svg>
