@@ -29,7 +29,7 @@ const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
 const tooltipArrowSize = 10;
 
 function App() {
-    const data = useRef(JSONParse.retrieveData());
+    const data = useMemo(() => JSONParse.retrieveData(), []);
 
     //document.body.insertBefore(document.createElement("hi"), document.getElementById('root'));
     //document.body.insertBefore(document.createElement("hi"), document.getElementById('root'));
@@ -39,7 +39,7 @@ function App() {
     const [partType, setPartType] = useState(PartType.Bricks);
     const [scalingType, setScalingType] = useState("Logarithmic");
     const [cameraType, setCameraType] = useState("Perspective");
-    const currentData = data.current.histogramData[partType][quantityType][chronoType];
+    const currentData = data.histogramData[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
     const throttledYearVal = useThrottle(yearVal, 150);
     const camControlsRef = useRef<OrbitControls>(null!);
@@ -115,7 +115,7 @@ function App() {
             if (row > col) {
                 (mat as THREE.MeshStandardMaterial).color = threeImpossibleBarColor;
             } else {
-                if (data.current.partLifetimeData[partType].hasPart(row + "x" + col)) {
+                if (data.partLifetimeData[partType].hasPart(row + "x" + col)) {
                     (mat as THREE.MeshStandardMaterial).color = threeEmptyBarColor;
                 } else {
                     (mat as THREE.MeshStandardMaterial).color = threeUnusedBarColor;
@@ -133,7 +133,7 @@ function App() {
                 midpoint
             );
         }
-    }, [linearColorHeightDiv, logColorHeightDiv, partType, linearLerpMidpoint, logarithmicLerpMidpoint, scalingType, threeBarColor1,threeBarColor2, threeBarColor3, threeEmptyBarColor, threeUnusedBarColor, threeImpossibleBarColor]);
+    }, [data, linearColorHeightDiv, logColorHeightDiv, partType, linearLerpMidpoint, logarithmicLerpMidpoint, scalingType, threeBarColor1,threeBarColor2, threeBarColor3, threeEmptyBarColor, threeUnusedBarColor, threeImpossibleBarColor]);
 
     const getCurrentValue = useCallback((name: string) => {
         if (name in currentData.dataset[throttledYearVal + ""]) {
@@ -152,7 +152,7 @@ function App() {
 
     const addAccessibleDescription = useCallback((e: ReactElement<ThreeElements['mesh']>) => {
 
-        if (!e.props.name || !data.current.partLifetimeData[partType].hasPart(e.props.name)) {
+        if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
             return e;
         }
 
@@ -161,8 +161,8 @@ function App() {
             key={e.props.name + partType.slice(0, -1)}
             description={makeBarLabel({
                 partName: e.props.name,
-                startYear: data.current.partLifetimeData[partType].firstYear(e.props.name),
-                endYear: data.current.partLifetimeData[partType].lastYear(e.props.name),
+                startYear: data.partLifetimeData[partType].firstYear(e.props.name),
+                endYear: data.partLifetimeData[partType].lastYear(e.props.name),
                 partType: partType,
                 quantityFormat: quantityType,
                 timeFormat: chronoType,
@@ -174,17 +174,17 @@ function App() {
             {e}
         </A11y>;
 
-    }, [chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
+    }, [data, chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
     const colPointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
-        if (data.current.partLifetimeData[partType].hasPart(e.object.name)) {
+        if (data.partLifetimeData[partType].hasPart(e.object.name)) {
             setTooltipVisible(true);
             lastHoverRef.current = e.object.name;
 
             setTooltipContent(<TooltipContent
                 partName={e.object.name}
-                startYear={data.current.partLifetimeData[partType].firstYear(e.object.name)}
-                endYear={data.current.partLifetimeData[partType].lastYear(e.object.name) }
+                startYear={data.partLifetimeData[partType].firstYear(e.object.name)}
+                endYear={data.partLifetimeData[partType].lastYear(e.object.name) }
                 partType={partType }
                 quantityFormat={ quantityType}
                 timeFormat={ chronoType}
@@ -193,7 +193,7 @@ function App() {
             ></TooltipContent>);
         }
         e.stopPropagation();
-    }, [chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
+    }, [data, chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
     const colPointerOut = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (lastHoverRef.current === e.object.name) {
@@ -218,8 +218,8 @@ function App() {
         setPartType(s as PartType);
         setYearVal(Clamp(
             yearVal,
-            data.current.histogramData[s as PartType][quantityType][chronoType].firstYear,
-            data.current.histogramData[s as PartType][quantityType][chronoType].lastYear
+            data.histogramData[s as PartType][quantityType][chronoType].firstYear,
+            data.histogramData[s as PartType][quantityType][chronoType].lastYear
         ));
     }
 
