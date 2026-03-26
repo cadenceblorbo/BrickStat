@@ -238,7 +238,7 @@ function App() {
 
     const barMat = useRef(new THREE.MeshStandardMaterial());
 
-    return (<div>
+    return (<main>
         <title>Lego Stat 3D Histogram Viewer</title>
         <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)} ref={canvasParentRef}>
             <StatsCanvas
@@ -418,7 +418,7 @@ function App() {
         }
 
 
-    </div>);
+    </main>);
 }
 
 export default App;

@@ -1,6 +1,8 @@
 import { useState, useRef, type RefObject } from 'react';
+import { stylesHiddenButScreenreadable } from '../a11y/A11yConsts.tsx';
 
 import { Clamp } from "../utils/MathUtil.ts";
+
 interface LabeledTextboxSliderProps {
     label: string;
     min: number;
@@ -9,6 +11,8 @@ interface LabeledTextboxSliderProps {
     step?: number;
     onChange: (value: number) => void;
 }
+
+const hiddenLabelStyle = { clip: "rect(0 0 0 0)", margin: "-1px", overflow: "hidden", width: "1px", height: "1px" };
 
 export default function LabeledTextboxSliderProps({
     label,
@@ -46,17 +50,25 @@ export default function LabeledTextboxSliderProps({
 
     return <fieldset>
         <legend>{label}</legend>
+        <label
+            htmlFor={label + " text input"}
+            style={hiddenLabelStyle }
+        >{label + " text input (Enter a value between " + min + " and " + max + ".)"}</label>
         <input
+            id={label + " text input"}
             ref={textInputRef}
-            title={label + "text input (Enter a value between " + min + " and " + max + ".)"}
             type="text"
             value={textValue}
             onChange={e => setTextValue(e.target.value)}
             onBlur={e => textboxEnter(e.target.value)}
             onKeyDown={e =>  handleEnter(e.key)}
         ></input>
+        <label
+            htmlFor={label + " slider"}
+            style={hiddenLabelStyle}
+        >{label + " slider"}</label>
         <input
-            title={label + " slider"}
+            id={label + " slider"}
             type="range"
             value={value}
             min={min}
