@@ -42,7 +42,7 @@ export function AnimatedHistogramColumn({
     heightTarget = 1,
     trackHeightChange = () => { },
     materialChange = () => { },
-    animSpeed = 0.2,
+    animSpeed = 0.15,
     xWidth = 1,
     yWidth = 1,
     isEmpty,

@@ -41,7 +41,7 @@ function App() {
     const [cameraType, setCameraType] = useState("Perspective");
     const currentData = data.histogramData[partType][quantityType][chronoType];
     const [yearVal, setYearVal] = useState(currentData.firstYear);
-    const throttledYearVal = useThrottle(yearVal, 150);
+    const throttledYearVal = useThrottle(yearVal, 100);
     const camControlsRef = useRef<OrbitControls>(null!);
     const canvasParentRef = useRef(null!);
 
