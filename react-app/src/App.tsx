@@ -1,4 +1,4 @@
-﻿import { useMemo } from 'react';
+﻿import { useMemo, useRef } from 'react';
 
 import Histogram3DApp from './Histogram3DApp.tsx';
 import Header from './react-components/Header.tsx';
@@ -7,10 +7,13 @@ import './App.css';
 
 function App() {
 
+    const aboutRef = useRef<HTMLDialogElement>(null!);
+    const helpRef = useRef<HTMLDialogElement>(null!);
+
     const headerButtons = useMemo(() => {
         return new Map([
-            ["About", () => console.log("about selected")],
-            ["Help", () => console.log("help selected")]
+            ["About", () => aboutRef.current?.showModal()],
+            ["Help", () => helpRef.current?.showModal()]
 
         ]);
     }, []);
@@ -26,6 +29,12 @@ function App() {
         <main>
             <Histogram3DApp></Histogram3DApp>
         </main>
+        <dialog ref={aboutRef}>
+            <p>"hi"</p>
+        </dialog>
+        <dialog ref={helpRef}>
+            <p>"bye"</p>
+        </dialog>
     </div>;
 }
 

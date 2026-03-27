@@ -7,8 +7,6 @@ import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { A11yAnnouncer } from './a11y/A11yAnnouncer.tsx';
 import { A11y } from './a11y/A11y.tsx';
 
-
-
 import { GraphTitle } from './graph-title.ts';
 import * as JSONParse from './json-parser.ts';
 import LabeledColorPicker from './react-components/LabeledColorPicker.tsx';
