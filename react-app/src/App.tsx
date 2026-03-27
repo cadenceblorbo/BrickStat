@@ -2,6 +2,7 @@
 
 import Histogram3DApp from './Histogram3DApp.tsx';
 import Header from './react-components/Header.tsx';
+import HelpContent from './react-components/ControlsContent.tsx';
 import './App.css';
 
 
@@ -12,9 +13,9 @@ function App() {
 
     const headerButtons = useMemo(() => {
         return new Map([
+            ["Controls", () => helpRef.current?.showModal()],
             ["About", () => aboutRef.current?.showModal()],
-            ["Help", () => helpRef.current?.showModal()]
-
+            
         ]);
     }, []);
 
@@ -33,7 +34,7 @@ function App() {
             <p>"hi"</p>
         </dialog>
         <dialog ref={helpRef}>
-            <p>"bye"</p>
+            <HelpContent></HelpContent>
         </dialog>
     </div>;
 }
