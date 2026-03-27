@@ -6,7 +6,11 @@ import './App.css';
 function App() {
     return <div role='none'>
         <title>BrickStat 3D Histogram Viewer</title>
-        <Header></Header>
+        <Header
+            logoSrc="./brickstaticon.svg"
+            logoAlt="Brick Stat"
+            className="header"
+        ></Header>
         <main>
             <Histogram3DApp></Histogram3DApp>
         </main>

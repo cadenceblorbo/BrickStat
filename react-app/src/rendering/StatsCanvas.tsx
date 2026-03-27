@@ -96,7 +96,7 @@ function StatsCanvas({
             />
             {cam}
             {cameraControls}
-            <Stats></Stats>
+            
         </Canvas>
             
     );

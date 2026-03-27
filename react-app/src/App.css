@@ -1,12 +1,21 @@
 #root {
-    margin: 0 auto;
-    padding: 2rem;
     text-align: center;
     --color-black: #151515;
     --color-green: #1adb4e;
     --color-gray: #A0A19F;
+    --color-dark-gray: #42423e;
     --base-opacity: 0.9;
     --transition-time: 0.2s;
+}
+
+body{
+    padding: 0;
+    margin:0;
+}
+
+main {
+    margin: 0 auto;
+    padding: 2rem;
 }
 
 .stats-canvas-parent {
@@ -158,4 +167,14 @@ legend{
 
 .stats-canvas p {
     pointer-events: none;
+}
+
+.header{
+    display: flex;
+    height: 5rem;
+    width: 100%;
+    background: var(--color-dark-gray);
+    border-style: none none solid none;
+    border-color: var(--color-gray);
+    border-width: 0.1rem;
 }
