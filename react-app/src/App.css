@@ -198,3 +198,13 @@ legend{
 .header button:hover{
     background: var(--color-very-dark-gray);
 }
+
+.header img {
+    width:auto;
+    height:100%;
+    min-width:0;
+}
+
+.header div{
+    white-space: nowrap;
+}
