@@ -21,7 +21,7 @@ export default function Header({
         }
         const result = [];
         for (const [key, value] of navOptions) {
-            result.push(<button onClick={value}>{key}</button>);
+            result.push(<button onClick={value} key={key}>{key}</button>);
         }
         return result;
     }, [navOptions]);

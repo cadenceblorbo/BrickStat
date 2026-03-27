@@ -1,5 +1,4 @@
 import { useState, useRef, type RefObject } from 'react';
-import { stylesHiddenButScreenreadable } from '../a11y/A11yConsts.tsx';
 
 import { Clamp } from "../utils/MathUtil.ts";
 

@@ -24,7 +24,7 @@ interface StatsCanvasProps {
     cameraControls?: ReactElement;
     colPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
-    accessibilityLabel: string;
+    imageAccessibilityLabel: string;
     columnPostProcess?: (e: ReactElement<ThreeElements['mesh']>) => ReactElement;
 }
 
@@ -47,7 +47,7 @@ function StatsCanvas({
     cameraControls,
     colPointerOver = () => { },
     colPointerOut = () => { },
-    accessibilityLabel,
+    imageAccessibilityLabel,
     columnPostProcess = (e) => { return e; }
 }: StatsCanvasProps) {
 
@@ -62,15 +62,14 @@ function StatsCanvas({
             return;
         }
         canvasRef.current.role = "img";
-        canvasRef.current.ariaLabel = accessibilityLabel;
-        canvasRef.current.tabIndex = 0;
-    }, [canvasRef, accessibilityLabel]);
+        canvasRef.current.ariaLabel = imageAccessibilityLabel;
+    }, [canvasRef, imageAccessibilityLabel]);
 
     
 
     return (
         <Canvas
-            ref={canvasRef} className={className} 
+            ref={canvasRef} className={className} tabIndex={0}
         >
             <ambientLight intensity={0.5} />
             <directionalLight position={[-7.5, 5, 10]} intensity={Math.PI} />

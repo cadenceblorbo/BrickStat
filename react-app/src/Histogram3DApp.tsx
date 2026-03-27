@@ -256,7 +256,7 @@ function Histogram3DApp() {
                 cameraControls={<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
-                accessibilityLabel={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}
+                imageAccessibilityLabel={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}
                 columnPostProcess={addAccessibleDescription}
             />
             <A11yAnnouncer />

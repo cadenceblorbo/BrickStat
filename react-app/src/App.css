@@ -4,6 +4,8 @@
     --color-green: #1adb4e;
     --color-gray: #A0A19F;
     --color-dark-gray: #42423e;
+    --color-very-dark-gray: #30302e; 
+    --color-white: #ffffff;
     --base-opacity: 0.9;
     --transition-time: 0.2s;
 }
@@ -23,7 +25,7 @@ main {
     border-color: var(--color-gray);
     border-radius: 6px;
     width: 100%;
-    height: 70vh;
+    height: 60vh;
 }
 
 
@@ -171,10 +173,28 @@ legend{
 
 .header{
     display: flex;
+    justify-content: space-between;
     height: 5rem;
     width: 100%;
     background: var(--color-dark-gray);
     border-style: none none solid none;
     border-color: var(--color-gray);
-    border-width: 0.1rem;
+    border-width: 1px;
+}
+
+.header button {
+    background: var(--color-dark-gray);
+    height: 100%;
+    color: var(--color-white);
+    border-style: none none none solid;
+    border-color: var(--color-gray);
+    border-width: 1px;
+    border-radius: 0;
+    font-size: 1rem;
+    padding: 1rem;
+    transition: background var(--transition-time);
+}
+
+.header button:hover{
+    background: var(--color-very-dark-gray);
 }
