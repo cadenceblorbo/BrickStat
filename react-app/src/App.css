@@ -226,7 +226,24 @@ dialog {
     margin-bottom: 2.5rem;
 }
 
+dialog[open] {
+    animation: open-popup var(--transition-time) forwards;
+}
+
+@keyframes open-popup {
+    from{opacity:0}
+    to{opacity:1}
+}
+
 dialog::backdrop{
     background-color: var(--color-gray);
-    opacity: 0.5;
+}
+
+dialog[open]::backdrop {
+    animation: open-popup-background var(--transition-time) forwards;
+}
+
+@keyframes open-popup-background {
+    from {opacity: 0}
+    to {opacity: 0.5}
 }
