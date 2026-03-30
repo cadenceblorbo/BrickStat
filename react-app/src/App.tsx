@@ -2,6 +2,7 @@
 
 import Histogram3DApp from './Histogram3DApp.tsx';
 import Header from './react-components/Header.tsx';
+import AboutContent from './react-components/AboutContent.tsx';
 import HelpContent from './react-components/ControlsContent.tsx';
 import './App.css';
 
@@ -31,7 +32,7 @@ function App() {
             <Histogram3DApp></Histogram3DApp>
         </main>
         <dialog ref={aboutRef}>
-            <p>"hi"</p>
+            <AboutContent></AboutContent>
         </dialog>
         <dialog ref={helpRef}>
             <HelpContent></HelpContent>
