@@ -4,6 +4,7 @@ import Histogram3DApp from './Histogram3DApp.tsx';
 import Header from './react-components/Header.tsx';
 import AboutContent from './react-components/AboutContent.tsx';
 import HelpContent from './react-components/ControlsContent.tsx';
+import PopupWithClose from './react-components/PopupWithClose.tsx';
 import './App.css';
 
 
@@ -31,12 +32,12 @@ function App() {
         <main>
             <Histogram3DApp></Histogram3DApp>
         </main>
-        <dialog ref={aboutRef}>
+        <PopupWithClose ref={aboutRef}>
             <AboutContent></AboutContent>
-        </dialog>
-        <dialog ref={helpRef}>
+        </PopupWithClose>
+        <PopupWithClose ref={helpRef}>
             <HelpContent></HelpContent>
-        </dialog>
+        </PopupWithClose>
     </div>;
 }
 
