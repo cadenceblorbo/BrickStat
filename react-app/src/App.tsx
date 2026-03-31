@@ -24,7 +24,7 @@ function App() {
     return <div role='none'>
         <title>BrickStat 3D Histogram Viewer</title>
         <Header
-            logoSrc="./brickstatlogo.svg"
+            logoSrc="./brickstatlogopath.svg"
             logoAlt="BrickStat"
             navOptions = {headerButtons}
             className="header"
