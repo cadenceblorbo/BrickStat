@@ -41,7 +41,8 @@ input[type="range"] {
     -webkit-transition: var(--transition-time);
     transition: opacity var(--transition-time);
     --thumb-color: var(--color-green);
-    --thumb-height: 175%;
+    --thumb-height: 1.75rem;
+    --thumb-width: 0.8rem;
 }
 
 .year-controls {
@@ -54,6 +55,7 @@ input[type="range"] {
 .year-slider {
     width: 80vw;
     border-radius: 0.5rem;
+    height: 1rem;
 }
 
 input[type="range"]:hover {
@@ -66,14 +68,18 @@ input[type="range"]::-webkit-slider-thumb {
     background: var(--thumb-color);
     cursor: pointer;
     height: var(--thumb-height);
-    border: none
+    border: solid;
+    border-width: 1.5px;
+    border-color: var(--color-black);
+    border-radius: 6px;
+    width: 0.9rem;
 }
 
 input[type="range"]::-moz-range-thumb {
     background: var(--thumb-color);
     cursor: pointer;
     height: var(--thumb-height);
-    border-color: var(--color-black)
+    border-color: var(--color-black);
 }
 
 button {
