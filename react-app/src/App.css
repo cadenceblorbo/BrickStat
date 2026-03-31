@@ -32,7 +32,6 @@ main {
     height: 60vh;
 }
 
-
 input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
@@ -43,6 +42,7 @@ input[type="range"] {
     --thumb-color: var(--color-green);
     --thumb-height: 1.75rem;
     --thumb-width: 0.8rem;
+    
 }
 
 .year-controls {
@@ -90,7 +90,8 @@ button {
     opacity: var(--base-opacity);
     -webkit-transition: var(--transition-time);
     transition: opacity var(--transition-time);
-    text-align:center;
+    text-align: center;
+    cursor: pointer;
 }
 
 button:hover {
@@ -111,7 +112,8 @@ button:hover {
     padding: 5px;
 }
 
-.dataset-selection-parent select, .scene-control-parent select {
+select {
+    cursor: pointer;
     background: var(--color-black);
     border-color: var(--color-gray);
     border-radius: 6px;
@@ -252,4 +254,11 @@ dialog[open]::backdrop {
 @keyframes open-popup-background {
     from {opacity: 0}
     to {opacity: 0.5}
+}
+
+dialog button{
+    background-color: transparent;
+    border:none;
+    color: var(--color-gray);
+    text-decoration: underline;
 }
