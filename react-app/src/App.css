@@ -12,6 +12,8 @@ html{
     --color-white: #ffffff;
     --base-opacity: 0.9;
     --transition-time: 0.2s;
+    --input-border-width: 1.5px;
+    --input-border-radius: 6px;
 }
 
 body{
@@ -42,7 +44,7 @@ input[type="range"] {
     --thumb-color: var(--color-green);
     --thumb-height: 1.75rem;
     --thumb-width: 0.8rem;
-    
+    border-width: var(--input-border-width);
 }
 
 .year-controls {
@@ -69,9 +71,9 @@ input[type="range"]::-webkit-slider-thumb {
     cursor: pointer;
     height: var(--thumb-height);
     border: solid;
-    border-width: 1.5px;
+    border-width: var(--input-border-width);
     border-color: var(--color-black);
-    border-radius: 6px;
+    border-radius: var(--input-border-radius);
     width: 0.9rem;
 }
 
@@ -82,16 +84,39 @@ input[type="range"]::-moz-range-thumb {
     border-color: var(--color-black);
 }
 
+input[type="color"] {
+    background-color: var(--color-black);
+    border-color: var(--color-dark-gray);
+    border-width: var(--input-border-width);
+    border-radius: var(--input-border-radius);
+    border-style: solid;
+}
+
+input[type="text"]{
+    background-color: var(--color-black);
+    border-color: var(--color-gray);
+    border-width: var(--input-border-width);
+    border-radius: var(--input-border-radius);
+    border-style: solid;
+}
+
+
 button {
     background-color: var(--color-gray);
     border: none;
     color: var(--color-black);
-    border-radius: 6px;
+    border-radius: var(--input-border-radius);
     opacity: var(--base-opacity);
     -webkit-transition: var(--transition-time);
     transition: opacity var(--transition-time);
     text-align: center;
     cursor: pointer;
+    border-width: var(--input-border-width);
+}
+
+select {
+    border-width: var(--input-border-width);
+    border-style: solid;
 }
 
 button:hover {
@@ -166,6 +191,7 @@ legend{
 
 .advanced-options input {
     margin-left: 0.5rem;
+    min-height: 1rem;
 }
 
 .advanced-options input[type="text"] {
@@ -174,9 +200,10 @@ legend{
     align-self: center;
 }
 
-.advanced-options input[type="range"]{
+.advanced-options input[type="range"] {
     border-radius: 0.5rem;
     height: 1rem;
+    align-self: center;
 }
 
 .stats-canvas p {
@@ -261,4 +288,5 @@ dialog button{
     border:none;
     color: var(--color-gray);
     text-decoration: underline;
+    float: right;
 }
