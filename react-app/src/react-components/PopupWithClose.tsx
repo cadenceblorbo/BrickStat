@@ -4,14 +4,16 @@ interface PopupWithCloseProps {
     children: React.ReactNode
     ref: RefObject<HTMLDialogElement>
     closeText?: string
+    label: string
 }
 
 export default function PopupWithClose({
     children,
     ref,
-    closeText = "close"
+    closeText = "close",
+    label
 }: PopupWithCloseProps) {
-    return <dialog ref={ref} closedby={'any'}>
+    return <dialog ref={ref} closedby={'any'} role="dialog" aria-modal="true" aria-label={label}>
         <button onClick={() => ref.current?.close()}>{closeText}</button>
         {children}
     </dialog>;

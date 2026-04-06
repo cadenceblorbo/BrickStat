@@ -32,10 +32,10 @@ function App() {
         <main>
             <Histogram3DApp></Histogram3DApp>
         </main>
-        <PopupWithClose ref={aboutRef}>
+        <PopupWithClose ref={aboutRef} aria-haspopup="dialog" label="About">
             <AboutContent></AboutContent>
         </PopupWithClose>
-        <PopupWithClose ref={helpRef}>
+        <PopupWithClose ref={helpRef} aria-haspopup="dialog" label="Help">
             <HelpContent></HelpContent>
         </PopupWithClose>
     </div>;
