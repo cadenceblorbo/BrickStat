@@ -231,6 +231,8 @@ function Histogram3DApp() {
         makeDefault={true}>
     </OrthographicCamera>);
 
+    const cameraControls = useRef(<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>);
+
     const barMat = useRef(new THREE.MeshStandardMaterial());
 
     return (<div role='none'>
@@ -251,7 +253,7 @@ function Histogram3DApp() {
                 heightScaling={heightScaling}
                 barMat={barMat.current}
                 materialChange={materialChange}
-                cameraControls={<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>}
+                cameraControls={cameraControls.current}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
                 imageAccessibilityLabel={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}

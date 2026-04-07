@@ -11,11 +11,11 @@ import './App.css';
 function App() {
 
     const aboutRef = useRef<HTMLDialogElement>(null!);
-    const helpRef = useRef<HTMLDialogElement>(null!);
+    const controlsRef = useRef<HTMLDialogElement>(null!);
 
     const headerButtons = useMemo(() => {
         return new Map([
-            ["Controls", () => helpRef.current?.showModal()],
+            ["Controls", () => controlsRef.current?.showModal()],
             ["About", () => aboutRef.current?.showModal()],
             
         ]);
@@ -35,7 +35,7 @@ function App() {
         <PopupWithClose ref={aboutRef} aria-haspopup="dialog" label="About">
             <AboutContent></AboutContent>
         </PopupWithClose>
-        <PopupWithClose ref={helpRef} aria-haspopup="dialog" label="Help">
+        <PopupWithClose ref={controlsRef} aria-haspopup="dialog" label="Controls">
             <HelpContent></HelpContent>
         </PopupWithClose>
     </div>;
