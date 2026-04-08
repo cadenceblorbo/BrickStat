@@ -1,24 +1,24 @@
-import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber'
+import { PerspectiveCamera  }from 'three';
+import { useFrame } from '@react-three/fiber';
 
 function CameraToy() {
-    let dir = 1
-    const min = 20
-    const max = 120
-    const speed = 10
+    let dir = 1;
+    const min = 20;
+    const max = 120;
+    const speed = 10;
     useFrame((state, delta) => {
-        if (state.camera instanceof THREE.PerspectiveCamera) {
+        if (state.camera instanceof PerspectiveCamera) {
             console.log("here");
             if (state.camera.fov > max) {
-                dir = -1
+                dir = -1;
             } else if (state.camera.fov < min) {
-                dir = 1
+                dir = 1;
             }
             state.camera.fov += delta * dir * speed;
             state.camera.updateProjectionMatrix();
         }
     });
-    return <></>
+    return <></>;
 }
 
-export default CameraToy
+export default CameraToy;

@@ -1,7 +1,7 @@
 import { Canvas, type ThreeEvent, type ThreeElements } from '@react-three/fiber';
 //import { Stats } from '@react-three/drei';
 import { type ReactElement, useRef, useEffect} from 'react';
-import * as THREE from 'three';
+import {MeshStandardMaterial, Material, Color } from 'three';
 import { Histogram3D } from "./Histogram3D";
 
 
@@ -19,8 +19,8 @@ interface StatsCanvasProps {
     rowWidth?: number;
     defaultHeight?: number;
     heightScaling?: (dataVal: number) => number;
-    barMat?: THREE.Material;
-    materialChange?: (mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
+    barMat?: Material;
+    materialChange?: (mat: Material | Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
     cameraControls?: ReactElement;
     colPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
@@ -42,7 +42,7 @@ function StatsCanvas({
     rowWidth = 1,
     defaultHeight = 0.1,
     heightScaling = (dataVal: number) => { return dataVal; },
-    barMat = new THREE.MeshStandardMaterial({ color: new THREE.Color().setHex(0xA0A19F) }),
+    barMat = new MeshStandardMaterial({ color: new Color().setHex(0xA0A19F) }),
     materialChange = () => { },
     cameraControls,
     colPointerOver = () => { },

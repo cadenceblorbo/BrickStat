@@ -146,7 +146,7 @@ export function retrieveData(): LegoDataset {
 	};
 
 	for (const type in PartType) {
-		Object.defineProperty(result.histogramData, type as PartType, {});
+		(result.histogramData as Record<PartType, object>)[type as PartType] = {};
 	}
 
 	for (const [key, value] of Object.entries(totalHistories)){
@@ -154,7 +154,7 @@ export function retrieveData(): LegoDataset {
 			[ChronoType.Cumulative]: new HistogramData(value, true),
 			[ChronoType.ByYear]: new HistogramData(value)
 		};
-		Object.defineProperty(result.partLifetimeData, key as PartType, new PartLifetimeData(value));
+		(result.partLifetimeData as Record<PartType, PartLifetimeData>)[key as PartType] = new PartLifetimeData(value);
 	}
 
 	for (const [key, value] of Object.entries(setHistories)) {
@@ -163,6 +163,8 @@ export function retrieveData(): LegoDataset {
 			[ChronoType.ByYear]: new HistogramData(value)
 		};
 	}
+
+	console.log(result);
 
 	return result as LegoDataset;
 }

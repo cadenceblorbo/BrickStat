@@ -1,7 +1,7 @@
 import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
 import { type ThreeEvent, type ThreeElements } from '@react-three/fiber';
 import { useRef, useState, useMemo, useCallback, type ReactElement } from 'react';
-import * as THREE from 'three';
+import {Color, Material, MeshStandardMaterial} from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 //import { A11yAnnouncer, A11y } from '@react-three/a11y';
 import { A11yAnnouncer } from './a11y/A11yAnnouncer.tsx';
@@ -50,16 +50,16 @@ function Histogram3DApp() {
     const [barColor1, setBarColor1] = useState("#60ba76");
     const [barColor2, setBarColor2] = useState("#4b9f4a");
     const [barColor3, setBarColor3] = useState("#237841");
-    const threeBarColor1 = useMemo(() => new THREE.Color(barColor1), [barColor1]);
-    const threeBarColor2 = useMemo(() => new THREE.Color(barColor2), [barColor2]);
-    const threeBarColor3 = useMemo(() => new THREE.Color(barColor3), [barColor3]);
+    const threeBarColor1 = useMemo(() => new Color(barColor1), [barColor1]);
+    const threeBarColor2 = useMemo(() => new Color(barColor2), [barColor2]);
+    const threeBarColor3 = useMemo(() => new Color(barColor3), [barColor3]);
 
     const [emptyBarColor, setEmptyBarColor] = useState("#6c6e68");
     const [unusedBarColor, setUnusedBarColor] = useState("#42423e");
     const [impossibleBarColor, setImpossibleBarColor] = useState("#05131D");
-    const threeEmptyBarColor = useMemo(() => new THREE.Color(emptyBarColor), [emptyBarColor]);
-    const threeUnusedBarColor = useMemo(() => new THREE.Color(unusedBarColor), [unusedBarColor]);
-    const threeImpossibleBarColor = useMemo(() => new THREE.Color(impossibleBarColor), [impossibleBarColor]);
+    const threeEmptyBarColor = useMemo(() => new Color(emptyBarColor), [emptyBarColor]);
+    const threeUnusedBarColor = useMemo(() => new Color(unusedBarColor), [unusedBarColor]);
+    const threeImpossibleBarColor = useMemo(() => new Color(impossibleBarColor), [impossibleBarColor]);
 
     const [linearLerpMidpoint, setLinearLerpMidpoint] = useState(0.25);
     const [logarithmicLerpMidpoint, setLogarithmicLerpMidpoint] = useState(0.8);
@@ -105,22 +105,22 @@ function Histogram3DApp() {
         return Math.max(defaultHeight, dataVal);
     }, [chronoType, defaultHeight, scalingType]);
 
-    const materialChange = useCallback((mat: THREE.Material | THREE.Material[], height: number, row: number, col: number, isEmpty: boolean): void => {
+    const materialChange = useCallback((mat: Material | Material[], height: number, row: number, col: number, isEmpty: boolean): void => {
         if (isEmpty) {
             if (row > col) {
-                (mat as THREE.MeshStandardMaterial).color = threeImpossibleBarColor;
+                (mat as MeshStandardMaterial).color = threeImpossibleBarColor;
             } else {
                 if (data.partLifetimeData[partType].hasPart(row + "x" + col)) {
-                    (mat as THREE.MeshStandardMaterial).color = threeEmptyBarColor;
+                    (mat as MeshStandardMaterial).color = threeEmptyBarColor;
                 } else {
-                    (mat as THREE.MeshStandardMaterial).color = threeUnusedBarColor;
+                    (mat as MeshStandardMaterial).color = threeUnusedBarColor;
                 }
             }
         }
         else {
             const heightDiv = (scalingType === "Linear") ? linearColorHeightDiv : logColorHeightDiv;
             const midpoint = (scalingType === "Linear") ? linearLerpMidpoint : logarithmicLerpMidpoint;
-            (mat as THREE.MeshStandardMaterial).color = colorLerp3(
+            (mat as MeshStandardMaterial).color = colorLerp3(
                 threeBarColor1,
                 threeBarColor2,
                 threeBarColor3,
@@ -233,7 +233,7 @@ function Histogram3DApp() {
 
     const cameraControls = useRef(<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>);
 
-    const barMat = useRef(new THREE.MeshStandardMaterial());
+    const barMat = useRef(new MeshStandardMaterial());
 
     return (<div role='none'>
         <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)} ref={canvasParentRef}>

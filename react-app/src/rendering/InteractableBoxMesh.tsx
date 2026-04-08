@@ -1,9 +1,9 @@
 import { useFrame, type ThreeElements } from '@react-three/fiber';
 import { useRef, useState } from 'react';
-import * as THREE from 'three';
+import { Mesh } from 'three';
 
 function InteractableBoxMesh(props: ThreeElements['mesh']) {
-    const meshRef = useRef<THREE.Mesh>(null!);
+    const meshRef = useRef<Mesh>(null!);
     const [hover, setHover] = useState(false);
     const [active, setActive] = useState(false);
     useFrame((_, delta) => (meshRef.current.rotation.x += delta));
