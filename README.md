@@ -82,7 +82,7 @@ You can control the playback of the event system using `Play()`, `Pause()`, `Sto
 
 ## License
 
-Distributed under the GNU Lesser General Public License, Version 3. See `LICENSE.txt` for more information.
+Distributed under an MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
