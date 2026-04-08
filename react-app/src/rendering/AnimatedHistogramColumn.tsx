@@ -1,7 +1,6 @@
 import { useFrame, type ThreeElements} from "@react-three/fiber";
 import { useEffect, useRef, type ReactElement, useMemo } from 'react';
 import { Material, Mesh, Vector3 } from "three";
-import { A11y } from '@react-three/a11y';
 
 import { Smoothstep } from "../utils/MathUtil";
 
@@ -26,7 +25,7 @@ export interface AnimatedColumnProps {
     xWidth?: number;
     yWidth?: number;
     isEmpty: boolean;
-    flag?: string;
+    //flag?: string;
     columnPostProcess?: (e: ReactElement<ThreeElements['mesh']>) => ReactElement;
 }
 
@@ -46,7 +45,7 @@ export function AnimatedHistogramColumn({
     xWidth = 1,
     yWidth = 1,
     isEmpty,
-    flag = "",
+    //flag = "",
     columnPostProcess = (e) => { return e; }
 }: AnimatedColumnProps) {
     if (animSpeed === 0) {
@@ -77,7 +76,7 @@ export function AnimatedHistogramColumn({
         materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty);
     }, [meshProps, row, col, isEmpty, materialChange]);
 
-    useFrame((state, delta) => {
+    useFrame((_, delta) => {
 
        if (time.current < 1 || !frameHappened) {
             delta = delta * (1 / animSpeed);

@@ -145,7 +145,7 @@ async function regenerateFiles() {
     const totalAxleData = await getPartDataByYear(partNumbers.axleMap, true);
     const setAxleData = await getPartDataByYear(partNumbers.axleMap, false);
 
-    const replacer = (key: unknown, value: unknown) => {
+    const replacer = (_key: unknown, value: unknown) => {
         if (value instanceof Map) {
             return Object.fromEntries(value);
         }

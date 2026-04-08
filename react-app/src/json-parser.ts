@@ -134,36 +134,35 @@ export class PartLifetimeData{
 }
 
 export interface LegoDataset {
-	histogramData: { [key in PartType]: { [key in QuantityType]: { [key in ChronoType]: HistogramData } } },
-	partLifetimeData: {[key in PartType]: PartLifetimeData}
-
+	histogramData: Record<PartType, Record<QuantityType, Record<ChronoType, HistogramData>>>,
+	partLifetimeData: Record<PartType, PartLifetimeData>
 }
 
 export function retrieveData(): LegoDataset {
 
-	const result: LegoDataset = {
+	const result = {
 		histogramData: {},
 		partLifetimeData: {}
 	};
 
 	for (const type in PartType) {
-		result.histogramData[type as PartType] = {};
+		Object.defineProperty(result.histogramData, type as PartType, {});
 	}
 
 	for (const [key, value] of Object.entries(totalHistories)){
-		result.histogramData[key as PartType][QuantityType.TotalQuantity] = {
+		(result as LegoDataset).histogramData[key as PartType][QuantityType.TotalQuantity] = {
 			[ChronoType.Cumulative]: new HistogramData(value, true),
 			[ChronoType.ByYear]: new HistogramData(value)
 		};
-		result.partLifetimeData[key as PartType] = new PartLifetimeData(value);
+		Object.defineProperty(result.partLifetimeData, key as PartType, new PartLifetimeData(value));
 	}
 
 	for (const [key, value] of Object.entries(setHistories)) {
-		result.histogramData[key as PartType][QuantityType.SetApperances] = {
+		(result as LegoDataset).histogramData[key as PartType][QuantityType.SetApperances] = {
 			[ChronoType.Cumulative]: new HistogramData(value, true),
 			[ChronoType.ByYear]: new HistogramData(value)
 		};
 	}
 
-	return result;
+	return result as LegoDataset;
 }

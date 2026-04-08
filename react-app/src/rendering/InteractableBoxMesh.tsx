@@ -6,7 +6,7 @@ function InteractableBoxMesh(props: ThreeElements['mesh']) {
     const meshRef = useRef<THREE.Mesh>(null!);
     const [hover, setHover] = useState(false);
     const [active, setActive] = useState(false);
-    useFrame((state, delta) => (meshRef.current.rotation.x += delta));
+    useFrame((_, delta) => (meshRef.current.rotation.x += delta));
     return (
         <mesh
             {...props}
@@ -19,6 +19,6 @@ function InteractableBoxMesh(props: ThreeElements['mesh']) {
             <boxGeometry args={[1, 1, 1]} />
             <meshStandardMaterial color={hover ? 'hotpink' : 'blue'} />
         </mesh>
-    )
+    );
 }
-export default InteractableBoxMesh
+export default InteractableBoxMesh;

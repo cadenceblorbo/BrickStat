@@ -29,9 +29,9 @@ const tooltipArrowSize = 10;
 function Histogram3DApp() {
     const data = useMemo(() => JSONParse.retrieveData(), []);
 
-    const [chronoType, setChronoType] = useState(ChronoType.Cumulative);
-    const [quantityType, setQuantityType] = useState(QuantityType.TotalQuantity);
-    const [partType, setPartType] = useState(PartType.Bricks);
+    const [chronoType, setChronoType] = useState<ChronoType>(ChronoType.Cumulative);
+    const [quantityType, setQuantityType] = useState<QuantityType>(QuantityType.TotalQuantity);
+    const [partType, setPartType] = useState<PartType>(PartType.Bricks);
     const [scalingType, setScalingType] = useState("Logarithmic");
     const [cameraType, setCameraType] = useState("Perspective");
     const currentData = data.histogramData[partType][quantityType][chronoType];

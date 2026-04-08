@@ -2,7 +2,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  MutableRefObject,
+  type MutableRefObject,
   createRef,
 } from 'react';
 import { useThree } from '@react-three/fiber';

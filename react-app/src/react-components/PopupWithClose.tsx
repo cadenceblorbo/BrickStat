@@ -13,7 +13,7 @@ export default function PopupWithClose({
     closeText = "close",
     label
 }: PopupWithCloseProps) {
-    return <dialog ref={ref} closedby={'any'} role="dialog" aria-modal="true" aria-label={label}>
+    return <dialog ref={ref} popover={'auto'} role="dialog" aria-modal="true" aria-label={label}>
         <button onClick={() => ref.current?.close()}>{closeText}</button>
         {children}
     </dialog>;
