@@ -3,7 +3,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/cadenceblorbo/BrickStat">
-    <img src="/react-app/public/brickstatlogo.svg" alt="BrickStat" width="768">
+    <img src="/react-app/public/brickstatlogopath.svg" alt="BrickStat" width="768">
   </a>
   <p align="center">A React application for visualizing LEGO element distributions in 3D.</p>
   <p align="center"><a href="https://github.com/cadenceblorbo/BrickStat/issues">Report Bug/Request Feature</a></p>
@@ -14,8 +14,7 @@
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#current-limitations">Current Limitations</a></li>
+    <li><a href="#local-hosting">Local Hosting</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#Acknowledgments">Acknowledgments</a></li>
@@ -42,7 +41,7 @@ using MIDI2Event;
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## Usage
+## Local Hosting
 
 First, create a MIDI2EventSystem using its constructor, passing in the path to your MIDI chart (and an optional lowest octave if your DAW doesn't use -1 as its lowest):
 ```csharp
