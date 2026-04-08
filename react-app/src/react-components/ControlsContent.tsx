@@ -15,7 +15,7 @@ export default function HelpContent() {
         <ul>
             <li>Use the arrow keys to pan the camera while the 3D viewport is focused.</li>
             <li>Hold CTRL/SHIFT and use the arrow keys to rotate the camera.</li>
-            <li>TODO: ADD ZOOM FUNCTIONALITY</li>
+            <li>Use the + and - keys to zoom in and out.</li>
             <li>Camera type changing and camera resetting can be accesed in the inputs under the viewport.</li>
         </ul>
         <h2>Dataset Controls</h2>
