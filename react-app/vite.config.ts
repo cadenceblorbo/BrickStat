@@ -14,12 +14,25 @@ export default defineConfig({
     ],
     base: "/brick-stat/",
     build: {
+        minify: 'terser',
         rollupOptions: {
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
                         // React core
-                        if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+                        if(id.includes('react-dom')){
+                            return 'react-dom';
+                        }
+                        if(id.includes('react-reconciler')){
+                            return 'react-reconciler';
+                        }
+                        if(id.includes('three.core')){
+                            return 'three-core';
+                        }
+                        if(id.includes('three')){
+                            return 'three';
+                        }
+                        if (id.includes('react') || id.includes('react-router')) {
                             return 'react-vendor';
                         }
                         // Common utils
