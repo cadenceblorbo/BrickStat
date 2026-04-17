@@ -1,11 +1,11 @@
+import axleSetHistory from './dataset/axle-set-history.json';
+import axleTotalHistory from './dataset/axle-total-history.json';
 import brickSetHistory from './dataset/brick-set-history.json';
 import brickTotalHistory from './dataset/brick-total-history.json';
 import plateSetHistory from './dataset/plate-set-history.json';
 import plateTotalHistory from './dataset/plate-total-history.json';
 import tileSetHistory from './dataset/tile-set-history.json';
 import tileTotalHistory from './dataset/tile-total-history.json';
-import axleSetHistory from './dataset/axle-set-history.json';
-import axleTotalHistory from './dataset/axle-total-history.json';
 
 import { ChronoType, PartType, QuantityType } from './utils/lego-enum.ts';
 
@@ -100,9 +100,19 @@ export class HistogramData {
 
 export class PartLifetimeData{
 	private dataset: { [key: string]: [number, number] };
+	public sortedKeys: string[];
 	constructor(rawJSON: { [key: string]: { [key: string]: number } }) {
 		this.dataset = {};
 		this.computeLifetimes(rawJSON);
+		this.sortedKeys = Object.keys(this.dataset).sort((a: string, b: string) => {
+			const splitA = a.split("x").map((e) => parseInt(e));
+			const splitB = b.split("x").map((e) => parseInt(e));
+			const diff1 = splitA[0] - splitB[0];
+			if (splitA[0] - splitB[0] === 0) {
+				return splitA[1] - splitB[1];
+			}
+			return diff1;
+		});
 	}
 
 	private computeLifetimes(rawJSON: { [key: string]: { [key: string]: number } }) {
@@ -129,6 +139,10 @@ export class PartLifetimeData{
 
 	public lastYear(part: string): number {
 		return this.dataset[part][1];
+	}
+
+	get keys() {
+		return this.sortedKeys;
 	}
 
 }

@@ -170,32 +170,35 @@ function Histogram3DApp() {
 
     const addAccessibleDescription = useCallback((e: ReactElement<ThreeElements['mesh']>) => {
 
-        if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
+        const key = e.props.name;
+
+        if (!key || !data.partLifetimeData[partType].hasPart(key)) {
             return e;
         }
 
-        return <A11y
+        const result = <A11y
             role="content"
             key={e.props.name + partType.slice(0, -1)}
             description={makeBarLabel({
-                partName: e.props.name,
-                startYear: data.partLifetimeData[partType].firstYear(e.props.name),
-                endYear: data.partLifetimeData[partType].lastYear(e.props.name),
+                partName: key,
+                startYear: data.partLifetimeData[partType].firstYear(key),
+                endYear: data.partLifetimeData[partType].lastYear(key),
                 partType: partType,
                 quantityFormat: quantityType,
                 timeFormat: chronoType,
-                currentValue: getCurrentValue(e.props.name),
-                pastValue: getPreviousValue(e.props.name),
+                currentValue: getCurrentValue(key),
+                pastValue: getPreviousValue(key),
             })}
-
         >
             {e}
         </A11y>;
 
+        return result;
+
     }, [data, chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
-    console.log(focusIndex)
-        ;
+    console.log(data.partLifetimeData[partType].keys[focusIndex]);
+
     const colPointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
             setTooltipVisible(true);
