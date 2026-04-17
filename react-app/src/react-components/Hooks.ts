@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 export const useMousePos = () => {
     const [mousePos, setMousePos] = useState({
@@ -52,6 +52,13 @@ export function useElemPos(toTrack: HTMLElement) {
         y: toTrack.getBoundingClientRect().top,
         moved: false
     });
+
+    useMemo(() => {
+        const rect = toTrack.getBoundingClientRect();
+        if (rect.top !== position.y || rect.left !== position.x) {
+            setPosition({ x: rect.left, y: rect.top, moved: true });
+        }
+    }, [toTrack, position]);
 
     useEffect(() => {
         const config = { attributes: true, attributeFilter: ['style', 'class'], subtree: false };
