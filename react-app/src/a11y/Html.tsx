@@ -87,7 +87,7 @@ export const Html = React.forwardRef(
     const { gl, camera, scene, size } = useThree();
     const [el] = React.useState<HTMLDivElement>(() => document.createElement('div'));
     el.setAttribute("role", "presentation");
-    const root = React.useRef<ReactDOM.Root>(null!);
+        const root = React.useRef<ReactDOM.Root>(null!);
     const group = React.useRef<Group>(null!);
     const oldZoom = React.useRef(0);
     const oldPosition = React.useRef([0, 0]);
@@ -100,7 +100,7 @@ export const Html = React.forwardRef(
         const vec = calculatePosition(group.current, camera, size);
         el.style.cssText = `position:absolute;top:0;left:0;transform:translate3d(${vec[0]}px,${vec[1]}px,0);transform-origin:0 0;`;
         if (target) {
-          target.appendChild(el);
+            target.appendChild(el);
         }
         return () => {
             if (target) target.removeChild(el);

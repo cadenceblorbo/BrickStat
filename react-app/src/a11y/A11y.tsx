@@ -6,7 +6,7 @@ import { stylesHiddenButScreenreadable } from './A11yConsts';
 import { Html } from './Html';
 
 interface A11yCommonProps {
-    ref?: RefObject<HTMLDivElement>
+    ref: RefObject<HTMLDivElement>
   role: 'button' | 'togglebutton' | 'link' | 'content' | 'image';
   children: React.ReactNode;
   description: string;

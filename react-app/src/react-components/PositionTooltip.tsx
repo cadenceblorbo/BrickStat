@@ -16,8 +16,8 @@ export default function PositionTooltip({
     positionX,
     positionY,
     arrowSize=10,
-    offsetX=0,
-    offsetY=0
+    offsetX=arrowSize,
+    offsetY=-arrowSize
 }: PositionTooltipProps) {
     return <div
         style={{

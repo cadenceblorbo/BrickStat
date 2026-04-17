@@ -48,8 +48,8 @@ export function useThrottle<T> (value: T, msDelay: number): T {
 
 export function useElemPos(toTrack: HTMLElement) {
     const [position, setPosition] = useState({
-        x: 0,
-        y: 0,
+        x: toTrack.getBoundingClientRect().left,
+        y: toTrack.getBoundingClientRect().top,
         moved: false
     });
 
@@ -57,8 +57,9 @@ export function useElemPos(toTrack: HTMLElement) {
         const config = { attributes: true, attributeFilter: ['style', 'class'], subtree: false };
 
         const callback = () => {
-            if (toTrack.offsetTop !== position.y || toTrack.offsetLeft !== position.x) {
-                setPosition({ x: toTrack.offsetLeft, y:toTrack.offsetTop, moved: true});
+            const rect = toTrack.getBoundingClientRect();
+            if (rect.top !== position.y || rect.left !== position.x) {
+                setPosition({ x: rect.left, y:rect.top, moved: true});
             }
         };
 

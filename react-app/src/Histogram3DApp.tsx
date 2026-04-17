@@ -1,6 +1,6 @@
 import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
 import { type ThreeEvent, type ThreeElements } from '@react-three/fiber';
-import { useRef, useState, useMemo, useCallback, type ReactElement } from 'react';
+import { useRef, useState, useMemo, useCallback, type ReactElement, JSX } from 'react';
 import {Color, Material, MeshStandardMaterial} from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 //import { A11yAnnouncer, A11y } from '@react-three/a11y';
@@ -22,10 +22,10 @@ import { Clamp } from './utils/MathUtil.ts';
 import makeBarLabel from './utils/bar-label-factory.ts';
 import { useThrottle } from './react-components/Hooks.ts';
 import KeyboardControls from './react-components/KeyboardControls.tsx';
+import ElemPosTooltip from './react-components/ElemPosTooltip.tsx';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
-const tooltipArrowSize = 10;
 
 function Histogram3DApp() {
     const data = useMemo(() => JSONParse.retrieveData(), []);
@@ -42,8 +42,8 @@ function Histogram3DApp() {
     const canvasParentRef = useRef(null!);
 
     const lastHoverRef = useRef("");
-    const [tooltipVisible, setTooltipVisible] = useState(false);
-    const [tooltipContent, setTooltipContent] = useState(<div></div>);
+    const [mouseTooltipVisible, setMouseTooltipVisible] = useState(false);
+    const [mouseTooltipContent, setMouseTooltipContent] = useState(<div></div>);
     const [mouseDown, setMouseDown] = useState(false);
 
     const [advancedOptionsVisible, setAdvancedOptionsVisible] = useState(false);
@@ -91,6 +91,7 @@ function Histogram3DApp() {
         keyboardDOMCapture={canvasParentRef}
         bindings={new Map([['[', () => setFocusIndex(i => i - 1)],[']', () => setFocusIndex(i => i + 1)]]) }
     ></KeyboardControls>);
+    const focusableElements = useRef<HTMLDivElement>(null!);
 
     const barMat = useRef(new MeshStandardMaterial());
 
@@ -177,6 +178,7 @@ function Histogram3DApp() {
         }
 
         const result = <A11y
+            ref={focusableElements}
             role="content"
             key={e.props.name + partType.slice(0, -1)}
             description={makeBarLabel({
@@ -197,14 +199,14 @@ function Histogram3DApp() {
 
     }, [data, chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
-    console.log(data.partLifetimeData[partType].keys[focusIndex]);
+    console.log(focusableElements);
 
     const colPointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
-            setTooltipVisible(true);
+            setMouseTooltipVisible(true);
             lastHoverRef.current = e.object.name;
 
-            setTooltipContent(<TooltipContent
+            setMouseTooltipContent(<TooltipContent
                 partName={e.object.name}
                 startYear={data.partLifetimeData[partType].firstYear(e.object.name)}
                 endYear={data.partLifetimeData[partType].lastYear(e.object.name)}
@@ -220,7 +222,7 @@ function Histogram3DApp() {
 
     const colPointerOut = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (lastHoverRef.current === e.object.name) {
-            setTooltipVisible(false);
+            setMouseTooltipVisible(false);
         }
         e.stopPropagation();
     }, []);
@@ -299,9 +301,13 @@ function Histogram3DApp() {
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
 
-        {(tooltipVisible && !mouseDown) ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize} content={
-            tooltipContent
+        {(mouseTooltipVisible && !mouseDown) ? <MousePosTooltip className="tooltip" content={
+            mouseTooltipContent
         }></MousePosTooltip> : null}
+
+        {(focusIndex !== 0) ? <ElemPosTooltip className="tooltip" toTrack={focusableElements.current?.parentElement } content={
+            mouseTooltipContent
+        }></ElemPosTooltip> : null}
 
         <button onClick={() => { setAdvancedOptionsVisible(!advancedOptionsVisible); }} >
             {(advancedOptionsVisible) ? "Hide Advanced Options" : "Show Advanced Options"}

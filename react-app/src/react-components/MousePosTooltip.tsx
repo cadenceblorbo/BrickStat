@@ -15,8 +15,8 @@ export default function MousePosTooltip({
     className,
     content,
     arrowSize = 10,
-    offsetX = 0,
-    offsetY = 0
+    offsetX = arrowSize,
+    offsetY = -arrowSize
 }: MousePosTooltipProps) {
 
     const mousePos = useMousePos();
@@ -27,17 +27,4 @@ export default function MousePosTooltip({
 
 
     return result;
-
-    //return mousePos.moved ?
-    //    <div
-    //        className={className}
-    //        style={{
-    //                position: "absolute",
-    //                top: (mousePos.y + offsetY) + "px",
-    //                left: (mousePos.x + offsetX) + "px"
-    //            }}
-    //    >
-    //        {content}
-    //    </div>
-    //    : null
 }
