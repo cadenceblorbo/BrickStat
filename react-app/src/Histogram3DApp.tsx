@@ -1,6 +1,6 @@
 import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
 import { type ThreeEvent, type ThreeElements } from '@react-three/fiber';
-import { useRef, useState, useMemo, useCallback, type ReactElement, JSX } from 'react';
+import { useRef, useState, useMemo, useCallback, type ReactElement} from 'react';
 import {Color, Material, MeshStandardMaterial} from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 //import { A11yAnnouncer, A11y } from '@react-three/a11y';
@@ -87,13 +87,20 @@ function Histogram3DApp() {
 
     const cameraControls = useRef(<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>);
     const [focusIndex, setFocusIndex] = useState(0);
-    const focusControls = useRef(<KeyboardControls
-        keyboardDOMCapture={canvasParentRef}
-        bindings={new Map([['[', () => setFocusIndex(i => i - 1)],[']', () => setFocusIndex(i => i + 1)]]) }
-    ></KeyboardControls>);
-    const focusableElements = useRef<HTMLDivElement>(null!);
+    const focusControls = useMemo(() => {
+        return <KeyboardControls
+            keyboardDOMCapture={canvasParentRef}
+            bindings={new Map([
+                ['[', () => setFocusIndex(i => (i - 1 + data.partLifetimeData[partType].size + 1) % (data.partLifetimeData[partType].size + 1))],
+                [']', () => setFocusIndex(i => (i + 1) % (data.partLifetimeData[partType].size + 1))]
+            ])}
+        ></KeyboardControls>;
+    }, [data, partType]);
+    const focusableElements = useRef<Map<string, HTMLDivElement>>(new Map());
+    const currentFocusKey = focusIndex !== 0 ? data.partLifetimeData[partType].keys[focusIndex - 1] : "";
 
     const barMat = useRef(new MeshStandardMaterial());
+
 
     function buttonResetCamera() {
         camControlsRef.current.reset();
@@ -178,7 +185,7 @@ function Histogram3DApp() {
         }
 
         const result = <A11y
-            ref={focusableElements}
+            ref={(e:HTMLDivElement) => focusableElements.current.set(key, e)}
             role="content"
             key={e.props.name + partType.slice(0, -1)}
             description={makeBarLabel({
@@ -200,6 +207,8 @@ function Histogram3DApp() {
     }, [data, chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
     console.log(focusableElements);
+    console.log(focusIndex);
+    console.log(currentFocusKey);
 
     const colPointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
@@ -246,6 +255,12 @@ function Histogram3DApp() {
             data.histogramData[s as PartType][quantityType][chronoType].firstYear,
             data.histogramData[s as PartType][quantityType][chronoType].lastYear
         ));
+        for (const key in focusableElements) {
+            if (!data.partLifetimeData[s as PartType].hasPart(key)) {
+                focusableElements.current.delete(key);
+            }
+        }
+        setFocusIndex(0);
     }
 
     
@@ -274,7 +289,7 @@ function Histogram3DApp() {
                 columnPostProcess={addAccessibleDescription}
             >
                 {cameraControls.current}
-                {focusControls.current}
+                {focusControls}
             </StatsCanvas>
             <A11yAnnouncer />
         </div>
@@ -305,9 +320,20 @@ function Histogram3DApp() {
             mouseTooltipContent
         }></MousePosTooltip> : null}
 
-        {(focusIndex !== 0) ? <ElemPosTooltip className="tooltip" toTrack={focusableElements.current?.parentElement } content={
-            mouseTooltipContent
-        }></ElemPosTooltip> : null}
+        {(focusIndex !== 0) ? <ElemPosTooltip className="tooltip" toTrack={focusableElements.current.get(currentFocusKey)?.parentElement as HTMLElement} content={
+
+            <TooltipContent
+                partName={currentFocusKey}
+                startYear={currentFocusKey ? data.partLifetimeData[partType].firstYear(currentFocusKey) : 0}
+                endYear={currentFocusKey ? data.partLifetimeData[partType].lastYear(currentFocusKey) : 0}
+                partType={partType}
+                quantityFormat={quantityType}
+                timeFormat={chronoType}
+                currentValue={getCurrentValue(currentFocusKey)}
+                pastValue={getPreviousValue(currentFocusKey)}
+            />
+        }
+        ></ElemPosTooltip> : null}
 
         <button onClick={() => { setAdvancedOptionsVisible(!advancedOptionsVisible); }} >
             {(advancedOptionsVisible) ? "Hide Advanced Options" : "Show Advanced Options"}

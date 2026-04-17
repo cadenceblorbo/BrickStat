@@ -145,6 +145,9 @@ export class PartLifetimeData{
 		return this.sortedKeys;
 	}
 
+	get size() {
+		return Object.entries(this.dataset).length;
+	}
 }
 
 export interface LegoDataset {
