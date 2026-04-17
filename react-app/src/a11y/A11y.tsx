@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext, type RefObject } from 'react';
 import { useThree } from '@react-three/fiber';
 import useAnnounceStore from './announceStore';
 import { useA11ySectionContext } from './A11ySection';
@@ -6,6 +6,7 @@ import { stylesHiddenButScreenreadable } from './A11yConsts';
 import { Html } from './Html';
 
 interface A11yCommonProps {
+    ref?: RefObject<HTMLDivElement>
   role: 'button' | 'togglebutton' | 'link' | 'content' | 'image';
   children: React.ReactNode;
   description: string;
@@ -87,6 +88,7 @@ const useA11y = () => {
 export { useA11y };
 
 export const A11y: React.FC<Props> = ({
+    ref,
   children,
   description,
   activationMsg,
@@ -478,6 +480,7 @@ export const A11y: React.FC<Props> = ({
       >
         {children}
         <Html
+            ref={ref}
           style={{ width: '0px' }}
           position={
             // @ts-ignore

@@ -45,3 +45,31 @@ export function useThrottle<T> (value: T, msDelay: number): T {
 
     return throttleValue;
 }
+
+export function useElemPos(toTrack: HTMLElement) {
+    const [position, setPosition] = useState({
+        x: 0,
+        y: 0,
+        moved: false
+    });
+
+    useEffect(() => {
+        const config = { attributes: true, attributeFilter: ['style', 'class'], subtree: false };
+
+        const callback = () => {
+            if (toTrack.offsetTop !== position.y || toTrack.offsetLeft !== position.x) {
+                setPosition({ x: toTrack.offsetLeft, y:toTrack.offsetTop, moved: true});
+            }
+        };
+
+        const observer = new MutationObserver(callback);
+        observer.observe(toTrack, config);
+
+        return () => {
+            observer.disconnect();
+        };
+
+    });
+
+    return position;
+}

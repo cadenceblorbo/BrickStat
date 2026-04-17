@@ -1,6 +1,7 @@
 import { type JSX } from 'react';
 
 import { useMousePos } from './Hooks.ts';
+import PositionTooltip from './PositionTooltip.tsx';
 
 export interface MousePosTooltipProps {
     className: string,
@@ -20,34 +21,12 @@ export default function MousePosTooltip({
 
     const mousePos = useMousePos();
 
-
-    return (mousePos.moved ? <div
-        style={{
-            position: "absolute",
-
-            top: (mousePos.y + offsetY) + "px",
-            left: (mousePos.x + offsetX) + "px",
-            pointerEvents: "none"
-        }}>
-        <div
-            className={className}
-            style={{
-                position: "absolute",
-                right: "100%",
-                backgroundColor: "transparent",
-                borderBottomColor: "transparent",
-                borderLeftColor: "transparent",
-                borderTopColor: "transparent",
-                borderWidth: arrowSize + "px",
-                borderRadius: "0px",
-                pointerEvents: "none",
-                padding: "0",
-            }}
-        >{" "}</div>
-        <div className={className}>{content}</div>
+    const result = (mousePos.moved ?
+        <PositionTooltip className={className} content={content} positionX={mousePos.x} positionY={mousePos.y} arrowSize={arrowSize} offsetX={offsetX} offsetY={offsetY}></PositionTooltip>
+        : null);
 
 
-    </div> : null);
+    return result;
 
     //return mousePos.moved ?
     //    <div
