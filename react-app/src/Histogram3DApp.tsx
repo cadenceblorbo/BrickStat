@@ -21,6 +21,7 @@ import TooltipContent from './react-components/TooltipContent.tsx';
 import { Clamp } from './utils/MathUtil.ts';
 import makeBarLabel from './utils/bar-label-factory.ts';
 import { useThrottle } from './react-components/Hooks.ts';
+import KeyboardControls from './react-components/KeyboardControls.tsx';
 
 const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
 const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
@@ -70,6 +71,28 @@ function Histogram3DApp() {
     const [rowWidth, setColYWidth] = useState(1);
     const [defaultHeight, setDefaultHeight] = useState(0.1);
     const [padding, setPadding] = useState(0.5);
+
+    const perspectiveCam = useRef(<PerspectiveCamera
+        position={[0, 30, 7]}
+        fov={75}
+        makeDefault={true}>
+    </PerspectiveCamera>);
+
+    const orthographicCam = useRef(<OrthographicCamera
+        position={[0, 9000, 0]}
+        far={10000}
+        zoom={Math.sqrt(Math.min(window.innerWidth, window.innerHeight) / 2) / 1.5}
+        makeDefault={true}>
+    </OrthographicCamera>);
+
+    const cameraControls = useRef(<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>);
+    const [focusIndex, setFocusIndex] = useState(0);
+    const focusControls = useRef(<KeyboardControls
+        keyboardDOMCapture={canvasParentRef}
+        bindings={new Map([['[', () => setFocusIndex(i => i - 1)],[']', () => setFocusIndex(i => i + 1)]]) }
+    ></KeyboardControls>);
+
+    const barMat = useRef(new MeshStandardMaterial());
 
     function buttonResetCamera() {
         camControlsRef.current.reset();
@@ -171,6 +194,8 @@ function Histogram3DApp() {
 
     }, [data, chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
+    console.log(focusIndex)
+        ;
     const colPointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
             setTooltipVisible(true);
@@ -218,22 +243,7 @@ function Histogram3DApp() {
         ));
     }
 
-    const perspectiveCam = useRef(<PerspectiveCamera
-        position={[0, 30, 7]}
-        fov={75}
-        makeDefault={true}>
-    </PerspectiveCamera>);
-
-    const orthographicCam = useRef(<OrthographicCamera
-        position={[0, 9000, 0]}
-        far={10000}
-        zoom={Math.sqrt(Math.min(window.innerWidth, window.innerHeight) / 2) / 1.5}
-        makeDefault={true}>
-    </OrthographicCamera>);
-
-    const cameraControls = useRef(<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>);
-
-    const barMat = useRef(new MeshStandardMaterial());
+    
 
     return (<div role='none'>
         <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)} ref={canvasParentRef}>
@@ -253,12 +263,14 @@ function Histogram3DApp() {
                 heightScaling={heightScaling}
                 barMat={barMat.current}
                 materialChange={materialChange}
-                cameraControls={cameraControls.current}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
                 imageAccessibilityLabel={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}
                 columnPostProcess={addAccessibleDescription}
-            />
+            >
+                {cameraControls.current}
+                {focusControls.current}
+            </StatsCanvas>
             <A11yAnnouncer />
         </div>
 
