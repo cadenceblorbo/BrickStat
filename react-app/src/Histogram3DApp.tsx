@@ -206,10 +206,6 @@ function Histogram3DApp() {
 
     }, [data, chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
-    console.log(focusableElements);
-    console.log(focusIndex);
-    console.log(currentFocusKey);
-
     const colPointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
             setMouseTooltipVisible(true);
