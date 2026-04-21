@@ -15,9 +15,10 @@
     <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#local-hosting">Local Hosting</a></li>
+    <li><a href="#dataset-regeneration">Dataset Regeneration</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#Acknowledgments">Acknowledgments</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -33,52 +34,43 @@ This application uses the dataset avaliable for public download from Rebrickable
 
 ## Getting Started
 
-Download the latest LibOnly archive or the .dll and place it in your project. Import the MIDI2Event namespace at the top of your script with a `using` statement:
-```csharp
-using MIDI2Event;
-```
+The easiest way to use this application is through GitHub pages, it is hosted [here](https://cadenceblorbo.github.io/BrickStat/).
+
+You can also host the app locally, described below.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ## Local Hosting
 
-First, create a MIDI2EventSystem using its constructor, passing in the path to your MIDI chart (and an optional lowest octave if your DAW doesn't use -1 as its lowest):
-```csharp
-MIDI2EventSystem(string filePath, int lowestOctave = -1)
+First, you will need to [install Node.js and npm](https://nodejs.org/en/download).
+
+Next, download the project repository, and navigate to the react-app folder in the terminal.
+
+Here, you will need to [install vite](https://vite.dev/guide/) using:
+```console
+npm install -D vite
 ```
-<br/>
 
-To subscribe events to this system, use the `MIDI2EventSystem.Subscribe()` method:
-```csharp
-public Action Subscribe(
-    Action action,
-    Notes note = 0,
-    int octave = 0,
-    SubType type = SubType.NoteStart
-)
+Then, you can run the app using:
+```console
+npm run dev
 ```
-This method allows you to specify what event you want an `Action` to be triggered by. Currently, you can trigger an action using:
-* `SubType.NoteStart`
-* `SubType.NoteStop`
-* `SubType.ChartEnd`
 
-If you are using a note-based event, you can specify which note and octave to assign the `Action` to.
-<br/>
-<br/>
+## Dataset Regeneration
 
-Call `MIDI2EventSystem.Update()` in whatever update function your engine/tool has, passing in the deltaTime in seconds (preferably calculated from the samples of the playing audio).
-<br/>
-<br/>
+If you would like to regenerate the app's dataset you will need the inventories.csv, inventory_parts.csv, and sets.csv files from [Rebrickable](https://rebrickable.com/downloads/).
 
-You can control the playback of the event system using `Play()`, `Pause()`, `Stop()`, and `Reset()`.
-<br/>
-<br/>
+Extract these files and place them in the /react-app/src/dataset folder in the project directory.
 
-**Currently, the user is responsible for implementing control over the actual audio that plays, as that is dependent on the engine/tool you are using. There are plans to make premade packages for Godot and Unity in the future.**
-<br/>
-<br/>
+Next, you will need to run csv-to-json.ts located at /react-app/src/csv-to-json.
 
+One way to do this is using node. Navigate to the /react-app/src folder, and run:
+```console
+node csv-to-json.ts
+```
+
+Once the script is finished, the next time you run the app, it should use the updated dataset!
 
 ## License
 
