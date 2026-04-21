@@ -24,9 +24,6 @@ import { useThrottle } from './react-components/Hooks.ts';
 import KeyboardControls from './react-components/KeyboardControls.tsx';
 import ElemPosTooltip from './react-components/ElemPosTooltip.tsx';
 
-const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
-const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
-
 function Histogram3DApp() {
     const data = useMemo(() => JSONParse.retrieveData(), []);
 
@@ -71,6 +68,8 @@ function Histogram3DApp() {
     const [rowWidth, setColYWidth] = useState(1);
     const [defaultHeight, setDefaultHeight] = useState(0.1);
     const [padding, setPadding] = useState(0.5);
+    const [byYearLinearDivisor, setByYearLinearDivisor] = useState(100);
+    const [cumulativeLinearDivisor, setCumulativeLinearDivisor] = useState(1000);
 
     const perspectiveCam = useRef(<PerspectiveCamera
         position={[0, 30, 7]}
@@ -79,8 +78,8 @@ function Histogram3DApp() {
     </PerspectiveCamera>);
 
     const orthographicCam = useRef(<OrthographicCamera
-        position={[0, 9000, 0]}
-        far={10000}
+        position={[0, 900000, 0]}
+        far={1000000}
         zoom={Math.sqrt(Math.min(window.innerWidth, window.innerHeight) / 2) / 1.5}
         makeDefault={true}>
     </OrthographicCamera>);
@@ -121,10 +120,10 @@ function Histogram3DApp() {
         if (scalingType == "Linear") {
             switch (chronoType) {
                 case ChronoType.Cumulative:
-                    dataVal /= CUMULATIVE_LINEAR_HEIGHT_DIVISOR;
+                    dataVal /= cumulativeLinearDivisor;
                     break;
                 case ChronoType.ByYear:
-                    dataVal /= BY_YEAR_LINEAR_HEIGHT_DIVISOR;
+                    dataVal /= byYearLinearDivisor;
                     break;
                 default:
                     break;
@@ -134,7 +133,7 @@ function Histogram3DApp() {
         }
 
         return Math.max(defaultHeight, dataVal);
-    }, [chronoType, defaultHeight, scalingType]);
+    }, [chronoType, defaultHeight, scalingType, cumulativeLinearDivisor, byYearLinearDivisor]);
 
     const materialChange = useCallback((mat: Material | Material[], height: number, row: number, col: number, isEmpty: boolean): void => {
         if (isEmpty) {
@@ -450,6 +449,24 @@ function Histogram3DApp() {
                         max={10}
                         step={0.5}
                         onChange={setPadding}
+                    ></LabeledTextboxSlider>
+                </div>
+                <div className="advanced-options-row">
+                    <LabeledTextboxSlider
+                        label={"Cumulative Linear Height Divisor"}
+                        value={cumulativeLinearDivisor}
+                        min={1}
+                        max={3000}
+                        step={100}
+                        onChange={setCumulativeLinearDivisor}
+                    ></LabeledTextboxSlider>
+                    <LabeledTextboxSlider
+                        label={"By Year Linear Height Divisor"}
+                        value={byYearLinearDivisor}
+                        min={1}
+                        max={300}
+                        step={10}
+                        onChange={setByYearLinearDivisor}
                     ></LabeledTextboxSlider>
                 </div>
             </div>)
