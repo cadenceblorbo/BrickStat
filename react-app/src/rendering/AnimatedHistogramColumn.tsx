@@ -54,7 +54,7 @@ export function AnimatedHistogramColumn({
     const time = useRef(0);
     const nextFrame = useRef(1 / FRAMERATE);
     const meshRef = useRef<Mesh>(null!);
-    let frameHappened = false;
+    let lastFrameHappened = false;
 
     const geom = useMemo(() => {
         return <boxGeometry></boxGeometry>;
@@ -78,24 +78,27 @@ export function AnimatedHistogramColumn({
 
     useFrame((_, delta) => {
 
-       if (time.current < 1 || !frameHappened) {
+        if (time.current < 1 || !lastFrameHappened) {
             delta = delta * (1 / animSpeed);
             time.current += delta;
-           if (time.current >= nextFrame.current) {
-               nextFrame.current += 1 / FRAMERATE;
-               const height = Smoothstep(heightStart, heightTarget, time.current);
+            if (time.current >= nextFrame.current) {
+                nextFrame.current += 1 / FRAMERATE;
+                const height = Smoothstep(heightStart, heightTarget, time.current);
 
-               meshRef.current.position.y = height / 2 + ((meshProps?.position as Vector3).y as number || 0);
-               meshRef.current.scale.y = height;
+                meshRef.current.position.y = height / 2 + ((meshProps?.position as Vector3).y as number || 0);
+                meshRef.current.scale.y = height;
 
-               materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty);
-               trackHeightChange(height);
-               //if (flag === "x") {
-               //    console.log(height)
-               //}
-               frameHappened = true;
-           }
-            
+                materialChange(meshRef.current.material, meshRef.current.position.y, row, col, isEmpty);
+                trackHeightChange(height);
+                //if (flag === "x") {
+                //    console.log(height)
+                //}
+                if (time.current >= 1) {
+                    lastFrameHappened = true;
+                }
+                
+            }
+
         }
     });
 
@@ -103,7 +106,7 @@ export function AnimatedHistogramColumn({
     let result = <mesh ref={meshRef}
         {...newProps}
         name={row + "x" + col}
-        key={"1" }
+        key={row + "x" + col}
     >
         {geom}
     </mesh>;

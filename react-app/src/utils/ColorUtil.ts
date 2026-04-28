@@ -14,7 +14,10 @@ export function colorLerp3(
     if (t >= midpoint) {
         color1 = color2;
         color2 = color3;
-        t = (t - midpoint) * (1 / (1-midpoint));
+        t = (t - midpoint) * (1 / (1 - midpoint));
+        if (isNaN(t)) {
+            t = 0;
+        }
     } else {
         t *= (1 / midpoint);
     }

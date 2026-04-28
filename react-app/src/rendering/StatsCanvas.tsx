@@ -6,6 +6,7 @@ import { Histogram3D } from "./Histogram3D";
 
 
 interface StatsCanvasProps {
+    children: React.ReactNode;
     data: { [key: string]: number };
     cam?: ReactElement;
     className?: string;
@@ -21,7 +22,6 @@ interface StatsCanvasProps {
     heightScaling?: (dataVal: number) => number;
     barMat?: Material;
     materialChange?: (mat: Material | Material[], height: number, row: number, col: number, isEmpty: boolean) => void;
-    cameraControls?: ReactElement;
     colPointerOver?: (e: ThreeEvent<PointerEvent>) => void;
     colPointerOut?: (e: ThreeEvent<PointerEvent>) => void;
     imageAccessibilityLabel: string;
@@ -29,6 +29,7 @@ interface StatsCanvasProps {
 }
 
 function StatsCanvas({
+    children,
     data,
     cam,
     className = "",
@@ -44,16 +45,11 @@ function StatsCanvas({
     heightScaling = (dataVal: number) => { return dataVal; },
     barMat = new MeshStandardMaterial({ color: new Color().setHex(0xA0A19F) }),
     materialChange = () => { },
-    cameraControls,
     colPointerOver = () => { },
     colPointerOut = () => { },
     imageAccessibilityLabel,
     columnPostProcess = (e) => { return e; }
 }: StatsCanvasProps) {
-
-    if (cameraControls === undefined) {
-        cameraControls = <></>;
-    }
 
     const canvasRef = useRef<HTMLCanvasElement>(null!);
 
@@ -94,7 +90,7 @@ function StatsCanvas({
                 columnPostProcess={columnPostProcess}
             />
             {cam}
-            {cameraControls}
+            {children}
             
         </Canvas>
             

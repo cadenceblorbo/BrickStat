@@ -100,7 +100,7 @@ export const Html = React.forwardRef(
         const vec = calculatePosition(group.current, camera, size);
         el.style.cssText = `position:absolute;top:0;left:0;transform:translate3d(${vec[0]}px,${vec[1]}px,0);transform-origin:0 0;`;
         if (target) {
-          target.appendChild(el);
+            target.appendChild(el);
         }
         return () => {
             if (target) target.removeChild(el);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 
 export const useMousePos = () => {
     const [mousePos, setMousePos] = useState({
@@ -44,4 +44,40 @@ export function useThrottle<T> (value: T, msDelay: number): T {
 
 
     return throttleValue;
+}
+
+export function useElemPos(toTrack: HTMLElement) {
+    const [position, setPosition] = useState({
+        x: toTrack.getBoundingClientRect().left,
+        y: toTrack.getBoundingClientRect().top,
+        moved: false
+    });
+
+    useMemo(() => {
+        const rect = toTrack.getBoundingClientRect();
+        if (rect.top !== position.y || rect.left !== position.x) {
+            setPosition({ x: rect.left, y: rect.top, moved: true });
+        }
+    }, [toTrack, position]);
+
+    useEffect(() => {
+        const config = { attributes: true, attributeFilter: ['style', 'class'], subtree: false };
+
+        const callback = () => {
+            const rect = toTrack.getBoundingClientRect();
+            if (rect.top !== position.y || rect.left !== position.x) {
+                setPosition({ x: rect.left, y:rect.top, moved: true});
+            }
+        };
+
+        const observer = new MutationObserver(callback);
+        observer.observe(toTrack, config);
+
+        return () => {
+            observer.disconnect();
+        };
+
+    });
+
+    return position;
 }

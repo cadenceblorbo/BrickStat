@@ -1,6 +1,6 @@
 import { OrthographicCamera, PerspectiveCamera } from '@react-three/drei';
 import { type ThreeEvent, type ThreeElements } from '@react-three/fiber';
-import { useRef, useState, useMemo, useCallback, type ReactElement } from 'react';
+import { useRef, useState, useMemo, useCallback, type ReactElement} from 'react';
 import {Color, Material, MeshStandardMaterial} from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 //import { A11yAnnouncer, A11y } from '@react-three/a11y';
@@ -21,10 +21,8 @@ import TooltipContent from './react-components/TooltipContent.tsx';
 import { Clamp } from './utils/MathUtil.ts';
 import makeBarLabel from './utils/bar-label-factory.ts';
 import { useThrottle } from './react-components/Hooks.ts';
-
-const CUMULATIVE_LINEAR_HEIGHT_DIVISOR = 1000;
-const BY_YEAR_LINEAR_HEIGHT_DIVISOR = 100;
-const tooltipArrowSize = 10;
+import KeyboardControls from './react-components/KeyboardControls.tsx';
+import ElemPosTooltip from './react-components/ElemPosTooltip.tsx';
 
 function Histogram3DApp() {
     const data = useMemo(() => JSONParse.retrieveData(), []);
@@ -41,8 +39,8 @@ function Histogram3DApp() {
     const canvasParentRef = useRef(null!);
 
     const lastHoverRef = useRef("");
-    const [tooltipVisible, setTooltipVisible] = useState(false);
-    const [tooltipContent, setTooltipContent] = useState(<div></div>);
+    const [mouseTooltipVisible, setMouseTooltipVisible] = useState(false);
+    const [mouseTooltipContent, setMouseTooltipContent] = useState(<div></div>);
     const [mouseDown, setMouseDown] = useState(false);
 
     const [advancedOptionsVisible, setAdvancedOptionsVisible] = useState(false);
@@ -70,6 +68,38 @@ function Histogram3DApp() {
     const [rowWidth, setColYWidth] = useState(1);
     const [defaultHeight, setDefaultHeight] = useState(0.1);
     const [padding, setPadding] = useState(0.5);
+    const [byYearLinearDivisor, setByYearLinearDivisor] = useState(100);
+    const [cumulativeLinearDivisor, setCumulativeLinearDivisor] = useState(1000);
+
+    const perspectiveCam = useRef(<PerspectiveCamera
+        position={[0, 30, 7]}
+        fov={75}
+        makeDefault={true}>
+    </PerspectiveCamera>);
+
+    const orthographicCam = useRef(<OrthographicCamera
+        position={[0, 900000, 0]}
+        far={1000000}
+        zoom={Math.sqrt(Math.min(window.innerWidth, window.innerHeight) / 2) / 1.5}
+        makeDefault={true}>
+    </OrthographicCamera>);
+
+    const cameraControls = useRef(<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>);
+    const [focusIndex, setFocusIndex] = useState(0);
+    const focusControls = useMemo(() => {
+        return <KeyboardControls
+            keyboardDOMCapture={canvasParentRef}
+            bindings={new Map([
+                ['[', () => setFocusIndex(i => (i - 1 + data.partLifetimeData[partType].size + 1) % (data.partLifetimeData[partType].size + 1))],
+                [']', () => setFocusIndex(i => (i + 1) % (data.partLifetimeData[partType].size + 1))]
+            ])}
+        ></KeyboardControls>;
+    }, [data, partType]);
+    const focusableElements = useRef<Map<string, HTMLDivElement>>(new Map());
+    const currentFocusKey = focusIndex !== 0 ? data.partLifetimeData[partType].keys[focusIndex - 1] : "";
+
+    const barMat = useRef(new MeshStandardMaterial());
+
 
     function buttonResetCamera() {
         camControlsRef.current.reset();
@@ -90,10 +120,10 @@ function Histogram3DApp() {
         if (scalingType == "Linear") {
             switch (chronoType) {
                 case ChronoType.Cumulative:
-                    dataVal /= CUMULATIVE_LINEAR_HEIGHT_DIVISOR;
+                    dataVal /= cumulativeLinearDivisor;
                     break;
                 case ChronoType.ByYear:
-                    dataVal /= BY_YEAR_LINEAR_HEIGHT_DIVISOR;
+                    dataVal /= byYearLinearDivisor;
                     break;
                 default:
                     break;
@@ -103,7 +133,7 @@ function Histogram3DApp() {
         }
 
         return Math.max(defaultHeight, dataVal);
-    }, [chronoType, defaultHeight, scalingType]);
+    }, [chronoType, defaultHeight, scalingType, cumulativeLinearDivisor, byYearLinearDivisor]);
 
     const materialChange = useCallback((mat: Material | Material[], height: number, row: number, col: number, isEmpty: boolean): void => {
         if (isEmpty) {
@@ -147,36 +177,40 @@ function Histogram3DApp() {
 
     const addAccessibleDescription = useCallback((e: ReactElement<ThreeElements['mesh']>) => {
 
-        if (!e.props.name || !data.partLifetimeData[partType].hasPart(e.props.name)) {
+        const key = e.props.name;
+
+        if (!key || !data.partLifetimeData[partType].hasPart(key)) {
             return e;
         }
 
-        return <A11y
+        const result = <A11y
+            ref={(e: HTMLDivElement) => { focusableElements.current.set(key, e); return undefined; }}
             role="content"
             key={e.props.name + partType.slice(0, -1)}
             description={makeBarLabel({
-                partName: e.props.name,
-                startYear: data.partLifetimeData[partType].firstYear(e.props.name),
-                endYear: data.partLifetimeData[partType].lastYear(e.props.name),
+                partName: key,
+                startYear: data.partLifetimeData[partType].firstYear(key),
+                endYear: data.partLifetimeData[partType].lastYear(key),
                 partType: partType,
                 quantityFormat: quantityType,
                 timeFormat: chronoType,
-                currentValue: getCurrentValue(e.props.name),
-                pastValue: getPreviousValue(e.props.name),
+                currentValue: getCurrentValue(key),
+                pastValue: getPreviousValue(key),
             })}
-
         >
             {e}
         </A11y>;
+
+        return result;
 
     }, [data, chronoType, getCurrentValue, getPreviousValue, partType, quantityType]);
 
     const colPointerOver = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (data.partLifetimeData[partType].hasPart(e.object.name)) {
-            setTooltipVisible(true);
+            setMouseTooltipVisible(true);
             lastHoverRef.current = e.object.name;
 
-            setTooltipContent(<TooltipContent
+            setMouseTooltipContent(<TooltipContent
                 partName={e.object.name}
                 startYear={data.partLifetimeData[partType].firstYear(e.object.name)}
                 endYear={data.partLifetimeData[partType].lastYear(e.object.name)}
@@ -192,7 +226,7 @@ function Histogram3DApp() {
 
     const colPointerOut = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (lastHoverRef.current === e.object.name) {
-            setTooltipVisible(false);
+            setMouseTooltipVisible(false);
         }
         e.stopPropagation();
     }, []);
@@ -216,24 +250,15 @@ function Histogram3DApp() {
             data.histogramData[s as PartType][quantityType][chronoType].firstYear,
             data.histogramData[s as PartType][quantityType][chronoType].lastYear
         ));
+        for (const key in focusableElements) {
+            if (!data.partLifetimeData[s as PartType].hasPart(key)) {
+                focusableElements.current.delete(key);
+            }
+        }
+        setFocusIndex(0);
     }
 
-    const perspectiveCam = useRef(<PerspectiveCamera
-        position={[0, 30, 7]}
-        fov={75}
-        makeDefault={true}>
-    </PerspectiveCamera>);
-
-    const orthographicCam = useRef(<OrthographicCamera
-        position={[0, 9000, 0]}
-        far={10000}
-        zoom={Math.sqrt(Math.min(window.innerWidth, window.innerHeight) / 2) / 1.5}
-        makeDefault={true}>
-    </OrthographicCamera>);
-
-    const cameraControls = useRef(<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>);
-
-    const barMat = useRef(new MeshStandardMaterial());
+    
 
     return (<div role='none'>
         <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)} ref={canvasParentRef}>
@@ -253,12 +278,14 @@ function Histogram3DApp() {
                 heightScaling={heightScaling}
                 barMat={barMat.current}
                 materialChange={materialChange}
-                cameraControls={cameraControls.current}
                 colPointerOver={colPointerOver}
                 colPointerOut={colPointerOut}
                 imageAccessibilityLabel={"A 3D histogram for visualizing distributions of common LEGO parts over time. Accessible descriptions for relevant parts can be found in the elements below."}
                 columnPostProcess={addAccessibleDescription}
-            />
+            >
+                {cameraControls.current}
+                {focusControls}
+            </StatsCanvas>
             <A11yAnnouncer />
         </div>
 
@@ -284,9 +311,24 @@ function Histogram3DApp() {
             <button className="camera-button" onClick={buttonResetCamera}>{"Reset Camera"}</button>
         </div>
 
-        {(tooltipVisible && !mouseDown) ? <MousePosTooltip className="tooltip" offsetX={tooltipArrowSize} offsetY={-tooltipArrowSize} content={
-            tooltipContent
+        {(mouseTooltipVisible && !mouseDown) ? <MousePosTooltip className="tooltip" content={
+            mouseTooltipContent
         }></MousePosTooltip> : null}
+
+        {(focusIndex !== 0) ? <ElemPosTooltip className="tooltip" toTrack={focusableElements.current.get(currentFocusKey)?.parentElement as HTMLElement} content={
+
+            <TooltipContent
+                partName={currentFocusKey}
+                startYear={currentFocusKey ? data.partLifetimeData[partType].firstYear(currentFocusKey) : 0}
+                endYear={currentFocusKey ? data.partLifetimeData[partType].lastYear(currentFocusKey) : 0}
+                partType={partType}
+                quantityFormat={quantityType}
+                timeFormat={chronoType}
+                currentValue={getCurrentValue(currentFocusKey)}
+                pastValue={getPreviousValue(currentFocusKey)}
+            />
+        }
+        ></ElemPosTooltip> : null}
 
         <button onClick={() => { setAdvancedOptionsVisible(!advancedOptionsVisible); }} >
             {(advancedOptionsVisible) ? "Hide Advanced Options" : "Show Advanced Options"}
@@ -407,6 +449,24 @@ function Histogram3DApp() {
                         max={10}
                         step={0.5}
                         onChange={setPadding}
+                    ></LabeledTextboxSlider>
+                </div>
+                <div className="advanced-options-row">
+                    <LabeledTextboxSlider
+                        label={"Cumulative Linear Height Divisor"}
+                        value={cumulativeLinearDivisor}
+                        min={1}
+                        max={3000}
+                        step={100}
+                        onChange={setCumulativeLinearDivisor}
+                    ></LabeledTextboxSlider>
+                    <LabeledTextboxSlider
+                        label={"By Year Linear Height Divisor"}
+                        value={byYearLinearDivisor}
+                        min={1}
+                        max={300}
+                        step={10}
+                        onChange={setByYearLinearDivisor}
                     ></LabeledTextboxSlider>
                 </div>
             </div>)

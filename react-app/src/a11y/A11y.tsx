@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext, type Ref } from 'react';
 import { useThree } from '@react-three/fiber';
 import useAnnounceStore from './announceStore';
 import { useA11ySectionContext } from './A11ySection';
@@ -6,8 +6,9 @@ import { stylesHiddenButScreenreadable } from './A11yConsts';
 import { Html } from './Html';
 
 interface A11yCommonProps {
+  ref: Ref<HTMLDivElement>
   role: 'button' | 'togglebutton' | 'link' | 'content' | 'image';
-  children: React.ReactNode;
+  children: React.ReactElement;
   description: string;
   tabIndex?: number;
   showAltText?: boolean;
@@ -16,6 +17,10 @@ interface A11yCommonProps {
   a11yElStyle?: Object;
   hidden?: boolean;
   dragThreshold?: number;
+}
+
+interface ParentProps {
+    children: React.ReactElement
 }
 
 type RoleProps =
@@ -87,6 +92,7 @@ const useA11y = () => {
 export { useA11y };
 
 export const A11y: React.FC<Props> = ({
+    ref,
   children,
   description,
   activationMsg,
@@ -448,7 +454,24 @@ export const A11y: React.FC<Props> = ({
   let portal = {};
   if (section.current instanceof HTMLElement) {
     portal = { portal: section };
-  }
+    }
+
+    const html = <Html
+        ref={ref}
+        key={"html"}
+        style={{ width: '0px' }}
+        {...portal}
+    >
+        {AltText}
+        {HtmlAccessibleElement}
+    </Html>;
+    
+    //useEffect(() => {
+    //    console.log(children);
+    //    console.log(test);
+    //}, [children]);
+
+    const newChildren = React.createElement(children?.type, children.props, [(children?.props as ParentProps).children, html]);
 
   return (
     <A11yContext.Provider
@@ -476,18 +499,7 @@ export const A11y: React.FC<Props> = ({
         onPointerOver={handleOnPointerOver}
         onPointerOut={handleOnPointerOut}
       >
-        {children}
-        <Html
-          style={{ width: '0px' }}
-          position={
-            // @ts-ignore
-            children.props.position ? children.props.position : 0
-          }
-          {...portal}
-        >
-          {AltText}
-          {HtmlAccessibleElement}
-        </Html>
+              {newChildren}
       </group>
     </A11yContext.Provider>
   );

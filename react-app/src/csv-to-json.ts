@@ -165,3 +165,4 @@ async function regenerateFiles() {
 }
 
 regenerateFiles();
+console.log("Finished!");
