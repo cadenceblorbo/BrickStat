@@ -8,7 +8,7 @@ import { Html } from './Html';
 interface A11yCommonProps {
     ref: RefObject<HTMLDivElement>
   role: 'button' | 'togglebutton' | 'link' | 'content' | 'image';
-  children: React.ReactNode;
+  children: React.ReactElement;
   description: string;
   tabIndex?: number;
   showAltText?: boolean;
@@ -450,7 +450,24 @@ export const A11y: React.FC<Props> = ({
   let portal = {};
   if (section.current instanceof HTMLElement) {
     portal = { portal: section };
-  }
+    }
+
+    const html = <Html
+        ref={ref}
+        key={"html"}
+        style={{ width: '0px' }}
+        {...portal}
+    >
+        {AltText}
+        {HtmlAccessibleElement}
+    </Html>;
+    
+    //useEffect(() => {
+    //    console.log(children);
+    //    console.log(test);
+    //}, [children]);
+
+    const newChildren = React.createElement(children?.type, children.props, [children?.props.children, html]);
 
   return (
     <A11yContext.Provider
@@ -478,19 +495,7 @@ export const A11y: React.FC<Props> = ({
         onPointerOver={handleOnPointerOver}
         onPointerOut={handleOnPointerOut}
       >
-        {children}
-        <Html
-            ref={ref}
-          style={{ width: '0px' }}
-          position={
-            // @ts-ignore
-            children.props.position ? children.props.position : 0
-          }
-          {...portal}
-        >
-          {AltText}
-          {HtmlAccessibleElement}
-        </Html>
+              {newChildren}
       </group>
     </A11yContext.Provider>
   );

@@ -87,7 +87,7 @@ export const Html = React.forwardRef(
     const { gl, camera, scene, size } = useThree();
     const [el] = React.useState<HTMLDivElement>(() => document.createElement('div'));
     el.setAttribute("role", "presentation");
-        const root = React.useRef<ReactDOM.Root>(null!);
+    const root = React.useRef<ReactDOM.Root>(null!);
     const group = React.useRef<Group>(null!);
     const oldZoom = React.useRef(0);
     const oldPosition = React.useRef([0, 0]);
