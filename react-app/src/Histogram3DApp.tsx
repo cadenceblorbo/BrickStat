@@ -299,6 +299,8 @@ function Histogram3DApp() {
             <button className="year-button" aria-label="Increase year" onClick={() => { buttonYearChange(1); }}>{">"}</button>
         </div>
 
+        {window.matchMedia("(pointer: coarse)").matches ? <p>Mobile</p> : <p>Desktop</p> }
+
         <div className="dataset-selection-parent">
             <LabeledDropdown id={"parttypes"} label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={partTypeChange} />
             <LabeledDropdown id={"quantityformat"} label={"Quantity Format"} values={Object.values(QuantityType)} selected={quantityType} onChange={(s) => { setQuantityType(s as QuantityType); }} />
