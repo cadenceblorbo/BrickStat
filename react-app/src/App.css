@@ -130,10 +130,6 @@ button:hover {
     max-width: 1.5rem;
 }
 
-.focus-label{
-    width: 2.75rem;
-}
-
 .dataset-selection-parent, .scene-control-parent {
     display: flex;
     gap:2.5vw;
