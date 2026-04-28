@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext, type RefObject } from 'react';
+import React, { useEffect, useRef, useState, useContext, type Ref } from 'react';
 import { useThree } from '@react-three/fiber';
 import useAnnounceStore from './announceStore';
 import { useA11ySectionContext } from './A11ySection';
@@ -6,7 +6,7 @@ import { stylesHiddenButScreenreadable } from './A11yConsts';
 import { Html } from './Html';
 
 interface A11yCommonProps {
-    ref: RefObject<HTMLDivElement>
+  ref: Ref<HTMLDivElement>
   role: 'button' | 'togglebutton' | 'link' | 'content' | 'image';
   children: React.ReactElement;
   description: string;
@@ -17,6 +17,10 @@ interface A11yCommonProps {
   a11yElStyle?: Object;
   hidden?: boolean;
   dragThreshold?: number;
+}
+
+interface ParentProps {
+    children: React.ReactElement
 }
 
 type RoleProps =
@@ -467,7 +471,7 @@ export const A11y: React.FC<Props> = ({
     //    console.log(test);
     //}, [children]);
 
-    const newChildren = React.createElement(children?.type, children.props, [children?.props.children, html]);
+    const newChildren = React.createElement(children?.type, children.props, [(children?.props as ParentProps).children, html]);
 
   return (
     <A11yContext.Provider

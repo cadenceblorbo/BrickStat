@@ -184,7 +184,7 @@ function Histogram3DApp() {
         }
 
         const result = <A11y
-            ref={(e:HTMLDivElement) => focusableElements.current.set(key, e)}
+            ref={(e: HTMLDivElement) => { focusableElements.current.set(key, e); return undefined; }}
             role="content"
             key={e.props.name + partType.slice(0, -1)}
             description={makeBarLabel({
