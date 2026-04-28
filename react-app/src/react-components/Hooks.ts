@@ -48,29 +48,23 @@ export function useThrottle<T> (value: T, msDelay: number): T {
 
 export function useElemPos(toTrack: HTMLElement) {
     const [position, setPosition] = useState({
-        x: toTrack.getBoundingClientRect().left,
-        y: toTrack.getBoundingClientRect().top,
+        x: toTrack.getBoundingClientRect().left + window.scrollX,
+        y: toTrack.getBoundingClientRect().top + window.scrollY,
         moved: false
     });
 
-    useMemo(() => {
-        const rect = toTrack.getBoundingClientRect();
-        if (rect.top !== position.y || rect.left !== position.x) {
-            setPosition({ x: rect.left, y: rect.top, moved: true });
-        }
-    }, [toTrack, position]);
 
     useEffect(() => {
         const config = { attributes: true, attributeFilter: ['style', 'class'], subtree: false };
 
-        const callback = () => {
+        const mutationCallback = () => {
             const rect = toTrack.getBoundingClientRect();
             if (rect.top !== position.y || rect.left !== position.x) {
-                setPosition({ x: rect.left, y:rect.top, moved: true});
+                setPosition({ x: rect.left + window.scrollX, y:rect.top+window.scrollY, moved: true});
             }
         };
 
-        const observer = new MutationObserver(callback);
+        const observer = new MutationObserver(mutationCallback);
         observer.observe(toTrack, config);
 
         return () => {
