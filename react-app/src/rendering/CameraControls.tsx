@@ -37,16 +37,16 @@ function CameraControls({
             }
         };
 
-        const preventDefault = (e) => e.preventDefault();
+        const preventDefault = (e: TouchEvent) => e.preventDefault();
 
         const capture = keyboardDOMCapture && keyboardDOMCapture.current ? keyboardDOMCapture.current : window;
         capture.addEventListener('keydown', keyboardZoom as EventListener);
-        capture.addEventListener('touchmove', preventDefault);
+        capture.addEventListener('touchmove', preventDefault as EventListener);
         currentControls.listenToKeyEvents(capture);
 
         return () => {
             capture.removeEventListener('keydown', keyboardZoom as EventListener);
-            capture.removeEventListener('touchmove', preventDefault);
+            capture.removeEventListener('touchmove', preventDefault as EventListener);
             currentControls.stopListenToKeyEvents();
         };
     }, [ref, keyboardDOMCapture]);
