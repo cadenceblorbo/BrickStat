@@ -181,7 +181,5 @@ export function retrieveData(): LegoDataset {
 		};
 	}
 
-	console.log(result);
-
 	return result as LegoDataset;
 }
