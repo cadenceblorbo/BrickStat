@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef} from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback} from 'react';
 
 export const useMousePos = () => {
     const [mousePos, setMousePos] = useState({
@@ -48,20 +48,36 @@ export function useThrottle<T> (value: T, msDelay: number): T {
 
 export function useElemPos(toTrack: HTMLElement) {
     const [position, setPosition] = useState({
-        x: toTrack.getBoundingClientRect().left + window.scrollX,
-        y: toTrack.getBoundingClientRect().top + window.scrollY,
+        x: toTrack ? toTrack.getBoundingClientRect().left + window.scrollX : 0,
+        y: toTrack ? toTrack.getBoundingClientRect().top + window.scrollY : 0,
         moved: false
     });
 
+    const trySetPosition = useCallback(() => {
+        if (!toTrack) {
+            return;
+        }
+        const rect = toTrack.getBoundingClientRect();
+        const realX = rect.left + window.scrollX;
+        const realY = rect.top + window.scrollY;
+        if (realY !== position.y || realX !== position.x) {
+            setPosition({ x: realX, y: realY, moved: true });
+        }
+    }, [toTrack, position]);
+
+    //recalculate pos on toTrack change
+    useMemo(() => {
+        trySetPosition();
+    }, [trySetPosition]);
 
     useEffect(() => {
+        if (!toTrack) {
+            return;
+        }
         const config = { attributes: true, attributeFilter: ['style', 'class'], subtree: false };
 
         const mutationCallback = () => {
-            const rect = toTrack.getBoundingClientRect();
-            if (rect.top !== position.y || rect.left !== position.x) {
-                setPosition({ x: rect.left + window.scrollX, y:rect.top+window.scrollY, moved: true});
-            }
+            trySetPosition();
         };
 
         const observer = new MutationObserver(mutationCallback);

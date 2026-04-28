@@ -86,6 +86,7 @@ function Histogram3DApp() {
 
     const cameraControls = useRef(<CameraControls ref={camControlsRef} keyboardDOMCapture={canvasParentRef}></CameraControls>);
     const [focusIndex, setFocusIndex] = useState(0);
+
     const focusControls = useMemo(() => {
         return <KeyboardControls
             keyboardDOMCapture={canvasParentRef}
@@ -94,12 +95,11 @@ function Histogram3DApp() {
                 [']', () => setFocusIndex(i => (i + 1) % (data.partLifetimeData[partType].size + 1))]
             ])}
         ></KeyboardControls>;
-    }, [data, partType]);
+    },[data, partType]);
     const focusableElements = useRef<Map<string, HTMLDivElement>>(new Map());
     const currentFocusKey = focusIndex !== 0 ? data.partLifetimeData[partType].keys[focusIndex - 1] : "";
 
     const barMat = useRef(new MeshStandardMaterial());
-
 
     function buttonResetCamera() {
         camControlsRef.current.reset();
@@ -258,8 +258,6 @@ function Histogram3DApp() {
         setFocusIndex(0);
     }
 
-    
-
     return (<div role='none'>
         <div className="stats-canvas-parent" onPointerDown={e => canvasPointerDown(e)} onPointerUp={e => canvasPointerUp(e)} ref={canvasParentRef}>
             <StatsCanvas
@@ -299,7 +297,15 @@ function Histogram3DApp() {
             <button className="year-button" aria-label="Increase year" onClick={() => { buttonYearChange(1); }}>{">"}</button>
         </div>
 
-        {window.matchMedia("(pointer: coarse)").matches ? <p>Mobile</p> : <p>Desktop</p> }
+        {window.matchMedia("(pointer: coarse)").matches ? <div className="year-controls">
+            <label htmlFor="focus-slider"><b>Focus</b></label>
+
+            <input className="year-slider" id="focus-slider" type="range" min={0} max={data.partLifetimeData[partType].size} onChange={(e) => setFocusIndex(Number(e.currentTarget.value))} value={focusIndex}></input>
+
+            <button className="year-button" aria-label="Decrease focus index" >{"<"}</button>
+            <p className = "focus-label" aria-label="Current focused element">{focusIndex === 0 ? "None!" : currentFocusKey}</p>
+            <button className="year-button" aria-label="Increase focus index"  >{">"}</button>
+        </div> : null}
 
         <div className="dataset-selection-parent">
             <LabeledDropdown id={"parttypes"} label={"Part Types"} values={Object.values(PartType)} selected={partType} onChange={partTypeChange} />

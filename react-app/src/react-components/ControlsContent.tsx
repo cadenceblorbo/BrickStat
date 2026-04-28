@@ -20,6 +20,14 @@ export default function HelpContent() {
             <li>Use the ] and [ keys to cycle column focus.</li>
             <li>Camera type changing and camera resetting can be accesed in the inputs under the viewport.</li>
         </ul>
+        <h3>Touch Controls</h3>
+        <ul>
+            <li>Drag over the viewport with one finger to rotate the camera.</li>
+            <li>Drag with two fingers to pan the camera.</li>
+            <li>Pinch with two fingers to zoom in and out.</li>
+            <li>Use the touch-exclusive focus slider to cycle column focus.</li>
+            <li>Camera type changing and camera resetting can be accesed in the inputs under the viewport.</li>
+        </ul>
         <h2>Dataset Controls</h2>
         <p>The dataset and histogram representation can be manipulated using the inputs under the viewport. Show the advanced options for more fine-grained contols over the histogram.</p>
     </div>;
