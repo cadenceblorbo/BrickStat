@@ -303,8 +303,8 @@ function Histogram3DApp() {
             <input className="year-slider" id="focus-slider" type="range" min={0} max={data.partLifetimeData[partType].size} onChange={(e) => setFocusIndex(Number(e.currentTarget.value))} value={focusIndex}></input>
 
             <button className="year-button" aria-label="Decrease focus index" onClick={() => setFocusIndex(i => (i - 1 + data.partLifetimeData[partType].size + 1) % (data.partLifetimeData[partType].size + 1)) } >{"<"}</button>
-            <p className="focus-label" aria-label="Current focused element" onClick={() => setFocusIndex(i => (i + 1) % (data.partLifetimeData[partType].size + 1)) }>{focusIndex === 0 ? "None!" : currentFocusKey}</p>
-            <button className="year-button" aria-label="Increase focus index"  >{">"}</button>
+            <p className="focus-label" aria-label="Current focused element" >{focusIndex === 0 ? "None!" : currentFocusKey}</p>
+            <button className="year-button" aria-label="Increase focus index" onClick={() => setFocusIndex(i => (i + 1) % (data.partLifetimeData[partType].size + 1))}>{">"}</button>
         </div> : null}
 
         <div className="dataset-selection-parent">
