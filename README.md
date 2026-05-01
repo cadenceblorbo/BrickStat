@@ -1,5 +1,3 @@
-# NOTE: WORK IN PROGRESS
-
 <a id="readme-top"></a>
 
 <br />
