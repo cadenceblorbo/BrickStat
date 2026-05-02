@@ -1,14 +1,15 @@
-html{
-    overflow-y:scroll;
+html {
+    overflow-y: scroll;
 }
 
 #root {
     text-align: center;
+    color: var(--color-white);
     --color-black: #151515;
     --color-green: #1adb4e;
     --color-gray: #A0A19F;
     --color-dark-gray: #42423e;
-    --color-very-dark-gray: #30302e; 
+    --color-very-dark-gray: #30302e;
     --color-white: #ffffff;
     --base-opacity: 0.9;
     --transition-time: 0.2s;
@@ -100,6 +101,7 @@ input[type="text"]{
     border-width: var(--input-border-width);
     border-radius: var(--input-border-radius);
     border-style: solid;
+    color: var(--color-white);
 }
 
 
@@ -119,6 +121,7 @@ button {
 select {
     border-width: var(--input-border-width);
     border-style: solid;
+    color: var(--color-white);
 }
 
 button:hover {
